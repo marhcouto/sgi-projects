@@ -442,14 +442,14 @@ export class MySceneGraph {
      * @param {transformations block element} transformationsNode
      */
     parseTransformations(transformationsNode) {
-        var children = transformationsNode.children;
+        const children = transformationsNode.children;
 
         this.transformations = [];
 
-        var grandChildren = [];
+        let grandChildren = [];
 
         // Any number of transformations.
-        for (var i = 0; i < children.length; i++) {
+        for (let i = 0; i < children.length; i++) {
 
             if (children[i].nodeName != "transformation") {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
@@ -457,7 +457,7 @@ export class MySceneGraph {
             }
 
             // Get id of the current transformation.
-            var transformationID = this.reader.getString(children[i], 'id');
+            const transformationID = this.reader.getString(children[i], 'id');
             if (transformationID == null)
                 return "no ID defined for transformation";
 
@@ -468,22 +468,27 @@ export class MySceneGraph {
             grandChildren = children[i].children;
             // Specifications for the current transformation.
 
-            var transfMatrix = mat4.create();
+            let transfMatrix = mat4.create();
 
-            for (var j = 0; j < grandChildren.length; j++) {
+            for (let j = 0; j < grandChildren.length; j++) {
                 switch (grandChildren[j].nodeName) {
                     case 'translate':
-                        var coordinates = this.parseCoordinates3D(grandChildren[j], "translate transformation for ID " + transformationID);
+                        const coordinates = this.parseCoordinates3D(grandChildren[j], "translate transformation for ID " + transformationID);
                         if (!Array.isArray(coordinates))
                             return coordinates;
 
                         transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
                         break;
-                    case 'scale':                        
-                        this.onXMLMinorError("To do: Parse scale transformations.");
+                    case 'scale':
+                        const scaleFactor = this.parseCoordinates3D(grandChildren[j], "scale transformation for ID" + transformationID);
+                        if (!Array.isArray(scaleFactor))
+                            return scaleFactor;
+                        
+                        transfMatrix = mat4.scale(transfMatrix, transfMatrix, scaleFactor)
                         break;
                     case 'rotate':
                         // angle
+
                         this.onXMLMinorError("To do: Parse rotate transformations.");
                         break;
                 }
