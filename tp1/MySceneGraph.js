@@ -488,7 +488,8 @@ export class MySceneGraph {
                     case 'rotate':
                         const rotationData = this.parseRotation(grandChildren[j], `rotation transformation for ID ${transformationID}`);
                         
-                        if (!'axis' in rotationData || !'angle' in rotationData)
+                        //Some type checking
+                        if (Object.prototype.toString.call(rotationData) === "[object String]")
                             return rotationData;
                         
                         transfMatrix = mat4.rotate(transfMatrix, transfMatrix, degreeToRad(rotationData.angle), rotationData.axis);
@@ -646,7 +647,7 @@ export class MySceneGraph {
         } else if (axis === 'z') {
             vectorizedAxis = vec3.fromValues(0, 0, 1);
         } else {
-            return `invalid axis expected one of [x, y, z] but got ${axis} at the ${messageError}`;
+            return `invalid axis expected one of [x, y, z] but got '${axis}' at the ${messageError}`;
         }
 
         let angle = this.reader.getFloat(node, 'angle');
