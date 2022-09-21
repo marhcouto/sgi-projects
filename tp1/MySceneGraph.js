@@ -1,7 +1,6 @@
 import { CGFXMLreader } from '../lib/CGF.js';
 import { MyRectangle } from './MyRectangle.js';
-
-var DEGREE_TO_RAD = Math.PI / 180;
+import { degreeToRad } from './utils.js';
 
 // Order of the groups in the XML document.
 var SCENE_INDEX = 0;
@@ -473,26 +472,30 @@ export class MySceneGraph {
             for (let j = 0; j < grandChildren.length; j++) {
                 switch (grandChildren[j].nodeName) {
                     case 'translate':
-                        const coordinates = this.parseCoordinates3D(grandChildren[j], "translate transformation for ID " + transformationID);
+                        const coordinates = this.parseCoordinates3D(grandChildren[j], `translate transformation for ID ${transformationID}`);
                         if (!Array.isArray(coordinates))
                             return coordinates;
 
                         transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
                         break;
                     case 'scale':
-                        const scaleFactor = this.parseCoordinates3D(grandChildren[j], "scale transformation for ID" + transformationID);
+                        const scaleFactor = this.parseCoordinates3D(grandChildren[j], `scale transformation for ID ${transformationID}`);
                         if (!Array.isArray(scaleFactor))
                             return scaleFactor;
                         
                         transfMatrix = mat4.scale(transfMatrix, transfMatrix, scaleFactor)
                         break;
                     case 'rotate':
-                        // angle
-
-                        this.onXMLMinorError("To do: Parse rotate transformations.");
+                        const rotationData = this.parseRotation(grandChildren[j], `rotation transformation for ID ${transformationID}`);
+                        
+                        if (!'axis' in rotationData || !'angle' in rotationData)
+                            return rotationData;
+                        
+                        transfMatrix = mat4.rotate(transfMatrix, transfMatrix, degreeToRad(rotationData.angle), rotationData.axis);
                         break;
                 }
             }
+            console.log(this.transformations);
             this.transformations[transformationID] = transfMatrix;
         }
 
@@ -629,6 +632,33 @@ export class MySceneGraph {
         }
     }
 
+    parseRotation(node, messageError) {
+        let axis = this.reader.getString(node, 'axis');
+        if (axis.length != 1) {
+            return `expected a character as axis but got a string with length ${axis.length} at the ${messageError}`;
+        }
+
+        let vectorizedAxis;
+        if (axis === 'x') {
+            vectorizedAxis = vec3.fromValues(1, 0, 0);
+        } else if (axis === 'y') {
+            vectorizedAxis = vec3.fromValues(0, 1, 0);
+        } else if (axis === 'z') {
+            vectorizedAxis = vec3.fromValues(0, 0, 1);
+        } else {
+            return `invalid axis expected one of [x, y, z] but got ${axis} at the ${messageError}`;
+        }
+
+        let angle = this.reader.getFloat(node, 'angle');
+        if (angle == null || isNaN(angle)) {
+            return `unable to parse angle of the ${messageError}`;
+        }
+
+        return {
+            angle: angle,
+            axis: vectorizedAxis
+        }
+    }
 
     /**
      * Parse the coordinates from a node with ID = id
