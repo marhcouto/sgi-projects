@@ -443,7 +443,7 @@ export class MySceneGraph {
     parseTransformations(transformationsNode) {
         const children = transformationsNode.children;
 
-        this.transformations = [];
+        this.transformations = {};
 
         let grandChildren = [];
 
@@ -496,7 +496,7 @@ export class MySceneGraph {
                         break;
                 }
             }
-            console.log(this.transformations);
+            console.log("TransformationID: ", transformationID)
             this.transformations[transformationID] = transfMatrix;
         }
 
@@ -587,7 +587,7 @@ export class MySceneGraph {
     parseComponents(componentsNode) {
         var children = componentsNode.children;
 
-        this.components = [];
+        this.components = {};
 
         var grandChildren = [];
         var grandgrandChildren = [];
