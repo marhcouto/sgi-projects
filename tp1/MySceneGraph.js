@@ -1,6 +1,6 @@
 import { CGFXMLreader } from '../lib/CGF.js';
+import { MyTorus } from './MyTorus.js';
 import { MyRectangle } from './MyRectangle.js';
-import { MyTriangle } from './MyTriangle.js';
 import { degreeToRad } from './utils.js';
 
 // Order of the groups in the XML document.
@@ -780,8 +780,6 @@ export class MySceneGraph {
         //To do: Create display loop for transversing the scene graph
 
         //To test the parsing/creation of the primitives, call the display function directly
-        //this.primitives['demoRectangle'].display();
-        let triangle = new MyTriangle(this.scene, 0, 0, 2, 1, 0, 0, 0, 1, 0);
-        triangle.display();
+        this.primitives['demoRectangle'].display();
     }
 }
