@@ -1,5 +1,6 @@
 import { CGFXMLreader } from '../lib/CGF.js';
 import { MyRectangle } from './MyRectangle.js';
+import { MyTriangle } from './MyTriangle.js';
 import { degreeToRad } from './utils.js';
 
 // Order of the groups in the XML document.
@@ -567,7 +568,7 @@ export class MySceneGraph {
                 if (!(y2 != null && !isNaN(y2) && y2 > y1))
                     return "unable to parse y2 of the primitive coordinates for ID = " + primitiveId;
 
-                var rect = new MyRectangle(this.scene, primitiveId, x1, x2, y1, y2);
+                var rect = new MyRectangle(this.scene, x1, x2, y1, y2);
 
                 this.primitives[primitiveId] = rect;
             }
@@ -779,6 +780,8 @@ export class MySceneGraph {
         //To do: Create display loop for transversing the scene graph
 
         //To test the parsing/creation of the primitives, call the display function directly
-        this.primitives['demoRectangle'].display();
+        //this.primitives['demoRectangle'].display();
+        let triangle = new MyTriangle(this.scene, 0, 0, 2, 1, 0, 0, 0, 1, 0);
+        triangle.display();
     }
 }
