@@ -1,10 +1,10 @@
 # SGI 2022/2023
 
-## Group T0xG0y
-| Name             | Number    | E-Mail             |
-| ---------------- | --------- | ------------------ |
-| John Doe         | 201801010 | ...                |
-| Jane Doe         | 201801011 | ...                |
+## Group T03G11
+| Name                        | Number    | E-Mail                   |
+| --------------------------- | --------- | ------------------------ |
+| Francisco Pinto de Oliveira | 201907361 | up201907361@edu.fe.up.pt |
+| Marcelo Henriques Couto     | 201906086 | ...                |
 
 ----
 
