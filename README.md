@@ -4,7 +4,7 @@
 | Name                        | Number    | E-Mail                   |
 | --------------------------- | --------- | ------------------------ |
 | Francisco Pinto de Oliveira | 201907361 | up201907361@edu.fe.up.pt |
-| Marcelo Henriques Couto     | 201906086 | ...                |
+| Marcelo Henriques Couto     | 201906086 | up201906086@edu.fe.up.pt |
 
 ----
 
