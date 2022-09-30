@@ -1,6 +1,8 @@
 import { CGFXMLreader } from '../lib/CGF.js';
 import { MyTorus } from './MyTorus.js';
 import { MyRectangle } from './MyRectangle.js';
+import { MyCylinder } from './MyCylinder.js';
+import { MySphere } from './MySphere.js';
 import { degreeToRad } from './utils.js';
 
 // Order of the groups in the XML document.
