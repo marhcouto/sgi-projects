@@ -1,8 +1,9 @@
-import { CGFXMLreader } from '../lib/CGF.js';
-import { MyTorus } from './MyTorus.js';
-import { MyRectangle } from './MyRectangle.js';
-import { MyCylinder } from './MyCylinder.js';
-import { MySphere } from './MySphere.js';
+import { CGFcamera, CGFcameraOrtho, CGFXMLreader } from '../lib/CGF.js';
+import { MyRectangle } from './primitives/MyRectangle.js';
+import { MyTriangle } from './primitives/MyTriangle.js';
+import { MyCylinder } from './primitives/MyCylinder.js';
+import { MySphere } from './primitives/MySphere.js';
+import { MyTorus } from './primitives/MyTorus.js';
 import { degreeToRad } from './utils.js';
 
 // Order of the groups in the XML document.
@@ -232,7 +233,261 @@ export class MySceneGraph {
      * @param {view block element} viewsNode
      */
     parseView(viewsNode) {
-        this.onXMLMinorError("To do: Parse views and create cameras.");
+        var children = viewsNode.children;
+
+        this.views = {};
+
+        var grandChildren = [];
+
+        if (children.length === 0) {
+            return 'must have at least one view!'
+        }
+
+        for (let i = 0; i < children.length; i++) {
+            let curNode = children[i];
+            let validView = curNode.nodeName === 'perspective' ||
+                curNode.nodeName === 'ortho'
+            if (!validView) {
+                return `invalid view tag <${children[i].nodeName}>`
+            }
+
+            // Get id of the current view.
+            var viewId = this.reader.getString(curNode, 'id');
+            if (viewId == null)
+                return "no ID defined for view";
+
+            // Checks for repeated IDs.
+            if (this.views[viewId] != null)
+                return "ID must be unique for each view (conflict: ID = " + viewId + ")";
+
+            if (curNode.nodeName === 'perspective') {
+                let near = this.reader.getFloat(curNode, 'near');
+                if (!(near != null && !isNaN(near))) {
+                    return "unable to parse near of the view for ID = " + viewId;
+                }
+
+                let far = this.reader.getFloat(curNode, 'far');
+                if (!(far != null && !isNaN(far))) {
+                    return "unable to parse far of the view for ID = " + viewId;
+                }
+
+                let angle = this.reader.getFloat(curNode, 'angle');
+                if (!(angle != null && !isNaN(angle))) {
+                    return "unable to parse angle of the view for ID = " + viewId;
+                }
+
+                let readFrom = false;
+                let readTo = false;
+                let grandChildren = curNode.children;
+                let to;
+                let from;
+
+
+                for (let i = 0; i < grandChildren.length; i++) {
+                    let curGrandChildren = grandChildren[i];
+                    let validChildren = curGrandChildren.nodeName === 'from' ||
+                        curGrandChildren.nodeName === 'to'
+
+                    if (!validChildren) {
+                        return `invalid view tag <${curGrandChildren.nodeName}>`
+                    }
+
+                    if (curGrandChildren.nodeName === 'from') {
+                        if (readFrom) {
+                            return `duplicated child ${curGrandChildren.nodeName} for view with id ${viewId}`
+                        } else {
+                            readFrom = true;
+                        }
+
+                        let x = this.reader.getFloat(curGrandChildren, 'x');
+                        if (!(x != null && !isNaN(x))) {
+                            return `"unable to parse x of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        let y = this.reader.getFloat(curGrandChildren, 'y');
+                        if (!(y != null && !isNaN(y))) {
+                            return `"unable to parse y of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        let z = this.reader.getFloat(curGrandChildren, 'z');
+                        if (!(z != null && !isNaN(z))) {
+                            return `"unable to parse z of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        from = vec3.fromValues(x, y, z);
+                    }
+
+                    if (curGrandChildren.nodeName === 'to') {
+                        if (readTo) {
+                            return `duplicated child ${curGrandChildren.nodeName} for view with id ${viewId}`
+                        } else {
+                            readTo = true;
+                        }
+
+                        let x = this.reader.getFloat(curGrandChildren, 'x');
+                        if (!(x != null && !isNaN(x))) {
+                            return `"unable to parse x of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        let y = this.reader.getFloat(curGrandChildren, 'y');
+                        if (!(y != null && !isNaN(y))) {
+                            return `"unable to parse y of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        let z = this.reader.getFloat(curGrandChildren, 'z');
+                        if (!(z != null && !isNaN(z))) {
+                            return `"unable to parse z of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        to = vec3.fromValues(x, y, z);
+                    }
+                }
+
+                if (!readFrom) {
+                    return `missing from in view with id: ${viewId}`;
+                }
+                if (!readTo) {
+                    return `missing to in view with id: ${viewId}`;
+                }
+
+                this.views[viewId] = new CGFcamera(80, near, far, from, to);
+            }
+
+            if (curNode.nodeName === 'ortho') {
+                let near = this.reader.getFloat(curNode, 'near');
+                if (!(near != null && !isNaN(near))) {
+                    return "unable to parse near of the view for ID = " + viewId;
+                }
+
+                let far = this.reader.getFloat(curNode, 'far');
+                if (!(far != null && !isNaN(far))) {
+                    return "unable to parse far of the view for ID = " + viewId;
+                }
+
+                let left = this.reader.getFloat(curNode, 'left');
+                if (!(left != null && !isNaN(left))) {
+                    return "unable to parse left of the view for ID = " + viewId;
+                }
+
+                let right = this.reader.getFloat(curNode, 'right');
+                if (!(right != null && !isNaN(right))) {
+                    return "unable to parse right of the view for ID = " + viewId;
+                }
+
+                let top = this.reader.getFloat(curNode, 'top');
+                if (!(top != null && !isNaN(top))) {
+                    return "unable to parse top of the view for ID = " + viewId;
+                }
+
+                let bottom = this.reader.getFloat(curNode, 'bottom');
+                if (!(bottom != null && !isNaN(bottom))) {
+                    return "unable to parse bottom of the view for ID = " + viewId;
+                }
+
+                let readFrom = false;
+                let readTo = false;
+                let readUp = false;
+                let grandChildren = curNode.children;
+                let to;
+                let from;
+                let up = vec3.fromValues(0, 1, 0);
+
+                for (let i = 0; i < grandChildren.length; i++) {
+                    let curGrandChildren = grandChildren[i];
+                    let validChildren = curGrandChildren.nodeName === 'from' ||
+                        curGrandChildren.nodeName === 'to' ||
+                        curGrandChildren.nodeName === 'up'
+
+                    if (!validChildren) {
+                        return `invalid view tag <${curGrandChildren.nodeName}>`
+                    }
+
+                    if (curGrandChildren.nodeName === 'from') {
+                        if (readFrom) {
+                            return `duplicated child ${curGrandChildren.nodeName} for view with id ${viewId}`
+                        } else {
+                            readFrom = true;
+                        }
+
+                        let x = this.reader.getFloat(curGrandChildren, 'x');
+                        if (!(x != null && !isNaN(x))) {
+                            return `"unable to parse x of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        let y = this.reader.getFloat(curGrandChildren, 'y');
+                        if (!(y != null && !isNaN(y))) {
+                            return `"unable to parse y of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        let z = this.reader.getFloat(curGrandChildren, 'z');
+                        if (!(z != null && !isNaN(z))) {
+                            return `"unable to parse z of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        from = vec3.fromValues(x, y, z);
+                    }
+
+                    if (curGrandChildren.nodeName === 'to') {
+                        if (readTo) {
+                            return `duplicated child ${curGrandChildren.nodeName} for view with id ${viewId}`
+                        } else {
+                            readTo = true;
+                        }
+
+                        let x = this.reader.getFloat(curGrandChildren, 'x');
+                        if (!(x != null && !isNaN(x))) {
+                            return `"unable to parse x of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        let y = this.reader.getFloat(curGrandChildren, 'y');
+                        if (!(y != null && !isNaN(y))) {
+                            return `"unable to parse y of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        let z = this.reader.getFloat(curGrandChildren, 'z');
+                        if (!(z != null && !isNaN(z))) {
+                            return `"unable to parse z of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        to = vec3.fromValues(x, y, z);
+                    }
+
+                    if (curGrandChildren.nodeName === 'up') {
+                        if (readUp) {
+                            return `duplicated child ${curGrandChildren.nodeName} for view with id ${viewId}`
+                        } else {
+                            readUp = true;
+                        }
+
+                        let x = this.reader.getFloat(curGrandChildren, 'x');
+                        if (!(x != null && !isNaN(x))) {
+                            return `"unable to parse x of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        let y = this.reader.getFloat(curGrandChildren, 'y');
+                        if (!(y != null && !isNaN(y))) {
+                            return `"unable to parse y of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        let z = this.reader.getFloat(curGrandChildren, 'z');
+                        if (!(z != null && !isNaN(z))) {
+                            return `"unable to parse z of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        }
+
+                        up = vec3.fromValues(x, y, z);
+                    }
+                }
+
+                if (!readFrom) {
+                    return `missing from in view with id: ${viewId}`;
+                }
+                if (!readTo) {
+                    return `missing to in view with id: ${viewId}`;
+                }
+
+                this.views[viewId] = new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, up);
+            }
+        }
 
         return null;
     }
@@ -514,7 +769,7 @@ export class MySceneGraph {
     parsePrimitives(primitivesNode) {
         var children = primitivesNode.children;
 
-        this.primitives = [];
+        this.primitives = {};
 
         var grandChildren = [];
 
@@ -549,7 +804,7 @@ export class MySceneGraph {
             var primitiveType = grandChildren[0].nodeName;
 
             // Retrieves the primitive coordinates.
-            if (primitiveType == 'rectangle') {
+            if (primitiveType === 'rectangle') {
                 // x1
                 var x1 = this.reader.getFloat(grandChildren[0], 'x1');
                 if (!(x1 != null && !isNaN(x1)))
@@ -574,8 +829,129 @@ export class MySceneGraph {
 
                 this.primitives[primitiveId] = rect;
             }
-            else {
-                console.warn("To do: Parse other primitives.");
+
+            if (primitiveType === 'triangle') {
+                let x1 = this.reader.getFloat(grandChildren[0], 'x1');
+                if (!(x1 != null && !isNaN(x1))) {
+                    return `unable to parse x1 of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                let y1 = this.reader.getFloat(grandChildren[0], 'y1');
+                if (!(y1 != null && !isNaN(y1))) {
+                    return `unable to parse y1 of the primitive coordinates for ID = ${primitiveId}`
+                }
+
+                let z1 = this.reader.getFloat(grandChildren[0], 'z1');
+                if (!(z1 != null && !isNaN(z1))) {
+                    return `unable to parse z1 of the primitive coordinates for ID = ${primitiveId}`
+                }
+
+                let x2 = this.reader.getFloat(grandChildren[0], 'x2');
+                if (!(x2 != null && !isNaN(x2))) {
+                    return `unable to parse x2 of the primitive coordinates for ID = ${primitiveId}`
+                }
+
+                let y2 = this.reader.getFloat(grandChildren[0], 'y2');
+                if (!(y2 != null && !isNaN(y2))) {
+                    return `unable to parse y2 of the primitive coordinates for ID = ${primitiveId}`
+                }
+
+                let z2 = this.reader.getFloat(grandChildren[0], 'z2');
+                if (!(z2 != null && !isNaN(z2))) {
+                    return `unable to parse z2 of the primitive coordinates for ID = ${primitiveId}`
+                }
+
+                let x3 = this.reader.getFloat(grandChildren[0], 'x3');
+                if (!(x3 != null && !isNaN(x3))) {
+                    return `unable to parse x3 of the primitive coordinates for ID = ${primitiveId}`
+                }
+
+                let y3 = this.reader.getFloat(grandChildren[0], 'y3');
+                if (!(y3 != null && !isNaN(y3))) {
+                    return `unable to parse y3 of the primitive coordinates for ID = ${primitiveId}`
+                }
+
+                let z3 = this.reader.getFloat(grandChildren[0], 'z3');
+                if (!(z3 != null && !isNaN(z3))) {
+                    return `unable to parse z3 of the primitive coordinates for ID = ${primitiveId}`
+                }
+
+                this.primitives[primitiveId] = new MyTriangle(this.scene, x1, y1, z1,
+                    x2, y2, z2,
+                    x3, y3, z3
+                );
+            }
+
+            if (primitiveType === 'cylinder') {
+                let base = this.reader.getFloat(grandChildren[0], 'base');
+                if (!(base != null && !isNaN(base))) {
+                    return `unable to parse base of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                let top = this.reader.getFloat(grandChildren[0], 'top');
+                if (!(top != null && !isNaN(top))) {
+                    return `unable to parse top of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                let height = this.reader.getFloat(grandChildren[0], 'height');
+                if (!(height != null && !isNaN(height))) {
+                    return `unable to parse height of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                let slices = this.reader.getInteger(grandChildren[0], 'slices');
+                if (!(slices != null && !isNaN(slices))) {
+                    return `unable to parse slices of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                let stacks = this.reader.getInteger(grandChildren[0], 'stacks');
+                if (!(stacks != null && !isNaN(stacks))) {
+                    return `unable to parse stacks of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                this.primitives[primitiveId] = new MyCylinder(this.scene, base, top, height, slices, stacks);
+            }
+
+            if (primitiveType === 'sphere') {
+                let radius = this.reader.getFloat(grandChildren[0], 'radius');
+                if (!(radius != null && !isNaN(radius))) {
+                    return `unable to parse radius of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                let slices = this.reader.getInteger(grandChildren[0], 'slices');
+                if (!(slices != null && !isNaN(slices))) {
+                    return `unable to parse slices of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                let stacks = this.reader.getInteger(grandChildren[0], 'stacks');
+                if (!(stacks != null && !isNaN(stacks))) {
+                    return `unable to parse stacks of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                this.primitives[primitiveId] = new MySphere(this.scene, slices, stacks);
+            }
+
+            if (primitiveType === 'torus') {
+                let inner = this.reader.getFloat(grandChildren[0], 'inner');
+                if (!(inner != null && !isNaN(inner))) {
+                    return `unable to parse inner of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                let outer = this.reader.getFloat(grandChildren[0], 'outer');
+                if (!(outer != null && !isNaN(outer))) {
+                    return `unable to parse outer of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                let slices = this.reader.getInteger(grandChildren[0], 'slices');
+                if (!(slices != null && !isNaN(slices))) {
+                    return `unable to parse slices of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                let loops = this.reader.getInteger(grandChildren[0], 'loops');
+                if (!(loops != null && !isNaN(loops))) {
+                    return `unable to parse loops of the primitive coordinates for ID = ${primitiveId}`;
+                }
+
+                this.primitives[primitiveId] = new MyTorus(this.scene, inner, outer, slices, loops);
             }
         }
 
@@ -782,6 +1158,5 @@ export class MySceneGraph {
         //To do: Create display loop for transversing the scene graph
 
         //To test the parsing/creation of the primitives, call the display function directly
-        this.primitives['demoRectangle'].display();
     }
 }

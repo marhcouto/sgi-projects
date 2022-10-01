@@ -1,17 +1,15 @@
-import { CGFobject } from '../lib/CGF.js';
+import { CGFobject } from '../../lib/CGF.js';
 /**
  * MySphere
  * @constructor
  * @param scene - Reference to MyScene object
- * @param id - ID of the object
  * @param radius - Radius in the base of the cylinder
  * @param slices - Number of circular slices of the cylinder
  * @param stacks - Number of horizontal stacks on the cylinder
  */
 export class MySphere extends CGFobject {
-	constructor(scene, id, radius, slices, stacks) {
+	constructor(scene, radius, slices, stacks) {
 		super(scene);
-		this.id = id;
         this.radius = radius;
         this.slices = slices;
         this.stacks = stacks;
@@ -25,7 +23,7 @@ export class MySphere extends CGFobject {
         this.normals = [];
         this.texCoords = [];
     
-        let latitudeDegIncrement = Math.PI / this.stacks;
+        let latitudeDegIncrement = Math.PI / (2 * this.stacks);
         let longitudeDegIncrement = (2 * Math.PI) / this.slices;
     
         // Sphere stacks, in crescent order of z

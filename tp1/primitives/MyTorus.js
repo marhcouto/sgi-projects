@@ -1,4 +1,4 @@
-import { CGFobject } from "../lib/CGF.js";
+import { CGFobject } from "../../lib/CGF.js";
 
 export class MyTorus extends CGFobject {
     constructor(scene, innerRadius, outerRadius, nSlices, nLoops) {
@@ -35,13 +35,9 @@ export class MyTorus extends CGFobject {
 
                 this.vertices.push(curX, curY, curZ);
                 
-                const firstTangent = vec3.fromValues(-sinInnerAngle, cosInnerAngle, 0);
-                const secondTangent = vec3.fromValues(-sinOuterAngle*cosInnerAngle, -sinOuterAngle*sinInnerAngle, cosOuterAngle);
-                const normal = vec3.create();
-                vec3.cross(normal, firstTangent, secondTangent);
-                const normalLength = vec3.length(normal);
+                const normal = vec3.fromValues(cosInnerAngle * cosOuterAngle, cosInnerAngle * sinOuterAngle, sinInnerAngle);
                 
-                this.normals.push(normal[0] / normalLength, normal[1] / normalLength, normal[2] / normalLength);
+                this.normals.push(normal[0], normal[1], normal[2]);
 
                 if (loop < this.nLoops && iLoop < this.nSlices) {
                     const current = loop * (this.nSlices + 1) + iLoop;
@@ -57,7 +53,6 @@ export class MyTorus extends CGFobject {
         }
 
         this.primitiveType = this.scene.gl.TRIANGLES;
-        this.enableNormalViz();
 		this.initGLBuffers();
     } 
 }

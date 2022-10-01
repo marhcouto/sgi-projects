@@ -1,9 +1,8 @@
-import { CGFobject } from '../lib/CGF.js';
+import { CGFobject } from '../../lib/CGF.js';
 /**
  * MyCylinder
  * @constructor
  * @param scene - Reference to MyScene object
- * @param id - ID of the object
  * @param base - Radius in the base of the cylinder
  * @param top - Radius in the top of the cylinder
  * @param height - Height of the cylinder
@@ -11,9 +10,8 @@ import { CGFobject } from '../lib/CGF.js';
  * @param stacks - Number of horizontal stacks on the cylinder
  */
 export class MyCylinder extends CGFobject {
-	constructor(scene, id, base, top, height, slices, stacks) {
+	constructor(scene, base, top, height, slices, stacks) {
 		super(scene);
-		this.id = id;
         this.base = base;
         this.top = top;
         this.height = height;
