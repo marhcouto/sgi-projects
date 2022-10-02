@@ -1,4 +1,4 @@
-import { CGFcamera, CGFcameraOrtho, CGFXMLreader } from '../lib/CGF.js';
+import { CGFappearance, CGFcamera, CGFcameraOrtho, CGFtexture, CGFXMLreader } from '../lib/CGF.js';
 import { MyRectangle } from './primitives/MyRectangle.js';
 import { MyTriangle } from './primitives/MyTriangle.js';
 import { MyCylinder } from './primitives/MyCylinder.js';
@@ -298,23 +298,12 @@ export class MySceneGraph {
                         } else {
                             readFrom = true;
                         }
-
-                        let x = this.reader.getFloat(curGrandChildren, 'x');
-                        if (!(x != null && !isNaN(x))) {
-                            return `"unable to parse x of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        
+                        const fromArray = this.parseCoordinates3D(curGrandChildren, 'view for ID ${viewId} and children ${curGrandChildren.nodeName}');
+                        if (!Array.isArray(fromArray)) {
+                            return fromArray;
                         }
-
-                        let y = this.reader.getFloat(curGrandChildren, 'y');
-                        if (!(y != null && !isNaN(y))) {
-                            return `"unable to parse y of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
-                        }
-
-                        let z = this.reader.getFloat(curGrandChildren, 'z');
-                        if (!(z != null && !isNaN(z))) {
-                            return `"unable to parse z of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
-                        }
-
-                        from = vec3.fromValues(x, y, z);
+                        from = vec3.fromValues(fromArray[0], fromArray[1], fromArray[2]);
                     }
 
                     if (curGrandChildren.nodeName === 'to') {
@@ -324,22 +313,11 @@ export class MySceneGraph {
                             readTo = true;
                         }
 
-                        let x = this.reader.getFloat(curGrandChildren, 'x');
-                        if (!(x != null && !isNaN(x))) {
-                            return `"unable to parse x of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        const toArray = this.parseCoordinates3D(curGrandChildren, 'view for ID ${viewId} and children ${curGrandChildren.nodeName}');
+                        if (!Array.isArray(toArray)) {
+                            return toArray;
                         }
-
-                        let y = this.reader.getFloat(curGrandChildren, 'y');
-                        if (!(y != null && !isNaN(y))) {
-                            return `"unable to parse y of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
-                        }
-
-                        let z = this.reader.getFloat(curGrandChildren, 'z');
-                        if (!(z != null && !isNaN(z))) {
-                            return `"unable to parse z of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
-                        }
-
-                        to = vec3.fromValues(x, y, z);
+                        to = vec3.fromValues(toArray[0], toArray[1], toArray[2]);
                     }
                 }
 
@@ -409,22 +387,11 @@ export class MySceneGraph {
                             readFrom = true;
                         }
 
-                        let x = this.reader.getFloat(curGrandChildren, 'x');
-                        if (!(x != null && !isNaN(x))) {
-                            return `"unable to parse x of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        const fromArray = this.parseCoordinates3D(curGrandChildren, 'view for ID ${viewId} and children ${curGrandChildren.nodeName}');
+                        if (!Array.isArray(fromArray)) {
+                            return fromArray;
                         }
-
-                        let y = this.reader.getFloat(curGrandChildren, 'y');
-                        if (!(y != null && !isNaN(y))) {
-                            return `"unable to parse y of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
-                        }
-
-                        let z = this.reader.getFloat(curGrandChildren, 'z');
-                        if (!(z != null && !isNaN(z))) {
-                            return `"unable to parse z of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
-                        }
-
-                        from = vec3.fromValues(x, y, z);
+                        from = vec3.fromValues(fromArray[0], fromArray[1], fromArray[2]);
                     }
 
                     if (curGrandChildren.nodeName === 'to') {
@@ -433,23 +400,12 @@ export class MySceneGraph {
                         } else {
                             readTo = true;
                         }
-
-                        let x = this.reader.getFloat(curGrandChildren, 'x');
-                        if (!(x != null && !isNaN(x))) {
-                            return `"unable to parse x of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        
+                        const toArray = this.parseCoordinates3D(curGrandChildren, 'view for ID ${viewId} and children ${curGrandChildren.nodeName}');
+                        if (!Array.isArray(toArray)) {
+                            return toArray;
                         }
-
-                        let y = this.reader.getFloat(curGrandChildren, 'y');
-                        if (!(y != null && !isNaN(y))) {
-                            return `"unable to parse y of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
-                        }
-
-                        let z = this.reader.getFloat(curGrandChildren, 'z');
-                        if (!(z != null && !isNaN(z))) {
-                            return `"unable to parse z of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
-                        }
-
-                        to = vec3.fromValues(x, y, z);
+                        to = vec3.fromValues(toArray[0], toArray[1], toArray[2]);
                     }
 
                     if (curGrandChildren.nodeName === 'up') {
@@ -459,22 +415,11 @@ export class MySceneGraph {
                             readUp = true;
                         }
 
-                        let x = this.reader.getFloat(curGrandChildren, 'x');
-                        if (!(x != null && !isNaN(x))) {
-                            return `"unable to parse x of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
+                        const upArray = this.parseCoordinates3D(curGrandChildren, 'view for ID ${viewId} and children ${curGrandChildren.nodeName}');
+                        if (!Array.isArray(upArray)) {
+                            return upArray;
                         }
-
-                        let y = this.reader.getFloat(curGrandChildren, 'y');
-                        if (!(y != null && !isNaN(y))) {
-                            return `"unable to parse y of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
-                        }
-
-                        let z = this.reader.getFloat(curGrandChildren, 'z');
-                        if (!(z != null && !isNaN(z))) {
-                            return `"unable to parse z of the view for ID ${viewId} and children ${curGrandChildren.nodeName}`;
-                        }
-
-                        up = vec3.fromValues(x, y, z);
+                        up = vec3.fromValues(upArray[0], upArray[1], upArray[2]);
                     }
                 }
 
@@ -651,9 +596,29 @@ export class MySceneGraph {
      * @param {textures block element} texturesNode
      */
     parseTextures(texturesNode) {
+        let textureList = texturesNode.children;
 
-        //For each texture in textures block, check ID and file URL
-        this.onXMLMinorError("To do: Parse textures.");
+        this.textures = {};
+
+        for (let i = 0; i < textureList.length; i++) {
+            let curTexture = textureList[i];
+
+            // Get id of the current texture.
+            const textureID = this.reader.getString(curTexture, 'id');
+            if (textureID == null)
+                return "no ID defined for texture";
+
+            // Checks for repeated IDs.
+            if (this.textures[textureID] != null)
+                return "ID must be unique for each texture (conflict: ID = " + textureID + ")";
+
+            const texturePath = this.reader.getString(curTexture, 'file');
+            if (textureID == null) {
+                return `no file defined for texture with id ${textureID}`;
+            }
+
+            this.textures[textureID] = new CGFtexture(this.scene, texturePath);
+        }
         return null;
     }
 
@@ -664,13 +629,19 @@ export class MySceneGraph {
     parseMaterials(materialsNode) {
         var children = materialsNode.children;
 
-        this.materials = [];
+        this.materials = {};
 
-        var grandChildren = [];
-        var nodeNames = [];
+        let emissionComponent;
+        let ambientComponent;
+        let specularComponent;
+        let diffuseComponent;
 
         // Any number of materials.
-        for (var i = 0; i < children.length; i++) {
+        for (let i = 0; i < children.length; i++) {
+            let readAmbient = false;
+            let readDiffuse = false;
+            let readEmission = false;
+            let readSpecular = false;
 
             if (children[i].nodeName != "material") {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
@@ -686,11 +657,100 @@ export class MySceneGraph {
             if (this.materials[materialID] != null)
                 return "ID must be unique for each light (conflict: ID = " + materialID + ")";
 
-            //Continue here
-            this.onXMLMinorError("To do: Parse materials.");
+            let shininess = this.reader.getFloat(children[i], 'shininess')
+            if (!(shininess != null && !isNaN(shininess))) {
+                return `unable to parse shininess of the material with ID = ${materialID}`;
+            }
+
+            const materialComponents = children[i].children;
+            for (let i = 0; i < materialComponents.length; i++) {
+                let curMaterialComponent = materialComponents[i];
+                let validMaterialComponent = curMaterialComponent.nodeName === 'emission' ||
+                    curMaterialComponent.nodeName === 'ambient' ||
+                    curMaterialComponent.nodeName === 'diffuse' ||
+                    curMaterialComponent.nodeName === 'specular';
+
+                if (!validMaterialComponent) {
+                    return `invalid material component ${curMaterialComponent.nodeName} for material with id: ${materialID}`
+                }
+
+                if (curMaterialComponent.nodeName === 'emission' && readEmission) {
+                    return `duplicated attribute emission for material with id: ${materialID}`
+                }
+                if (curMaterialComponent.nodeName === 'ambient' && readAmbient) {
+                    return `duplicated attribute ambient for material with id: ${materialID}`
+                }
+                if (curMaterialComponent.nodeName === 'diffuse' && readDiffuse) {
+                    return `duplicated attribute diffuse for material with id: ${materialID}`
+                }
+                if (curMaterialComponent.nodeName === 'specular' && readSpecular) {
+                    return `duplicated attribute specular for material with id: ${materialID}`
+                }
+
+                const color = {}
+
+                color['red'] = this.reader.getFloat(curMaterialComponent, 'r');
+                if (!(color['red'] != null && !isNaN(color['red']))) {
+                    return `unable to parse red component of ${curMaterialComponent.nodeName} at material with ID = ${materialID}`;
+                }
+
+                color['green'] = this.reader.getFloat(curMaterialComponent, 'g');
+                if (!(color['green'] != null && !isNaN(color['green']))) {
+                    return `unable to parse green component of ${curMaterialComponent.nodeName} at material with ID = ${materialID}`;
+                }
+
+                color['blue'] = this.reader.getFloat(curMaterialComponent, 'b');
+                if (!(color['blue'] != null && !isNaN(color['blue']))) {
+                    return `unable to parse blue component of ${curMaterialComponent.nodeName} at material with ID = ${materialID}`;
+                }
+
+                color['alpha'] = this.reader.getFloat(curMaterialComponent, 'a');
+                if (!(color['alpha'] != null && !isNaN(color['alpha']))) {
+                    return `unable to parse alpha component of ${curMaterialComponent.nodeName} at material with ID = ${materialID}`;
+                }
+
+                switch (curMaterialComponent.nodeName) {
+                    case 'emission':
+                        emissionComponent = color;
+                        readEmission = true;
+                        break;
+                    case 'ambient':
+                        ambientComponent = color;
+                        readAmbient = true;
+                        break;
+                    case 'diffuse':
+                        diffuseComponent = color;
+                        readDiffuse = true;
+                        break;
+                    case 'specular':
+                        specularComponent = color;
+                        readSpecular = true;
+                        break;
+                }
+            }
+
+            if (!readDiffuse) {
+                return `missing attribute diffuse from material with id: ${materialID}`;
+            }
+            if (!readAmbient) {
+                return `missing attribute ambient from material with id: ${materialID}`;
+            }
+            if (!readSpecular) {
+                return `missing attribute specular from material with id: ${materialID}`;
+            }
+            if (!readEmission) {
+                return `missing attribute emission from material with id: ${materialID}`;
+            }
+    
+            this.materials[materialID] = new CGFappearance(this.scene);
+            this.materials[materialID].setAmbient(ambientComponent.red, ambientComponent.green, ambientComponent.blue, ambientComponent.alpha);
+            this.materials[materialID].setDiffuse(diffuseComponent.red, diffuseComponent.green, diffuseComponent.blue, diffuseComponent.alpha);
+            this.materials[materialID].setEmission(emissionComponent.red, emissionComponent.green, emissionComponent.blue, emissionComponent.alpha);
+            this.materials[materialID].setSpecular(specularComponent.red, specularComponent.green, specularComponent.blue, specularComponent.alpha);
+            this.materials[materialID].setShininess(shininess);
         }
 
-        //this.log("Parsed materials");
+        this.log("Parsed materials");
         return null;
     }
 
@@ -747,10 +807,10 @@ export class MySceneGraph {
                         const rotationData = this.parseRotation(grandChildren[j], `rotation transformation for ID ${transformationID}`);
                         
                         //Some type checking
-                        if (Object.prototype.toString.call(rotationData) === "[object String]")
+                        if (rotationData instanceof String)
                             return rotationData;
                         
-                        transfMatrix = mat4.rotate(transfMatrix, transfMatrix, degreeToRad(rotationData.angle), rotationData.axis);
+                        transfMatrix = mat4.rotate(transfMatrix, transfMatrix, rotationData.angle, rotationData.axis);
                         break;
                 }
             }
@@ -969,7 +1029,6 @@ export class MySceneGraph {
         this.components = {};
 
         var grandChildren = [];
-        var grandgrandChildren = [];
         var nodeNames = [];
 
         // Any number of components.
@@ -1001,15 +1060,209 @@ export class MySceneGraph {
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
 
-            this.onXMLMinorError("To do: Parse components.");
+            if (transformationIndex === -1) {
+                return `missing node transformation from component with id: ${componentID}`
+            }
+            if (materialsIndex === -1) {
+                return `missing node material from component with id: ${componentID}`
+            }
+            if (textureIndex === -1) {
+                return `missing node texture from component with id: ${componentID}`
+            }
+            if (childrenIndex === -1) {
+                return `missing node children from component with id: ${componentID}`
+            }
+
             // Transformations
+            const transformation = this.parseComponentTransformations(componentID, grandChildren[transformationIndex]);
+            if(transformation instanceof String) {
+                return transformation;
+            }
 
             // Materials
+            const materialList = this.parseComponentMaterials(componentID, grandChildren[materialsIndex]);
+            if (!Array.isArray(materialList)) {
+                return materialList;
+            }
 
             // Texture
+            const texture = this.parseComponentTextures(componentID, grandChildren[textureIndex]);
+            if (texture instanceof String) {
+                return texture
+            }
 
             // Children
+            const childrenList = this.parseComponentChildren(componentID, grandChildren[childrenIndex]);
+            if (!Array.isArray(childrenList)) {
+                return childrenList;
+            }
+            this.components[componentID] = {
+                transformation: transformation,
+                materials: materialList,
+                texture: texture,
+                children: childrenList
+            };
         }
+
+        console.log('Parsed components');
+        return null;
+    }
+
+    parseComponentChildren(componentID, childrenNode) {
+        const childrenArr = childrenNode.children;
+        if (childrenArr.length == null) {
+            return `expected at least one child when parsing component with id: ${componentID}`;
+        }
+
+        const childrenObj = []
+        for (let i = 0; i < childrenArr.length; i++) {
+            const curChild = childrenArr[i];
+            const childID = this.reader.getString(curChild, 'id');
+            if (curChild.nodeName === 'componentref') {
+                if (this.components[childID] == null) {
+                    return `component with id ${componentID} does not exist when parsing component's ${componentID} children`;
+                }
+                childrenObj.push({
+                    type: 'component',
+                    id: childID
+                });
+            } else if (curChild.nodeName === 'primitiveref') {
+                if (this.primitives[childID] == null) {
+                    return `primitive with id ${componentID} does not exist when parsing component's ${componentID} children`;
+                }
+                childrenObj.push({
+                    type: 'primitive',
+                    id: childID
+                });
+            } else {
+                return `unexpected node with name '${curChild.nodeName}' when parsing component's ${componentID} children`
+            }
+        }
+
+        return childrenObj;
+    }
+
+    parseComponentTextures(componentID, textureNode) {
+        if (textureNode.children.length !== 0) {
+            return `expected no children at texture of node ${componentID}`;
+        }
+
+        const textureID = this.reader.getString(textureNode, 'id');
+        const lenS = this.reader.getFloat(textureNode, 'length_s');
+        const lenT = this.reader.getFloat(textureNode, 'length_t');
+        if (textureID == null) {
+            return `expected ID at texture of node ${componentID}`;
+        }
+
+        if (textureID === 'inherit' || textureID === 'none') {
+            if (lenS != null || lenT != null) {
+                return `expected neither length_s nor length_t when id is one of (inherit, none) at component id: ${componentID}`;
+            }
+            return {
+                type: textureID
+            }
+        }
+
+        if (lenS == null) {
+            return `expected length_s at texture of component with id ${componentID}`;
+        }
+        if (lenT == null) {
+            return `expected length_t at texture of component with id ${componentID}`;
+        }
+
+        if (lenS == null || isNaN(lenS)) {
+            return `unable to parse length_s of the texture at component with id: ${componentID}`;
+        }
+        
+        if (lenT == null || isNaN(lenT)) {
+            return `unable to parse length_s of the texture at component with id: ${componentID}`;
+        }
+
+        return {
+            type: 'id_ref',
+            id: textureID,
+            lenS: lenS,
+            lenT: lenT
+        };
+    }
+
+    parseComponentMaterials(componentID, materialsNode) {
+        const materialList = materialsNode.children; 
+        const materialIds = [];
+        if (materialList.length === 0) {
+            return `component with id '${componentID}' must have at least one material`;
+        }
+
+        for (let i = 0; i < materialList.length; i++) {
+            const curMaterial = materialList[i];
+            if (curMaterial.nodeName !== 'material') {
+                return `unknown node ${curMaterial.nodeName} at component with id: ${componentID}`;
+            }
+
+            const materialID = this.reader.getString(curMaterial, 'id');
+            if (materialID == null) {
+                return `material does not contain id at component with id: ${componentID}`;
+            }
+
+            if (materialID === 'inherit') {
+                materialIds.push(materialID);
+            } else {
+                const curMaterialObj = this.materials[materialID];
+                if (curMaterialObj === null) {
+                    return `material with id '${materialID}' referenced at component '${componentID}' does not exist`;
+                }
+                materialIds.push(materialID);
+            }
+        }
+        return materialIds;
+    }
+
+    parseComponentTransformations(componentID, transformationsNode) {
+        const transformationsList = transformationsNode.children;
+        const finalTransformation = mat4.create();
+
+        for (let i = 0; i < transformationsList.length; i++) {
+            const curTransformationNode = transformationsList[i];
+            
+            switch (curTransformationNode.nodeName) {
+                case 'translate':
+                    const translateArray = this.parseCoordinates3D(curTransformationNode, `translate at component with id: ${componentID}`);
+                    if (!Array.isArray(translateArray)) {
+                        return translateArray;
+                    }
+                    mat4.translate(finalTransformation, finalTransformation, vec3.fromValues(translateArray[0], translateArray[1], translateArray[2]));
+                    break;
+                case 'rotate':
+                    const rotationData = this.parseRotation(curTransformationNode, `rotate at component with id: ${componentID}`);
+                    if (rotationData instanceof String) {
+                        return rotationData;
+                    }
+                    mat4.rotate(finalTransformation, finalTransformation, rotationData.angle, rotationData.axis);
+                    break;
+                case 'scale':
+                    const scaleArray = this.parseCoordinates3D(curTransformationNode, `scale at component with id: ${componentID}`);
+                    if (!Array.isArray(scaleArray)) {
+                        return scaleArray;
+                    }
+                    mat4.scale(finalTransformation, finalTransformation, vec3.fromValues(scaleArray[0], scaleArray[1], scaleArray[2]));
+                    break;
+                case 'transformationref':
+                    const transformationID = this.reader.getString(curTransformationNode, 'id');
+                    if (transformationID == null) {
+                        return `missing id from transformationref in component with id: ${componentID}`;
+                    }
+
+                    const curTransformation = this.transformations[transformationID];
+                    if (curTransformation == null) {
+                        return `transformationref references id '${transformationID}' but such transformation does not exist. Component ID: ${componentID}`;
+                    }
+                    mat4.multiply(finalTransformation, finalTransformation, curTransformation);
+                    break;
+                default:
+                    return `invalid transfomation node: ${curTransformationNode.nodeName}`;
+            }
+        }
+        return finalTransformation;
     }
 
     parseRotation(node, messageError) {
@@ -1035,7 +1288,7 @@ export class MySceneGraph {
         }
 
         return {
-            angle: angle,
+            angle: degreeToRad(angle),
             axis: vectorizedAxis
         }
     }
