@@ -29,9 +29,13 @@ export class MyCylinder extends CGFobject {
 
         let degIncrement = 2 * Math.PI / this.slices;
         let heightIncrement = this.height / this.stacks;
+        let sIncrement = 1 / this.slices;
+        let tIncrement = 1 / this.stacks;
+        let t = 0; 
 
         // Cylinder stacks, in crescent order of z
         for (let j = 0, currentHeight = 0; j < this.stacks; j++, currentHeight += heightIncrement) {
+            let s = 0;
 
             // Cylinder slices, each 'face' of the cylinder in counter clockwise order 
             for (let i = 0, currentDeg = 0; i < this.slices; i++, currentDeg += degIncrement) {
@@ -69,8 +73,13 @@ export class MyCylinder extends CGFobject {
                 this.normals.push(x1Normalized, y1Normalized, 0); 
                 this.normals.push(x2Normalized, y2Normalized, 0); 
                 this.normals.push(x1Normalized, y1Normalized, 0); 
-                this.normals.push(x2Normalized, y2Normalized, 0); 
+                this.normals.push(x2Normalized, y2Normalized, 0);
+
+                this.texCoords.push(s, t);
+                s += sIncrement;
             }
+
+            t += tIncrement;
         }
 
 		this.primitiveType = this.scene.gl.TRIANGLES;

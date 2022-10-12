@@ -19,11 +19,16 @@ export class MyTorus extends CGFobject {
 
         let outerAngle = 0
         let fullAngle = 2 * Math.PI;
-        let outerAngleStep = fullAngle / this.nLoops
-        let innerAngleStep = fullAngle / this.nSlices
+        let outerAngleStep = fullAngle / this.nLoops;
+        let innerAngleStep = fullAngle / this.nSlices;
+        
+        let tIncrement =  1 / this.nSlices;
+        let sIncrement = 1 / this.nLoops;
+        let s = 0;
 
         for (let loop = 0; loop <= this.nLoops; loop++) {
             let innerAngle = 0
+            let t = 0
             for (let iLoop = 0; iLoop <= this.nSlices; iLoop++) {
                 const cosInnerAngle = Math.cos(innerAngle);
                 const cosOuterAngle = Math.cos(outerAngle);
@@ -48,7 +53,10 @@ export class MyTorus extends CGFobject {
                 }
 
                 innerAngle += innerAngleStep;
+                this.texCoords.push(s, t);
+                t += tIncrement;
             }
+            s += sIncrement;
             outerAngle += outerAngleStep;
         }
 

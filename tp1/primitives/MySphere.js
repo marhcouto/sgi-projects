@@ -23,12 +23,15 @@ export class MySphere extends CGFobject {
         this.normals = [];
         this.texCoords = [];
     
-        let latitudeDegIncrement = Math.PI / (2 * this.stacks);
+        let latitudeDegIncrement = (2 * Math.PI) / (2 * this.stacks);
         let longitudeDegIncrement = (2 * Math.PI) / this.slices;
-    
+        let tIncrement = 1 / (2 * this.stacks);
+        let sIncrement = 1 / this.slices
+        let t = 0;
+
         // Sphere stacks, in crescent order of z
         for (let latitude = 0, latitudeDeg = 0; latitude <= this.stacks; latitude++, latitudeDeg += latitudeDegIncrement) {
-
+            let s = 0
             let sinLatitudeDeg = Math.sin(latitudeDeg);
             let cosLatitudeDeg = Math.cos(latitudeDeg);
     
@@ -56,7 +59,10 @@ export class MySphere extends CGFobject {
                 // Normals
                 //divided by the radius to normalize the vector
                 this.normals.push(x / this.radius, y / this.radius, z / this.radius);
+                this.texCoords.push(s, t);
+                s += sIncrement;
             }
+            t += tIncrement;
         }
     
         this.primitiveType = this.scene.gl.TRIANGLES;
