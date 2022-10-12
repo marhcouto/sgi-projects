@@ -1,0 +1,467 @@
+<sxs>
+    <scene root="sceneRoot" axis_length="5"/>
+
+    <views default="userView">
+        <perspective id="userView" near="0.1" far="500" angle="30">
+            <from x="0" y="40" z="-40" />
+            <to x="0" y="0" z="-50" />
+        </perspective>
+
+        <perspective id="frontView" near="0.1" far="500" angle="30">
+            <from x="0" y="0" z="50" />
+            <to x="0" y="0" z="-50" />
+        </perspective>
+    </views>
+
+    <ambient>
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+        <background r="0.0" g="0.0" b="0.0" a="1.0" />
+    </ambient>
+
+    <lights>
+        <omni id="rightSideLight" enabled="1">
+            <location x="50" y="25" z="0" w="1.0" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+            <attenuation linear="0.15" />
+        </omni>
+
+        <omni id="leftSideLight" enabled="1">
+            <location x="-50" y="25" z="0" w="1.0" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+            <attenuation linear="0.15" />
+        </omni>
+    </lights>
+
+    <textures>
+        <texture id="wallTexture" file="scenes/images/testScene/wall-texture.png" />
+    </textures>
+
+    <materials>
+        <material id="wallMaterial" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="1.0" g="0.0" b="0.0" a="1.0" />
+            <diffuse r="0.373" g="0.173" b="0.043" a="1.0" />
+            <specular r="0.455" g="0.243" b="0.102" a="1.0" />
+        </material>
+
+        <material id="whitePaintedMetal" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="1.0" g="1" b="1" a="1" />
+            <diffuse r="1" g="1" b="1" a="1.0" />
+            <specular r="1" g="1" b="1" a="1.0" />
+        </material>
+    </materials>
+
+    <transformations>
+        <!-- This transformation simply makes the unit square the size of a wall/floor -->
+        <transformation id="unitSquareToWall">
+            <scale x="30" y="30" z="1" />
+        </transformation>
+    </transformations>
+
+    <primitives>
+        <primitive id="square">
+            <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5"/>
+        </primitive>
+
+        <primitive id="fridgeSide">
+            <rectangle x1="-0.5" y1="0" x2="0.5" y2="1"/>
+        </primitive>
+
+        <primitive id="fridgeSideTriangle">
+            <triangle x1="0" y1="0" z1="0"
+                x2="7" y2="0" z2="0"
+                x3="7" y3="8" z3="0"
+            />
+        </primitive>
+
+        <primitive id="donut">
+            <torus inner="1" outer="2.5" slices="100" loops="100"/>
+        </primitive>
+
+        <primitive id="tipJar">
+            <cylinder base="1" top="1" height="2" slices="100" stacks="50"/>
+        </primitive>
+
+        <primitive id="berlinBall">
+            <sphere radius="2" slices="25" stacks="25"/>
+        </primitive>
+    </primitives>
+
+    <components>
+        <!-- Room floor -->
+        <component id="floor">
+            <transformation>
+                <rotate axis="x" angle="-90"/>
+                <transformationref id="unitSquareToWall" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="square" />
+            </children>
+        </component>
+
+        <!-- Back walls -->
+        <component id="backWall">
+            <transformation>
+                <translate x="0" y="15" z="-15" />
+                <transformationref id="unitSquareToWall" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="square" />
+            </children>
+        </component>
+
+        <!-- Left side wall -->
+        <component id="leftWall">
+            <transformation>
+                <translate x="-15" y="15" z="0" />
+                <rotate axis="y" angle="90" />
+                <transformationref id="unitSquareToWall" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="square" />
+            </children>
+        </component>
+
+        <!-- Right side wall -->
+        <component id="rightWall">
+            <transformation>
+                <translate x="15" y="15" z="0" />
+                <rotate axis="y" angle="-90" />
+                <transformationref id="unitSquareToWall" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="square" />
+            </children>
+        </component>
+
+        <!-- Front wall -->
+        <component id="frontWall">
+            <transformation>
+                <translate x="0" y="15" z="15" />
+                <rotate axis="y" angle="180" />
+                <transformationref id="unitSquareToWall" />
+            </transformation>
+            <materials>
+                <material id="wallMaterial" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="square" />
+            </children>
+        </component>
+
+        <!-- Walls -->
+        <component id="walls">
+            <transformation>
+                <!-- No transforms here-->
+            </transformation>
+            <materials>
+                <material id="wallMaterial" />
+            </materials>
+            <texture id="wallTexture" />
+            <children>
+                <componentref id="backWall" />
+                <componentref id="leftWall" />
+                <componentref id="rightWall" />
+                <componentref id="frontWall" />
+            </children>
+        </component>
+
+        <!--Fridge-->
+        <component id="fridgeSquareLeftSide">
+            <transformation>
+                <translate x="-3" y="0" z="0" />
+                <rotate axis="y" angle="-90"/>
+                <scale x="1.5" y="2" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="fridgeSide" />
+            </children>
+        </component>
+
+        <component id="fridgeSquareRightSide">
+            <transformation>
+                <translate x="3" y="0" z="0" />
+                <rotate axis="y" angle="90"/>
+                <scale x="1.5" y="2" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="fridgeSide" />
+            </children>
+        </component>
+
+        <component id="fridgeSquareBackSide">
+            <transformation>
+                <translate x="0" y="0" z="-0.75"/>
+                <rotate axis="y" angle="180"/>
+                <scale x="6" y="2" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="fridgeSide" />
+            </children>
+        </component>
+
+        <component id="fridgeSquareFrontSide">
+            <transformation>
+                <translate x="0" y="0" z="0.75"/>
+                <scale x="6" y="2" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="fridgeSide" />
+            </children>
+        </component>
+
+        <component id="fridgeSquareTopSide">
+            <transformation>
+                <translate x="0" y="3" z="0"/>
+                <rotate axis="x" angle="-90"/>
+                <scale x="2" y="1.5" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="fridgeSide" />
+            </children>
+        </component>
+
+        <component id="fridgeTopSquareLeftSide">
+            <transformation>
+                <translate x="1" y="3" z="0" />
+                <rotate axis="y" angle="90" />
+                <translate x="0" y="4" z="0" />
+                <!-- <scale x="8" y="8" z="0" /> -->
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="square" />
+            </children>
+        </component>
+
+        <component id="fridgeTopSquareRightSide">
+            <transformation>
+                <translate x="-10" y="30" z="0" />
+                <rotate axis="y" angle="-90" />
+                <translate x="0" y="4" z="0" />
+                <scale x="8" y="8" z="0" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="square" />
+            </children>
+        </component>
+
+        <component id="fridgeTopSquareBackSide">
+            <transformation>
+                <translate x="0" y="30" z="-7.5" />
+                <rotate axis="y" angle="180" />
+                <translate x="0" y="4" z="0" />
+                <scale x="8" y="8" z="0" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="square" />
+            </children>
+        </component>
+
+        <component id="fridgeTopSquareTopSide">
+            <transformation>
+                <translate x="-10" y="38" z="0" />
+                <rotate axis="x" angle="-90" />
+                <scale x="8" y="8" z="0" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="square" />
+            </children>
+        </component>
+
+        <component id="fridgeTopTriangleRightSide">
+            <transformation>
+                <translate x="3" y="2" z="0" />
+                <rotate axis="y" angle="90" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="fridgeSideTriangle" />
+            </children>
+        </component>
+
+        <component id="fridgeTopTriangleLeftSide">
+            <transformation>
+                <translate x="0" y="38" z="-7" />
+                <rotate axis="y" angle="-90" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="fridgeSideTriangle" />
+            </children>
+        </component>
+
+        <component id="fridgeWalls">
+            <transformation />
+            <materials>
+                <material id="whitePaintedMetal" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="fridgeSquareLeftSide" />
+                <componentref id="fridgeSquareRightSide" />
+                <componentref id="fridgeSquareBackSide" />
+                <componentref id="fridgeSquareFrontSide" />
+                <!-- <componentref id="fridgeSquareTopSide" /> -->
+                <!-- <componentref id="fridgeTopSquareLeftSide" /> -->
+                <!--<componentref id="fridgeTopSquareRightSide" />-->
+                <!--<componentref id="fridgeTopSquareBackSide" />-->
+                <!--<componentref id="fridgeTopSquareTopSide" />-->
+                <componentref id="fridgeTopTriangleRightSide" />
+                <componentref id="fridgeTopTriangleLeftSide" />
+            </children>
+        </component>
+
+        <!--Pasteries-->
+        <component id="firstDonut">
+            <transformation>
+                <translate x="0" y="30" z="-12" />
+                <rotate axis="x" angle="-90" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="donut" />
+            </children>
+        </component>
+
+        <component id="secondDonut">
+            <transformation>
+                <translate x="8" y="30" z="5" />
+                <rotate axis="x" angle="-90" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="donut" />
+            </children>
+        </component>
+
+        <component id="thirdDonut">
+            <transformation>
+                <translate x="-5" y="30" z="5" />
+                <rotate axis="x" angle="-90" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="donut" />
+            </children>
+        </component>
+
+        <component id="tipJar">
+            <transformation>
+                <translate x="0" y="8" z="-3.75" />
+                <rotate axis="x" angle="-90" />
+                <translate x="0" y="0" z="1" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="tipJar" />
+            </children>
+        </component>
+
+        <component id="berlinBall">
+            <transformation>
+                <translate x="3" y="30" z="3" />
+                <scale x="1" y="0.25" z="1" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="berlinBall" />
+            </children>
+        </component>
+
+        <!--Root Component-->
+        <component id="sceneRoot">
+            <transformation>
+                <scale x="1.0" y="1.0" z="1.0" />
+            </transformation>
+            <materials>
+                <material id="wallMaterial" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <componentref id="floor" />
+                <componentref id="walls" />
+                <componentref id="tipJar" />
+                <componentref id="fridgeWalls" />
+            </children>
+        </component>
+    </components>
+</sxs>
