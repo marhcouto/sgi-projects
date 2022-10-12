@@ -1051,7 +1051,7 @@ export class MySceneGraph {
             grandChildren = children[i].children;
 
             nodeNames = [];
-            for (var j = 0; j < grandChildren.length; j++) {
+            for (let j = 0; j < grandChildren.length; j++) {
                 nodeNames.push(grandChildren[j].nodeName);
             }
 
@@ -1060,7 +1060,6 @@ export class MySceneGraph {
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
 
-            console.log(nodeNames)
             if (transformationIndex === -1) {
                 return `missing node transformation from component with id: ${componentID}`
             }
@@ -1405,11 +1404,36 @@ export class MySceneGraph {
         console.log("   " + message);
     }
 
+
+    graphTraversal(component, parentMaterial) {
+
+        // Transformations
+        this.scene.pushMatrix();
+        this.scene.multMatrix(component.transformation);
+
+        // Materials
+        for (let materialId of component.materials) {
+            if (materialId != 'inherit')
+                this.materials[materialId].apply();
+        }
+
+        for (let child of component.children) {
+            if (child.type != 'primitive') {
+                this.graphTraversal(this.components[child.id]);
+            } else {
+                this.primitives[child.id].display();
+            }
+        }
+        parentMaterial.apply();
+        this.scene.popMatrix();
+    }
+
     /**
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
-        //To do: Create display loop for transversing the scene graph
+
+        this.graphTraversal(this.components[this.idRoot]);
 
         //To test the parsing/creation of the primitives, call the display function directly
     }
