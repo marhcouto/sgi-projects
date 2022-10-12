@@ -1412,19 +1412,20 @@ export class MySceneGraph {
         this.scene.multMatrix(component.transformation);
 
         // Materials
-        for (let materialId of component.materials) {
-            if (materialId != 'inherit')
-                this.materials[materialId].apply();
-        }
+        let material = this.materials[component.materials[0]]; 
+        if (component.materials[0] != "inherit")
+            material.apply();
 
         for (let child of component.children) {
             if (child.type != 'primitive') {
-                this.graphTraversal(this.components[child.id]);
+                this.graphTraversal(this.components[child.id], material);
             } else {
                 this.primitives[child.id].display();
             }
         }
-        parentMaterial.apply();
+        
+        if (parentMaterial != null)
+            parentMaterial.apply();
         this.scene.popMatrix();
     }
 
@@ -1433,7 +1434,7 @@ export class MySceneGraph {
      */
     displayScene() {
 
-        this.graphTraversal(this.components[this.idRoot]);
+        this.graphTraversal(this.components[this.idRoot], null);
 
         //To test the parsing/creation of the primitives, call the display function directly
     }
