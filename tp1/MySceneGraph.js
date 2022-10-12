@@ -1060,6 +1060,7 @@ export class MySceneGraph {
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
 
+            console.log(nodeNames)
             if (transformationIndex === -1) {
                 return `missing node transformation from component with id: ${componentID}`
             }

@@ -1,5 +1,5 @@
 <sxs>
-    <scene root="root" axis_length="5"/>
+    <scene root="sceneRoot" axis_length="5"/>
 
     <views default="userView">
         <perspective id="userView" near="0.1" far="500" angle="30">
@@ -93,18 +93,6 @@
     </primitives>
 
     <components>
-        <component id="root">
-            <transformation/>
-            <material/>
-            <texture id="none">
-            <children>
-                <componentref id="floor" />
-                <componentref id="walls" />
-                <componentref id="fridgeWalls" />
-                <componentref id="tipJar" />
-            </children
-        </component>
-
         <!-- Room floor -->
         <component id="floor">
             <transformation>
@@ -454,6 +442,22 @@
             <texture id="inherit" />
             <children>
                 <primitiveref id="berlinBall" />
+            </children>
+        </component>
+
+        <component id="sceneRoot">
+            <transformation>
+                <scale x="1.0" y="1.0" z="1.0" />
+            </transformation>
+            <materials>
+                <material id="wallMaterial" />
+            </materials>
+            <texture id="none"/> 
+            <children>
+                <componentref id="floor" />
+                <componentref id="walls" />
+                <componentref id="fridgeWalls" />
+                <componentref id="tipJar" />
             </children>
         </component>
     </components>
