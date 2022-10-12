@@ -1,5 +1,5 @@
 <sxs>
-    <scene root="testScene" axis_length="5"/>
+    <scene root="root" axis_length="5"/>
 
     <views default="userView">
         <perspective id="userView" near="0.1" far="500" angle="30">
@@ -93,6 +93,18 @@
     </primitives>
 
     <components>
+        <component id="root">
+            <transformation/>
+            <material/>
+            <texture id="none">
+            <children>
+                <componentref id="floor" />
+                <componentref id="walls" />
+                <componentref id="fridgeWalls" />
+                <componentref id="tipJar" />
+            </children
+        </component>
+
         <!-- Room floor -->
         <component id="floor">
             <transformation>
