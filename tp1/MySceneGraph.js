@@ -987,7 +987,7 @@ export class MySceneGraph {
                     return `unable to parse stacks of the primitive coordinates for ID = ${primitiveId}`;
                 }
 
-                this.primitives[primitiveId] = new MySphere(this.scene, slices, stacks);
+                this.primitives[primitiveId] = new MySphere(this.scene, radius, slices, stacks);
             }
 
             if (primitiveType === 'torus') {
