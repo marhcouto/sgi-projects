@@ -1,4 +1,5 @@
 import { CGFinterface, CGFapplication, dat } from '../lib/CGF.js';
+import { cloneCamera } from './utils.js';
 
 /**
 * MyInterface class, creating a GUI interface.
@@ -37,6 +38,28 @@ export class MyInterface extends CGFinterface {
         this.scene.gui=this;
         this.processKeyboard=function(){};
         this.activeKeys={};
+    }
+
+    initLightFolder() {
+        this.lightFolder = this.gui.addFolder('Lights');
+        this.lights = {}
+    }
+
+    initCameras(cameras, callback) {
+        this.activatedCamera = Object.keys(cameras)[0];
+        let clonedCamera = cloneCamera(cameras[this.activatedCamera]);
+        this.setActiveCamera(clonedCamera);
+        callback(clonedCamera)
+        this.gui.add(this, 'activatedCamera', Object.keys(cameras)).name('Selected Camera: ').onChange((activeCamera) => {
+            let clonedCamera = cloneCamera(cameras[activeCamera]);
+            this.setActiveCamera(clonedCamera);
+            callback(clonedCamera);
+        });   
+    }
+
+    createLightSource(key, initialState, switchCallback) {
+        this.lights[key] = initialState;
+        this.lightFolder.add(this.lights, key).name(key).onChange(switchCallback);
     }
 
     processKeyDown(event) {

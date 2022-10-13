@@ -31,8 +31,6 @@ export class MySceneGraph {
         this.scene = scene;
         scene.graph = this;
 
-        this.nodes = [];
-
         this.idRoot = null;                    // The id of the root element.
 
         this.axisCoords = [];
@@ -480,7 +478,7 @@ export class MySceneGraph {
     parseLights(lightsNode) {
         var children = lightsNode.children;
 
-        this.lights = [];
+        this.lights = {};
         var numLights = 0;
 
         var grandChildren = [];
