@@ -54,19 +54,19 @@ export class XMLscene extends CGFscene {
         // Lights index.
 
         // Reads the lights from the scene graph.
-        for (var key in this.graph.lights) {
+        for (let key in this.graph.lights) {
             if (i >= 8)
                 break;              // Only eight lights allowed by WebGL.
 
             if (this.graph.lights.hasOwnProperty(key)) {
-                var light = this.graph.lights[key];
+                let light = this.graph.lights[key];
 
                 this.lights[i].setPosition(light[2][0], light[2][1], light[2][2], light[2][3]);
                 this.lights[i].setAmbient(light[3][0], light[3][1], light[3][2], light[3][3]);
                 this.lights[i].setDiffuse(light[4][0], light[4][1], light[4][2], light[4][3]);
                 this.lights[i].setSpecular(light[5][0], light[5][1], light[5][2], light[5][3]);
 
-                if (light[1] == "spot") {
+                if (light[1] === "spot") {
                     this.lights[i].setSpotCutOff(light[6]);
                     this.lights[i].setSpotExponent(light[7]);
                     this.lights[i].setSpotDirection(light[8][0], light[8][1], light[8][2]);
@@ -79,10 +79,21 @@ export class XMLscene extends CGFscene {
                     this.lights[i].disable();
 
                 this.lights[i].update();
+                
+                this.interface.createLightSource(key, light[0], (enabled) => this.updateLightState(i, enabled));
 
                 i++;
             }
         }
+    }
+
+    updateLightState(index, enabled) {
+        if (enabled) {
+            this.lights[index].enable();    
+        } else {
+            this.lights[index].disable();
+        }
+        this.lights[index].update();
     }
 
     setDefaultAppearance() {
@@ -100,6 +111,10 @@ export class XMLscene extends CGFscene {
         this.gl.clearColor(this.graph.background[0], this.graph.background[1], this.graph.background[2], this.graph.background[3]);
 
         this.setGlobalAmbientLight(this.graph.ambient[0], this.graph.ambient[1], this.graph.ambient[2], this.graph.ambient[3]);
+
+        this.interface.initCameras(this.graph.views, (camera) => this.camera = camera);
+
+        this.interface.initLightFolder();
 
         this.initLights();
 
