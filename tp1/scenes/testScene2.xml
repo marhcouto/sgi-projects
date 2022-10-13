@@ -50,10 +50,25 @@
 
         <material id="whitePaintedMetal" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="1.0" g="1" b="1" a="1" />
-            <diffuse r="1" g="1" b="1" a="1.0" />
-            <specular r="1" g="1" b="1" a="1.0" />
+            <ambient r="0.6" g="0.55" b="0.5" a="1" />
+            <diffuse  r="0.6" g="0.55" b="0.5" a="1.0" />
+            <specular  r="0.5" g="0.5" b="0.5" a="1.0" />
         </material>
+
+        <material id="goldPaintedMetal" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.8" g="0.5" b="0" a="1" />
+            <diffuse r="0.75" g="0.5" b="0" a="1.0" />
+            <specular r="1" g="0.65" b="0" a="1.0" />
+        </material>
+
+        <material id="basePastery" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.7" g="0.5" b="0.5" a="1" />
+            <diffuse r="0.7" g="0.5" b="0.2" a="1.0" />
+            <specular r="0.2" g="0.1" b="0" a="1.0" />
+        </material>
+
     </materials>
 
     <transformations>
@@ -73,14 +88,19 @@
         </primitive>
 
         <primitive id="fridgeSideTriangle">
-            <triangle x1="0" y1="0" z1="0"
-                x2="7" y2="0" z2="0"
-                x3="7" y3="8" z3="0"
-            />
+            <triangle x1="0" y1="-0.5" z1="0"
+                x2="1" y2="-0.5" z2="0"
+                x3="1" y3="1" z3="0" />
+        </primitive>
+
+        <primitive id="fridgeSideTriangleOpposite">
+            <triangle x1="0" y1="-0.5" z1="0"
+                x2="1" y2="1" z2="0"
+                 x3="1" y3="-0.5" z3="0" />
         </primitive>
 
         <primitive id="donut">
-            <torus inner="1" outer="2.5" slices="100" loops="100"/>
+            <torus inner="0.125" outer="0.2" slices="100" loops="100"/>
         </primitive>
 
         <primitive id="tipJar">
@@ -88,7 +108,7 @@
         </primitive>
 
         <primitive id="berlinBall">
-            <sphere radius="2" slices="25" stacks="25"/>
+            <sphere radius="0.3" slices="25" stacks="25"/>
         </primitive>
     </primitives>
 
@@ -193,7 +213,7 @@
             <transformation>
                 <translate x="-3" y="0" z="0" />
                 <rotate axis="y" angle="-90"/>
-                <scale x="1.5" y="2" z="0"/>
+                <scale x="2" y="1.5" z="0"/>
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -208,7 +228,7 @@
             <transformation>
                 <translate x="3" y="0" z="0" />
                 <rotate axis="y" angle="90"/>
-                <scale x="1.5" y="2" z="0"/>
+                <scale x="2" y="1.5" z="0"/>
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -221,7 +241,7 @@
 
         <component id="fridgeSquareBackSide">
             <transformation>
-                <translate x="0" y="0" z="-0.75"/>
+                <translate x="0" y="0" z="-1"/>
                 <rotate axis="y" angle="180"/>
                 <scale x="6" y="2" z="0"/>
             </transformation>
@@ -236,8 +256,8 @@
 
         <component id="fridgeSquareFrontSide">
             <transformation>
-                <translate x="0" y="0" z="0.75"/>
-                <scale x="6" y="2" z="0"/>
+                <translate x="0" y="0" z="1"/>
+                <scale x="6" y="1.5" z="0"/>
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -250,9 +270,9 @@
 
         <component id="fridgeSquareTopSide">
             <transformation>
-                <translate x="0" y="3" z="0"/>
-                <rotate axis="x" angle="-90"/>
-                <scale x="2" y="1.5" z="0"/>
+                <translate x="0" y="1.5" z="1"/>
+                <rotate axis="x" angle="-76"/>
+                <scale x="6" y="2.06" z="0"/>
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -265,9 +285,9 @@
 
         <component id="fridgeTopSquareLeftSide">
             <transformation>
-                <translate x="1" y="3" z="0" />
+                <!-- <translate x="1" y="3" z="0" />
                 <rotate axis="y" angle="90" />
-                <translate x="0" y="4" z="0" />
+                <translate x="0" y="4" z="0" /> -->
                 <!-- <scale x="8" y="8" z="0" /> -->
             </transformation>
             <materials>
@@ -297,17 +317,30 @@
 
         <component id="fridgeTopSquareBackSide">
             <transformation>
-                <translate x="0" y="30" z="-7.5" />
-                <rotate axis="y" angle="180" />
-                <translate x="0" y="4" z="0" />
-                <scale x="8" y="8" z="0" />
+                <translate x="0" y="2" z="-1" />
+                <scale x="6" y="1" z="0" />
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
             <texture id="inherit" />
             <children>
-                <primitiveref id="square" />
+                <primitiveref id="fridgeSide" />
+            </children>
+        </component>
+
+        <component id="fridgeTopSquareBackSideOpposite">
+            <transformation>
+                <translate x="0" y="2" z="-1" />
+                <rotate axis="y" angle="180" />
+                <scale x="6" y="1" z="0" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="fridgeSide" />
             </children>
         </component>
 
@@ -328,8 +361,9 @@
 
         <component id="fridgeTopTriangleRightSide">
             <transformation>
-                <translate x="3" y="2" z="0" />
+                <translate x="3" y="2" z="1" />
                 <rotate axis="y" angle="90" />
+                <scale x="2" y="1" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -337,13 +371,15 @@
             <texture id="inherit" />
             <children>
                 <primitiveref id="fridgeSideTriangle" />
+                <primitiveref id="fridgeSideTriangleOpposite" />
             </children>
         </component>
 
         <component id="fridgeTopTriangleLeftSide">
             <transformation>
-                <translate x="0" y="38" z="-7" />
-                <rotate axis="y" angle="-90" />
+                <translate x="-3" y="2" z="1" />
+                <rotate axis="y" angle="90" />
+                <scale x="2" y="1" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -351,13 +387,14 @@
             <texture id="inherit" />
             <children>
                 <primitiveref id="fridgeSideTriangle" />
+                <primitiveref id="fridgeSideTriangleOpposite" />
             </children>
         </component>
 
-        <component id="fridgeWalls">
+        <component id="fridgeBaseWalls">
             <transformation />
             <materials>
-                <material id="whitePaintedMetal" />
+                <material id="goldPaintedMetal" />
             </materials>
             <texture id="none" />
             <children>
@@ -365,11 +402,19 @@
                 <componentref id="fridgeSquareRightSide" />
                 <componentref id="fridgeSquareBackSide" />
                 <componentref id="fridgeSquareFrontSide" />
-                <!-- <componentref id="fridgeSquareTopSide" /> -->
-                <!-- <componentref id="fridgeTopSquareLeftSide" /> -->
-                <!--<componentref id="fridgeTopSquareRightSide" />-->
-                <!--<componentref id="fridgeTopSquareBackSide" />-->
-                <!--<componentref id="fridgeTopSquareTopSide" />-->
+            </children>
+        </component>
+
+        <component id="fridgeTopWalls">
+            <transformation />
+            <materials>
+                <material id="whitePaintedMetal" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="fridgeSquareTopSide" />
+                <componentref id="fridgeTopSquareBackSide" />
+                <componentref id="fridgeTopSquareBackSideOpposite" />
                 <componentref id="fridgeTopTriangleRightSide" />
                 <componentref id="fridgeTopTriangleLeftSide" />
             </children>
@@ -378,8 +423,8 @@
         <!--Pasteries-->
         <component id="firstDonut">
             <transformation>
-                <translate x="0" y="30" z="-12" />
-                <rotate axis="x" angle="-90" />
+                <translate x="0" y="1.9" z="0" />
+                <rotate axis="x" angle="-76" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -392,8 +437,8 @@
 
         <component id="secondDonut">
             <transformation>
-                <translate x="8" y="30" z="5" />
-                <rotate axis="x" angle="-90" />
+                <translate x="-0.6" y="1.73" z="0.5" />
+                <rotate axis="x" angle="-76" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -406,8 +451,8 @@
 
         <component id="thirdDonut">
             <transformation>
-                <translate x="-5" y="30" z="5" />
-                <rotate axis="x" angle="-90" />
+                <translate x="0.8" y="1.85" z="0.1" />
+                <rotate axis="x" angle="-76" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -435,8 +480,9 @@
 
         <component id="berlinBall">
             <transformation>
-                <translate x="3" y="30" z="3" />
-                <scale x="1" y="0.25" z="1" />
+                <translate x="0.2" y="1.72" z="0.7" />
+                <rotate axis="x" angle="14" />
+                <scale x="1" y="0.75" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -444,6 +490,35 @@
             <texture id="inherit" />
             <children>
                 <primitiveref id="berlinBall" />
+            </children>
+        </component>
+
+        <!-- All pasteries in fridge -->
+        <component id="pasteries">
+            <transformation />
+            <materials>
+                <material id="basePastery" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="berlinBall" />
+                <componentref id="firstDonut" />
+                <componentref id="secondDonut" />
+                <componentref id="thirdDonut" />
+            </children>
+        </component>
+
+        <!-- Entire Fridge -->
+        <component id="fridge">
+            <transformation />
+            <materials>
+                <material id="whitePaintedMetal" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="fridgeBaseWalls" />
+                <componentref id="fridgeTopWalls" />
+                <componentref id="pasteries" />
             </children>
         </component>
 
@@ -460,7 +535,7 @@
                 <componentref id="floor" />
                 <componentref id="walls" />
                 <componentref id="tipJar" />
-                <componentref id="fridgeWalls" />
+                <componentref id="fridge" />
             </children>
         </component>
     </components>
