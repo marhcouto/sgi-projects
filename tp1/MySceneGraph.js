@@ -1146,20 +1146,18 @@ export class MySceneGraph {
         }
 
         const textureID = this.reader.getString(textureNode, 'id');
-        const lenS = this.reader.getFloat(textureNode, 'length_s');
-        const lenT = this.reader.getFloat(textureNode, 'length_t');
         if (textureID == null) {
             return `expected ID at texture of node ${componentID}`;
         }
 
         if (textureID === 'inherit' || textureID === 'none') {
-            if (lenS != null || lenT != null) {
-                return `expected neither length_s nor length_t when id is one of (inherit, none) at component id: ${componentID}`;
-            }
             return {
                 type: textureID
             }
         }
+
+        const lenS = this.reader.getFloat(textureNode, 'length_s');
+        const lenT = this.reader.getFloat(textureNode, 'length_t');
 
         if (lenS == null) {
             return `expected length_s at texture of component with id ${componentID}`;
@@ -1403,25 +1401,53 @@ export class MySceneGraph {
     }
 
 
-    graphTraversal(component, parentMaterial) {
+    graphTraversal(component, parentMaterial, parentComponentTexture) {
 
         // Transformations
         this.scene.pushMatrix();
         this.scene.multMatrix(component.transformation);
 
         // Materials
-        let material = this.materials[component.materials[0]]; 
-        if (component.materials[0] != "inherit")
-            material.apply();
+        let material = parentMaterial;
+        if (component.materials[0] != "inherit") {
+            material = this.materials[component.materials[0]];
+        } 
+
+        // Textures
+        let lenS = 1, lenT = 1, parentLenS = 1, parentLenT = 1;
+        if (component.texture.type == "id_ref") {
+            material.setTexture(this.textures[component.texture.id]);
+            lenS = component.texture.lenS;
+            lenT = component.texture.lenT;
+        } else if (component.texture.type == "inherit") {
+            material.setTexture(this.textures[parentComponentTexture.id]);
+            lenS = parentComponentTexture.lenS;
+            
+        } else {
+            material.setTexture(null);
+        }
+
+        if (parentComponentTexture != null) {
+            parentLenS = parentComponentTexture.lenS;
+            parentLenT = parentComponentTexture.lenT
+        }
+        material.apply();
 
         for (let child of component.children) {
+
+            // Sub Components
             if (child.type != 'primitive') {
-                this.graphTraversal(this.components[child.id], material);
-            } else {
-                this.primitives[child.id].display();
-            }
+                this.graphTraversal(this.components[child.id], material, component.texture);
+                continue;
+            } 
+
+            // Primitives
+            this.primitives[child.id].updateTexCoords(lenS, lenT);
+            this.primitives[child.id].display();
+            this.primitives[child.id].updateTexCoords(parentLenS, parentLenT);
         }
-        
+
+        // Resetting        
         if (parentMaterial != null)
             parentMaterial.apply();
         this.scene.popMatrix();
@@ -1432,8 +1458,6 @@ export class MySceneGraph {
      */
     displayScene() {
 
-        this.graphTraversal(this.components[this.idRoot], null);
-
-        //To test the parsing/creation of the primitives, call the display function directly
+        this.graphTraversal(this.components[this.idRoot], null, null);
     }
 }

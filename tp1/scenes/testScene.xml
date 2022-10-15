@@ -3,8 +3,8 @@
 
     <views default="userView">
         <perspective id="userView" near="0.1" far="500" angle="30">
-            <from x="0" y="40" z="-40" />
-            <to x="0" y="0" z="-50" />
+            <from x="5" y="15" z="5" />
+            <to x="0" y="-2" z="0" />
         </perspective>
 
         <perspective id="frontView" near="0.1" far="500" angle="30">
@@ -131,7 +131,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -144,7 +144,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -157,7 +157,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -171,7 +171,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -185,7 +185,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -199,7 +199,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -210,7 +210,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <componentref id="base"/>
                 <componentref id="top"/>
@@ -232,7 +232,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -246,7 +246,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -261,7 +261,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -276,7 +276,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -291,25 +291,24 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id="square" />
             </children>
         </component>
 
         <component id="walls">
-            <transformation>
-                <!-- No transforms here-->
-            </transformation>
+            <transformation />
             <materials>
                 <material id="wallMaterial" />
             </materials>
-            <texture id="wallTexture" />
+            <texture id="wallTexture" length_s="1" length_t="1" />
             <children>
                 <componentref id="backWall" />
                 <componentref id="leftWall" />
                 <componentref id="rightWall" />
                 <componentref id="frontWall" />
+                <componentref id="floor" />
             </children>
         </component>
         <!-- Walls -->
@@ -326,7 +325,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -341,7 +340,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -356,7 +355,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -370,7 +369,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -385,7 +384,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -399,7 +398,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -414,7 +413,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -429,7 +428,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fridgeSideTriangle" />
                 <primitiveref id="fridgeSideTriangleOpposite" />
@@ -445,7 +444,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fridgeSideTriangle" />
                 <primitiveref id="fridgeSideTriangleOpposite" />
@@ -457,7 +456,7 @@
             <materials>
                 <material id="blackMate" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <componentref id="fridgeSquareLeftSide" />
                 <componentref id="fridgeSquareRightSide" />
@@ -471,7 +470,7 @@
             <materials>
                 <material id="whitePaintedMetal" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <componentref id="fridgeSquareTopSide" />
                 <componentref id="fridgeTopSquareBackSide" />
@@ -486,7 +485,7 @@
             <materials>
                 <material id="whitePaintedMetal" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <componentref id="fridgeBaseWalls" />
                 <componentref id="fridgeTopWalls" />
@@ -503,7 +502,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="donut" />
             </children>
@@ -517,7 +516,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="donut" />
             </children>
@@ -531,7 +530,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="donut" />
             </children>
@@ -546,7 +545,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="berlinBall" />
             </children>
@@ -557,7 +556,7 @@
             <materials>
                 <material id="basePastery" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <componentref id="berlinBall" />
                 <componentref id="firstDonut" />
@@ -572,7 +571,7 @@
             <materials>
                 <material id="whitePaintedMetal" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <componentref id="fridgeStructure" />
                 <componentref id="pasteries" />
@@ -589,7 +588,7 @@
             <materials>
                 <material id="pink" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="tipJar" />
             </children>
@@ -605,7 +604,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <componentref id="cube" />
             </children>
@@ -620,7 +619,7 @@
             <materials>
                 <material id="blackMate" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -635,7 +634,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <componentref id="cube" />
             </children>
@@ -649,7 +648,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" />
+            <texture id="none"/>
             <children>
                 <componentref id="cube" />
             </children>
@@ -660,7 +659,7 @@
             <materials>
                 <material id="whitePaintedMetal" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <componentref id="registerMachineMonitor" />
                 <componentref id="registerMachineMonitorArm" />
@@ -679,7 +678,7 @@
             <materials>
                 <material id="blackMate" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -694,7 +693,7 @@
             <materials>
                 <material id="blackMate" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -708,7 +707,7 @@
             <materials>
                 <material id="blackMate" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -723,7 +722,7 @@
             <materials>
                 <material id="blackMate" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -738,7 +737,7 @@
             <materials>
                 <material id="blackMate" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -749,7 +748,7 @@
             <materials>
                 <material id="blackMate" />
             </materials>
-            <texture id="none" />
+            <texture id="none"/>
             <children>
                 <componentref id="counterLeftWall" />
                 <componentref id="counterRightWall" />
@@ -772,7 +771,6 @@
             </materials>
             <texture id="none"/>
             <children>
-                <componentref id="floor" />
                 <componentref id="walls" />
                 <componentref id="fridge" />
                 <componentref id="counter" />
