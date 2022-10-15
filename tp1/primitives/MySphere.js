@@ -69,9 +69,14 @@ export class MySphere extends CGFobject {
         this.initGLBuffers();
     }
 
-    // TODO
-    updateTexCoords(lenS, lenT) {
-    
-    }
+    /**
+	 * @method updateTexCoords
+	 * Updates the list of texture coordinates of the rectangle
+	 * @param lenS 
+     * @param lenT
+	 */
+     updateTexCoords(lenS, lenT) {
+
+	}
 }
 

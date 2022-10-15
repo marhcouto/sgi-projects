@@ -63,4 +63,14 @@ export class MyTorus extends CGFobject {
         this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
     } 
+
+    /**
+	 * @method updateTexCoords
+	 * Updates the list of texture coordinates of the rectangle
+	 * @param lenS 
+     * @param lenT
+	 */
+     updateTexCoords(lenS, lenT) {
+
+	}
 }
