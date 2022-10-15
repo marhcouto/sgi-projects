@@ -326,7 +326,7 @@ export class MySceneGraph {
                     return `missing to in view with id: ${viewId}`;
                 }
 
-                this.views[viewId] = new CGFcamera(80, near, far, from, to);
+                this.views[viewId] = new CGFcamera(degreeToRad(angle), near, far, from, to);
             }
 
             if (curNode.nodeName === 'ortho') {
@@ -516,8 +516,8 @@ export class MySceneGraph {
             var aux = this.reader.getBoolean(children[i], 'enabled');
             if (!(aux != null && !isNaN(aux) && (aux == true || aux == false)))
                 this.onXMLMinorError("unable to parse value component of the 'enable light' field for ID = " + lightId + "; assuming 'value = 1'");
-
-            enableLight = aux || 1;
+            
+            enableLight = aux;
 
             //Add enabled boolean and type name to light info
             global.push(enableLight);
@@ -1204,7 +1204,7 @@ export class MySceneGraph {
                 materialIds.push(materialID);
             } else {
                 const curMaterialObj = this.materials[materialID];
-                if (curMaterialObj === null) {
+                if (curMaterialObj == null) {
                     return `material with id '${materialID}' referenced at component '${componentID}' does not exist`;
                 }
                 materialIds.push(materialID);

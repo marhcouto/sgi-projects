@@ -63,8 +63,8 @@ export class MyCylinder extends CGFobject {
     
                 // Normals
                 //the normals are divided by the sum of its coordinates to normalize the vector
-                let norm1 = x1 + y1
-                let norm2 = x2 + y2
+                let norm1 = Math.sqrt(Math.pow(x1, 2) + Math.pow(y1, 2))
+                let norm2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2))
                 let x1Normalized = x1 / norm1
                 let y1Normalized = y1 / norm1
                 let x2Normalized = x2 / norm2

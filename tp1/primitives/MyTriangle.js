@@ -59,7 +59,6 @@ export class MyTriangle extends CGFobject {
         this.texCoords = this._computeTexCords()
         
         this.primitiveType = this.scene.gl.TRIANGLES;
-        this.enableNormalViz();
 		this.initGLBuffers();
     }
 

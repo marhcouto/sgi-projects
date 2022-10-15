@@ -50,7 +50,7 @@ export class XMLscene extends CGFscene {
      * Initializes the scene lights with the values read from the XML file.
      */
     initLights() {
-        var i = 0;
+        let i = 0;
         // Lights index.
 
         // Reads the lights from the scene graph.
@@ -80,7 +80,12 @@ export class XMLscene extends CGFscene {
 
                 this.lights[i].update();
                 
-                this.interface.createLightSource(key, light[0], (enabled) => this.updateLightState(i, enabled));
+                //This is a trick to trap the value of i inside a function so that a different callback is called for each light
+                let freezerFunction = (idx) => {
+                    return (enabled) => this.updateLightState(idx, enabled)
+                } 
+
+                this.interface.createLightSource(key, light[0], freezerFunction(i));
 
                 i++;
             }
@@ -88,6 +93,7 @@ export class XMLscene extends CGFscene {
     }
 
     updateLightState(index, enabled) {
+        console.log(index, enabled);
         if (enabled) {
             this.lights[index].enable();    
         } else {

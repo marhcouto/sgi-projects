@@ -1,15 +1,15 @@
 <sxs>
     <scene root="sceneRoot" axis_length="5"/>
 
-    <views default="userView">
-        <perspective id="userView" near="0.1" far="500" angle="30">
-            <from x="5" y="15" z="5" />
-            <to x="0" y="-2" z="0" />
+    <views default="topView">
+        <perspective id="customerView" near="0.1" far="500" angle="50">
+            <from x="0" y="6" z="20" />
+            <to x="0" y="5" z="-20" />
         </perspective>
 
-        <perspective id="frontView" near="0.1" far="500" angle="30">
-            <from x="0" y="0" z="50" />
-            <to x="0" y="0" z="-50" />
+        <perspective id="topView" near="0.1" far="100" angle="50">
+            <from x="0" y="8" z="15" />
+            <to x="0" y="-2" z="-5" />
         </perspective>
     </views>
 
@@ -19,25 +19,47 @@
     </ambient>
 
     <lights>
+        <spot id="pasteryLight" enabled="1" angle="30" exponent="0.5">
+            <location x="10" y="8" z="-5" w="0.4" />
+            <target x="10" y="0" z="-5" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+            <specular r="0.0" g="0.0" b="0.0" a="0.0" />
+            <attenuation quadratic="1" />
+        </spot>
+
         <omni id="rightSideLight" enabled="1">
-            <location x="50" y="25" z="0" w="1.0" />
+            <location x="10" y="6" z="0" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
-            <attenuation linear="0.15" />
+            <attenuation quadratic="1" />
+        </omni>
+
+        <omni id="topLight" enabled="1">
+            <location x="0" y="12" z="0" w="0.5" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+            <attenuation quadratic="1" />
         </omni>
 
         <omni id="leftSideLight" enabled="1">
-            <location x="-50" y="25" z="0" w="1.0" />
+            <location x="-10" y="6" z="0" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
-            <attenuation linear="0.15" />
+            <attenuation quadratic="1" />
         </omni>
     </lights>
 
     <textures>
         <texture id="wallTexture" file="scenes/images/testScene/wall-texture.png" />
+        <texture id="floorTexture" file="scenes/images/testScene/floor-texture.jpg" />
+        <texture id="donutPink" file="scenes/images/testScene/donut-pink.jpg" />
+        <texture id="donutChoc" file="scenes/images/testScene/donut-choc.jpg" />
+        <texture id="ceilingPaint" file="scenes/images/testScene/ceiling.jpg" />
+        <texture id="stainlessSteel" file="scenes/images/testScene/stainless-steel.jpg" />
     </textures>
 
     <materials>
@@ -48,6 +70,13 @@
             <specular r="0.4" g="0.1" b="0.3" a="1.0" />
         </material>
 
+        <material id="ceilingWhite" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="0.0" />
+            <ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="0.0" g="0.0" b="0.0" a="0.0" />
+        </material>
+
         <material id="wallMaterial" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.8" g="0.8" b="0.6" a="1.0" />
@@ -56,7 +85,7 @@
         </material>
 
         <material id="whitePaintedMetal" shininess="10">
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <emission r="0.2" g="0.2" b="0.2" a="1.0" />
             <ambient r="0.9" g="0.9" b="0.7" a="1" />
             <diffuse  r="0.6" g="0.6" b="0.5" a="1.0" />
             <specular  r="0.5" g="0.5" b="0.5" a="1.0" />
@@ -81,7 +110,11 @@
     <transformations>
         <!-- This transformation simply makes the unit square the size of a wall/floor -->
         <transformation id="unitSquareToWall">
-            <scale x="30" y="30" z="1" />
+            <scale x="20" y="12" z="1" />
+        </transformation>
+
+        <transformation id="unitSquareToFloorCeiling">
+            <scale x="20" y="1" z="20" />
         </transformation>
     </transformations>
 
@@ -224,15 +257,30 @@
         <!-- Base components -->
 
         <!-- Walls -->
-        <component id="floor">
+        <component id="ceiling">
             <transformation>
-                <rotate axis="x" angle="-90"/>
-                <transformationref id="unitSquareToWall" />
+                <translate x="0" y="12" z="0" />
+                <transformationref id="unitSquareToFloorCeiling" />
+                <rotate axis="x" angle="90"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="ceilingPaint" length_s="1" length_t="1"/>
+            <children>
+                <primitiveref id="square" />
+            </children>
+        </component>
+
+        <component id="floor">
+            <transformation>
+                <transformationref id="unitSquareToFloorCeiling" />
+                <rotate axis="x" angle="-90"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="floorTexture" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -240,7 +288,7 @@
 
         <component id="backWall">
             <transformation>
-                <translate x="0" y="15" z="-15" />
+                <translate x="0" y="6" z="-10" />
                 <transformationref id="unitSquareToWall" />
             </transformation>
             <materials>
@@ -254,7 +302,7 @@
 
         <component id="leftWall">
             <transformation>
-                <translate x="-15" y="15" z="0" />
+                <translate x="-10" y="6" z="0" />
                 <rotate axis="y" angle="90" />
                 <transformationref id="unitSquareToWall" />
             </transformation>
@@ -269,7 +317,7 @@
 
         <component id="rightWall">
             <transformation>
-                <translate x="15" y="15" z="0" />
+                <translate x="10" y="6" z="0" />
                 <rotate axis="y" angle="-90" />
                 <transformationref id="unitSquareToWall" />
             </transformation>
@@ -284,7 +332,7 @@
 
         <component id="frontWall">
             <transformation>
-                <translate x="0" y="15" z="15" />
+                <translate x="0" y="6" z="10" />
                 <rotate axis="y" angle="180" />
                 <transformationref id="unitSquareToWall" />
             </transformation>
@@ -309,6 +357,7 @@
                 <componentref id="rightWall" />
                 <componentref id="frontWall" />
                 <componentref id="floor" />
+                <componentref id="ceiling" />
             </children>
         </component>
         <!-- Walls -->
@@ -384,7 +433,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="stainlessSteel" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -398,7 +447,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="stainlessSteel" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -413,7 +462,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="stainlessSteel" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="fornitureSide" />
             </children>
@@ -428,7 +477,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="stainlessSteel" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="fridgeSideTriangle" />
                 <primitiveref id="fridgeSideTriangleOpposite" />
@@ -444,7 +493,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="stainlessSteel" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="fridgeSideTriangle" />
                 <primitiveref id="fridgeSideTriangleOpposite" />
@@ -470,7 +519,7 @@
             <materials>
                 <material id="whitePaintedMetal" />
             </materials>
-            <texture id="none"/>
+            <texture id="inherit"/>
             <children>
                 <componentref id="fridgeSquareTopSide" />
                 <componentref id="fridgeTopSquareBackSide" />
@@ -485,7 +534,7 @@
             <materials>
                 <material id="whitePaintedMetal" />
             </materials>
-            <texture id="none"/>
+            <texture id="stainlessSteel" length_s="1" length_t="1"/>
             <children>
                 <componentref id="fridgeBaseWalls" />
                 <componentref id="fridgeTopWalls" />
@@ -502,7 +551,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="donutPink" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="donut" />
             </children>
@@ -516,9 +565,9 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="donutChoc" length_s="1" length_t="1"/>
             <children>
-                <primitiveref id="donut" />
+                <primitiveref id="donut"/>
             </children>
         </component>
 
@@ -530,7 +579,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="donutChoc" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="donut" />
             </children>
@@ -761,6 +810,21 @@
         </component>
         <!-- Counter -->
 
+        <!-- Fridge + Counter -->
+        <component id="fridgeAndCounter">
+            <transformation>
+                <translate x="4.0" y="0.0" z="-6.0" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <componentref id="fridge" />
+                <componentref id="counter" />
+            </children>
+        </component>
+
         <!--Root Component-->
         <component id="sceneRoot">
             <transformation>
@@ -772,8 +836,7 @@
             <texture id="none"/>
             <children>
                 <componentref id="walls" />
-                <componentref id="fridge" />
-                <componentref id="counter" />
+                <componentref id="fridgeAndCounter" />
             </children>
         </component>
     </components>
