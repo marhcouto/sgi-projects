@@ -47,6 +47,8 @@ export class MySceneGraph {
          * If any error occurs, the reader calls onXMLError on this object, with an error message
          */
         this.reader.open('scenes/' + filename, this);
+
+        this.curMaterial = 0;
     }
 
     /*
@@ -235,11 +237,15 @@ export class MySceneGraph {
 
         this.views = {};
 
-        var grandChildren = [];
-
         if (children.length === 0) {
             return 'must have at least one view!'
         }
+
+        let defaultView = this.reader.getString(viewsNode, 'default');
+        if (defaultView == null) {
+            return 'unable to parse views. Must define default view'
+        }
+        this.defaultView = defaultView;
 
         for (let i = 0; i < children.length; i++) {
             let curNode = children[i];
@@ -1409,9 +1415,10 @@ export class MySceneGraph {
 
         // Materials
         let material = parentMaterial;
-        if (component.materials[0] != "inherit") {
-            material = this.materials[component.materials[0]];
-        } 
+        let curMaterial = component.materials[this.curMaterial % component.materials.length]
+        if (curMaterial != "inherit") {
+            material = this.materials[curMaterial];
+        }
 
         // Textures
         let lenS = 1, lenT = 1, parentLenS = 1, parentLenT = 1;
@@ -1453,11 +1460,16 @@ export class MySceneGraph {
         this.scene.popMatrix();
     }
 
+    onKeyPress(event) {
+        if (event.code === "KeyM") {
+            this.curMaterial += 1
+        }
+    }
+
     /**
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
-
         this.graphTraversal(this.components[this.idRoot], null, null);
     }
 }

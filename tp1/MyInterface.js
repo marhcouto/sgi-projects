@@ -11,6 +11,7 @@ export class MyInterface extends CGFinterface {
      */
     constructor() {
         super();
+        this.keyDownSubscribers = [];
     }
 
     /**
@@ -45,8 +46,8 @@ export class MyInterface extends CGFinterface {
         this.lights = {}
     }
 
-    initCameras(cameras, callback) {
-        this.activatedCamera = Object.keys(cameras)[0];
+    initCameras(cameras, defaultCamera, callback) {
+        this.activatedCamera = defaultCamera;
         let clonedCamera = cloneCamera(cameras[this.activatedCamera]);
         this.setActiveCamera(clonedCamera);
         callback(clonedCamera)
@@ -54,17 +55,21 @@ export class MyInterface extends CGFinterface {
             let clonedCamera = cloneCamera(cameras[activeCamera]);
             this.setActiveCamera(clonedCamera);
             callback(clonedCamera);
-        });   
+        });
     }
 
     createLightSource(key, initialState, switchCallback) {
-        console.log(key, initialState)
         this.lights[key] = initialState;
         console.log(this.lightFolder.add(this.lights, key).name(key).onChange(switchCallback));
     }
 
+    subscribeKeyDownEvent(callback) {
+        this.keyDownSubscribers.push(callback);
+    }
+
     processKeyDown(event) {
         this.activeKeys[event.code]=true;
+        this.keyDownSubscribers.forEach((callback) => callback(event))
     };
 
     processKeyUp(event) {
