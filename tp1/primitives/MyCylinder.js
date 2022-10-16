@@ -27,58 +27,57 @@ export class MyCylinder extends CGFobject {
 		this.normals = [];
         this.texCoords = [];
 
-        let degIncrement = 2 * Math.PI / this.slices;
+        let theta = 0;
+        let thetaInc = (2 * Math.PI) / this.slices;
+        let heightVertices = this.stacks + 1;
+        let tIncrement = 1/this.stacks;
+        let sIncrement = 1/this.slices;
+        let curHeight = 0;
         let heightIncrement = this.height / this.stacks;
-        let sIncrement = 1 / this.slices;
-        let tIncrement = 1 / this.stacks;
-        let t = 0; 
+        let curRadius = this.base;
+        let radiusIncrement = (this.top - this.base) / this.stacks
+        let t = 0;
 
-        // Cylinder stacks, in crescent order of z
-        for (let j = 0, currentHeight = 0; j < this.stacks; j++, currentHeight += heightIncrement) {
-            let s = 0;
-
-            // Cylinder slices, each 'face' of the cylinder in counter clockwise order 
-            for (let i = 0, currentDeg = 0; i < this.slices; i++, currentDeg += degIncrement) {
-
-                // Triangles coordinates
-                // Two triangles correspond to a rectangle, which compose the face of the polygon
-                let y1 = Math.sin(currentDeg) * this.base;
-                let y2 = Math.sin(currentDeg + degIncrement) * this.top;
-                let x1 = Math.cos(currentDeg) * this.base;
-                let x2 = Math.cos(currentDeg + degIncrement) * this.top;
-                let z1 = currentHeight;
-                let z2 = currentHeight + heightIncrement;
-    
-                // Vertexes
-                this.vertices.push(x1, y1, z1); // Base 1
-                this.vertices.push(x2, y2, z1); // Base 2
-                this.vertices.push(x1, y1, z2); // Top 1
-                this.vertices.push(x2, y2, z2); // Top 2
-    
-                // Indexes
-                //two triangles, being one a reflection of the other by one of the rectangle's diagonal,
-                //side by side, create such rectangle, which is a part of the cylinder's lateral face
-                this.indices.push(4*i + j*this.slices*4, 4*i + j*this.slices*4 + 1, 4*i + j*this.slices*4 + 2);
-                this.indices.push(4*i + j*this.slices*4 + 1, 4*i + j*this.slices*4 + 3, 4*i + j*this.slices*4 + 2);
-    
-                // Normals
-                //the normals are divided by the sum of its coordinates to normalize the vector
-                let norm1 = Math.sqrt(Math.pow(x1, 2) + Math.pow(y1, 2))
-                let norm2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2))
-                let x1Normalized = x1 / norm1
-                let y1Normalized = y1 / norm1
-                let x2Normalized = x2 / norm2
-                let y2Normalized = y2 / norm2
-
-                this.normals.push(x1Normalized, y1Normalized, 0); 
-                this.normals.push(x2Normalized, y2Normalized, 0); 
-                this.normals.push(x1Normalized, y1Normalized, 0); 
-                this.normals.push(x2Normalized, y2Normalized, 0);
-
+        // build an all-around stack at a time, starting on "north pole" and proceeding "south"
+        for (let curStack = 0; curStack <= this.stacks; curStack++) {
+            // in each stack, build all the slices around, starting on longitude 0
+            theta = 0;
+            var s = 0;
+            for (let vertex = 0; vertex <= this.slices; vertex++) {
+                //--- Vertices coordinates
+                var x = Math.cos(theta);
+                var y = Math.sin(-theta);
+                var z = curHeight;
+                this.vertices.push(x * curRadius, y * curRadius, z);
+        
+                //--- Indices
+                if (curStack < this.stacks && vertex < this.slices) {
+                    var current = curStack * heightVertices + vertex;
+                    var next = current + heightVertices;
+                    // pushing two triangles using indices from this round (current, current+1)
+                    // and the ones directly south (next, next+1)
+                    // (i.e. one full round of slices ahead)
+                    
+                    this.indices.push( current + 1, current, next);
+                    this.indices.push( current + 1, next, next +1);
+                }
+        
+                //--- Normals
+                // at each vertex, the direction of the normal is equal to 
+                // the vector from the center of the sphere to the vertex.
+                // in a sphere of radius equal to one, the vector length is one.
+                // therefore, the value of the normal is equal to the position vectro
+                this.normals.push(x, y, 0);
+                theta += thetaInc;
+        
+                //--- Texture Coordinates
+                // To be done... 
+                // May need some additional code also in the beginning of the function.
                 this.texCoords.push(s, t);
                 s += sIncrement;
             }
-
+            curRadius += radiusIncrement;
+            curHeight += heightIncrement;
             t += tIncrement;
         }
 
