@@ -78,19 +78,19 @@
     </lights>
 
     <textures>
-        <texture id="wallTexture" file="scenes/images/SGI_TP1_XML_T03_G11_v1/wall-texture.png" />
-        <texture id="wallTextureWithDoor" file="scenes/images/SGI_TP1_XML_T03_G11_v1/wall-with-door.png" />
-        <texture id="floorTexture" file="scenes/images/SGI_TP1_XML_T03_G11_v1/floor-texture.jpg" />
-        <texture id="donutPink" file="scenes/images/SGI_TP1_XML_T03_G11_v1/donut-pink.jpg" />
-        <texture id="donutChoc" file="scenes/images/SGI_TP1_XML_T03_G11_v1/donut-choc.jpg" />
-        <texture id="ceilingPaint" file="scenes/images/SGI_TP1_XML_T03_G11_v1/ceiling.jpg" />
-        <texture id="stainlessSteel" file="scenes/images/SGI_TP1_XML_T03_G11_v1/stainless-steel.jpg" />
-        <texture id="aluminiumBlack" file="scenes/images/SGI_TP1_XML_T03_G11_v1/aluminium-black.jpg" />
-        <texture id="brushedAluminium" file="scenes/images/SGI_TP1_XML_T03_G11_v1/brushed-aluminium.jpg" />
-        <texture id="plasticBlack" file="scenes/images/SGI_TP1_XML_T03_G11_v1/plastic-black.jpg" />
-        <texture id="tableTop" file="scenes/images/SGI_TP1_XML_T03_G11_v1/table.jpg" />
-        <texture id="logsTexture" file="scenes/images/SGI_TP1_XML_T03_G11_v1/logs-texture.jpg" />
-        <texture id="shelfTexture" file="scenes/images/SGI_TP1_XML_T03_G11_v1/wooden-shelf.jpg" />
+        <texture id="wallTexture" file="scenes/images/SGI_TP1_XML_T03_G11/wall-texture.png" />
+        <texture id="wallTextureWithDoor" file="scenes/images/SGI_TP1_XML_T03_G11/wall-with-door.png" />
+        <texture id="floorTexture" file="scenes/images/SGI_TP1_XML_T03_G11/floor-texture.jpg" />
+        <texture id="donutPink" file="scenes/images/SGI_TP1_XML_T03_G11/donut-pink.jpg" />
+        <texture id="donutChoc" file="scenes/images/SGI_TP1_XML_T03_G11/donut-choc.jpg" />
+        <texture id="ceilingPaint" file="scenes/images/SGI_TP1_XML_T03_G11/ceiling.jpg" />
+        <texture id="stainlessSteel" file="scenes/images/SGI_TP1_XML_T03_G11/stainless-steel.jpg" />
+        <texture id="aluminiumBlack" file="scenes/images/SGI_TP1_XML_T03_G11/aluminium-black.jpg" />
+        <texture id="brushedAluminium" file="scenes/images/SGI_TP1_XML_T03_G11/brushed-aluminium.jpg" />
+        <texture id="plasticBlack" file="scenes/images/SGI_TP1_XML_T03_G11/plastic-black.jpg" />
+        <texture id="tableTop" file="scenes/images/SGI_TP1_XML_T03_G11/table.jpg" />
+        <texture id="logsTexture" file="scenes/images/SGI_TP1_XML_T03_G11/logs-texture.jpg" />
+        <texture id="shelfTexture" file="scenes/images/SGI_TP1_XML_T03_G11/wooden-shelf.jpg" />
     </textures>
 
     <materials>
