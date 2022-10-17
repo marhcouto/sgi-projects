@@ -1124,7 +1124,7 @@ export class MySceneGraph {
             const childID = this.reader.getString(curChild, 'id');
             if (curChild.nodeName === 'componentref') {
                 if (this.components[childID] == null) {
-                    return `component with id ${componentID} does not exist when parsing component's ${componentID} children`;
+                    return `component with id ${childID} does not exist when parsing component's ${componentID} children`;
                 }
                 childrenObj.push({
                     type: 'component',
@@ -1132,7 +1132,7 @@ export class MySceneGraph {
                 });
             } else if (curChild.nodeName === 'primitiveref') {
                 if (this.primitives[childID] == null) {
-                    return `primitive with id ${componentID} does not exist when parsing component's ${componentID} children`;
+                    return `primitive with id ${childID} does not exist when parsing component's ${componentID} children`;
                 }
                 childrenObj.push({
                     type: 'primitive',
