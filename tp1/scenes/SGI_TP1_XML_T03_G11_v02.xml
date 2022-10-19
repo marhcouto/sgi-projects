@@ -35,11 +35,11 @@
     </ambient>
 
     <lights>
-        <spot id="pasteryLight" enabled="1" angle="30" exponent="0.1">
-            <location x="0" y="5" z="0" w="0.5" />
-            <target x="6" y="0" z="-5" />
+        <spot id="pasteryLight" enabled="1" angle="10" exponent="0.1">
+            <location x="4" y="2" z="-6" w="1.0" />
+            <target x="4" y="1" z="-6" />
             <ambient r="0.0" g="0.0" b="0.0" a="0.0" />
-            <diffuse r="0.0" g="0.0" b="0.0" a="0.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation linear="1" />
         </spot>
@@ -47,7 +47,7 @@
         <omni id="rightSideLight" enabled="1">
             <location x="10" y="6" z="0" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation linear="1" />
         </omni>
@@ -55,7 +55,7 @@
         <omni id="topLight" enabled="1">
             <location x="0" y="12" z="0" w="0.5" />
             <ambient r="0" g="0" b="0" a="1.0" />
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation linear="1" />
         </omni>
@@ -63,15 +63,7 @@
         <omni id="leftSideLight" enabled="1">
             <location x="-10" y="6" z="0" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
-            <attenuation linear="1" />
-        </omni>
-
-        <omni id="sceneLight" enabled="1">
-            <location x="0" y="6" z="2" w="1.0" />
-            <ambient r="0" g="0" b="0" a="1.0" />
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation linear="1" />
         </omni>
@@ -1025,7 +1017,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="2" length_t="1"/>
+            <texture id="logsTexture" length_s="1" length_t="2"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -1040,7 +1032,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="2" length_t="1"/>
+            <texture id="logsTexture" length_s="1" length_t="2"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -1070,7 +1062,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="2" length_t="1"/>
+            <texture id="logsTexture" length_s="1" length_t="2"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -1313,19 +1305,6 @@
                 <componentref id="fridgeAndCounter" />
                 <componentref id="tables" />
                 <componentref id="shelfAndScene" />
-            </children>
-        </component>
-
-        <component id="testRoot">
-            <transformation>
-                <scale x="1.0" y="1.0" z="1.0" />
-            </transformation>
-            <materials>
-                <material id="wallMaterial" />
-            </materials>
-            <texture id="logsTexture" length_s="1" length_t="2" />
-            <children>
-                <primitiveref id="square" />
             </children>
         </component>
     </components>
