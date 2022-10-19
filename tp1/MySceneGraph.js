@@ -1123,9 +1123,6 @@ export class MySceneGraph {
             const curChild = childrenArr[i];
             const childID = this.reader.getString(curChild, 'id');
             if (curChild.nodeName === 'componentref') {
-                if (this.components[childID] == null) {
-                    return `component with id ${childID} does not exist when parsing component's ${componentID} children`;
-                }
                 childrenObj.push({
                     type: 'component',
                     id: childID
@@ -1223,7 +1220,7 @@ export class MySceneGraph {
         const transformationsList = transformationsNode.children;
         const finalTransformation = mat4.create();
 
-        for (let i = 0; i < transformationsList.length; i++) {
+         for (let i = 0; i < transformationsList.length; i++) {
             const curTransformationNode = transformationsList[i];
             
             switch (curTransformationNode.nodeName) {
@@ -1442,16 +1439,19 @@ export class MySceneGraph {
 
         for (let child of component.children) {
 
-            // Sub Components
-            if (child.type != 'primitive') {
-                this.graphTraversal(this.components[child.id], material, component.texture);
+            // Primitives
+            if (child.type == 'primitive') {
+                this.primitives[child.id].updateTexCoords(lenS, lenT);
+                this.primitives[child.id].display();
+                this.primitives[child.id].updateTexCoords(parentLenS, parentLenT);
                 continue;
             } 
 
-            // Primitives
-            this.primitives[child.id].updateTexCoords(lenS, lenT);
-            this.primitives[child.id].display();
-            this.primitives[child.id].updateTexCoords(parentLenS, parentLenT);
+            // Sub components
+            if (this.components[child.id] == null) {
+                return `component with id ${child.id} does not exist`;
+            }
+            this.graphTraversal(this.components[child.id], material, component.texture);
         }
 
         // Resetting        
