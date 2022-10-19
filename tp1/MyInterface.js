@@ -59,7 +59,9 @@ export class MyInterface extends CGFinterface {
     }
 
     createLightSource(key, initialState, switchCallback) {
+        console.log(key, initialState, switchCallback);
         this.lights[key] = initialState;
+        this.lightFolder.add(this.lights, key).name(key).onChange(switchCallback)
     }
 
     subscribeKeyDownEvent(callback) {

@@ -94,8 +94,9 @@ export class XMLscene extends CGFscene {
 
     updateLightState(index, enabled) {
         console.log(index, enabled);
+        this.lights[index].setVisible(true);
         if (enabled) {
-            this.lights[index].enable();    
+            this.lights[index].enable();
         } else {
             this.lights[index].disable();
         }

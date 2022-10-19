@@ -29,7 +29,7 @@ export class MyCylinder extends CGFobject {
 
         let theta = 0;
         let thetaInc = (2 * Math.PI) / this.slices;
-        let heightVertices = this.stacks + 1;
+        let heightVertices = this.slices + 1;
         let tIncrement = 1/this.stacks;
         let sIncrement = 1/this.slices;
         let curHeight = 0;
@@ -46,7 +46,7 @@ export class MyCylinder extends CGFobject {
             for (let vertex = 0; vertex <= this.slices; vertex++) {
                 //--- Vertices coordinates
                 var x = Math.cos(theta);
-                var y = Math.sin(-theta);
+                var y = Math.sin(theta);
                 var z = curHeight;
                 this.vertices.push(x * curRadius, y * curRadius, z);
         
@@ -58,8 +58,8 @@ export class MyCylinder extends CGFobject {
                     // and the ones directly south (next, next+1)
                     // (i.e. one full round of slices ahead)
                     
-                    this.indices.push( current + 1, current, next);
-                    this.indices.push( current + 1, next, next +1);
+                    this.indices.push( next, current, current + 1);
+                    this.indices.push( next, current + 1, next + 1);
                 }
         
                 //--- Normals
