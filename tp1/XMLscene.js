@@ -69,7 +69,7 @@ export class XMLscene extends CGFscene {
                 if (light[1] === "spot") {
                     this.lights[i].setSpotCutOff(light[6]);
                     this.lights[i].setSpotExponent(light[7]);
-                    this.lights[i].setSpotDirection(light[8][0], light[8][1], light[8][2]);
+                    this.lights[i].setSpotDirection(light[8][0] - light[2][0], light[8][1] - light[2][1], light[8][2] - light[2][2]);
                 }
 
                 this.lights[i].setVisible(true);
@@ -82,25 +82,19 @@ export class XMLscene extends CGFscene {
                 
                 //This is a trick to trap the value of i inside a function so that a different callback is called for each light
                 let freezerFunction = (idx) => {
-                    return (enabled) => this.updateLightState(idx, enabled)
+                    return (enabled) => this.updateLightState(key, enabled)
                 } 
 
-                this.interface.createLightSource(key, light[0], freezerFunction(i));
+                this.interface.createLightSource(key, light[0], freezerFunction(key));
 
                 i++;
             }
         }
     }
 
-    updateLightState(index, enabled) {
-        console.log(index, enabled);
-        this.lights[index].setVisible(true);
-        if (enabled) {
-            this.lights[index].enable();
-        } else {
-            this.lights[index].disable();
-        }
-        this.lights[index].update();
+    updateLightState(key, enabled) {
+        let light = this.graph.lights[key];
+        light[0] = enabled;
     }
 
     setDefaultAppearance() {
@@ -151,12 +145,31 @@ export class XMLscene extends CGFscene {
         this.pushMatrix();
         this.axis.display();
 
-        for (var i = 0; i < this.lights.length; i++) {
-            this.lights[i].setVisible(true);
-            this.lights[i].enable();
-        }
-
         if (this.sceneInited) {
+            let i = 0;
+            // Lights index.
+
+            // Reads the lights from the scene graph.
+            for (let key in this.graph.lights) {
+                if (i >= 8)
+                    break;              // Only eight lights allowed by WebGL.
+
+                if (this.graph.lights.hasOwnProperty(key)) {
+                    let light = this.graph.lights[key];
+
+                    this.lights[i].setVisible(true);
+                    if (light[0])
+                        this.lights[i].enable();
+                    else
+                        this.lights[i].disable();
+
+                    this.lights[i].update();
+                    
+                    //This is a trick to trap the value of i inside a function so that a different callback is called for each light
+                    i++;
+                }
+            }
+
             // Draw axis
             this.setDefaultAppearance();
 
