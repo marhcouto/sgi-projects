@@ -1,25 +1,30 @@
 <sxs>
     <scene root="sceneRoot" axis_length="5"/>
 
-    <views default="topView">
+    <views default="customerView">
         <perspective id="customerView" near="0.1" far="500" angle="50">
-            <from x="0" y="6" z="20" />
-            <to x="0" y="5" z="-20" />
+            <from x="0" y="6" z="15" />
+            <to x="0" y="5" z="0" />
         </perspective>
 
-        <perspective id="topView" near="0.1" far="100" angle="50">
-            <from x="0" y="8" z="15" />
-            <to x="0" y="-2" z="-5" />
+        <perspective id="outView" near="0.1" far="100" angle="50">
+            <from x="0" y="8" z="20" />
+            <to x="0" y="0" z="0" />
         </perspective>
 
         <perspective id="employeeView" near="0.1" far="500" angle="50">
-            <from x="4" y="5" z="-16" />
-            <to x="4" y="5" z="16" />
+            <from x="4" y="5" z="-15" />
+            <to x="4" y="5" z="0" />
         </perspective>
 
         <perspective id="observingScene" near="0.1" far="500" angle="50">
-            <from x="0" y="6" z="2" />
-            <to x="6" y="6" z="2" />
+            <from x="4" y="5.2" z="2" />
+            <to x="9" y="4.388" z="2" />
+        </perspective>
+
+        <perspective id="miniature" near="0.1" far="500" angle="50">
+            <from x="8.3" y="4.4" z="2" />
+            <to x="9" y="4.388" z="2" />
         </perspective>
 
         <ortho id="orthoView"  near="0.1" far="40" left="-10" right="10" top="12" bottom="0" >
@@ -35,11 +40,11 @@
     </ambient>
 
     <lights>
-        <spot id="pasteryLight" enabled="1" angle="10" exponent="0.1">
-            <location x="4" y="2" z="-6" w="1.0" />
-            <target x="4" y="1" z="-6" />
+        <spot id="pasteryLight" enabled="1" angle="30" exponent="0.1">
+            <location x="0" y="5" z="0" w="0.5" />
+            <target x="6" y="0" z="-5" />
             <ambient r="0.0" g="0.0" b="0.0" a="0.0" />
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <diffuse r="0.0" g="0.0" b="0.0" a="0.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation linear="1" />
         </spot>
@@ -47,7 +52,7 @@
         <omni id="rightSideLight" enabled="1">
             <location x="10" y="6" z="0" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
-            <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation linear="1" />
         </omni>
@@ -55,7 +60,7 @@
         <omni id="topLight" enabled="1">
             <location x="0" y="12" z="0" w="0.5" />
             <ambient r="0" g="0" b="0" a="1.0" />
-            <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation linear="1" />
         </omni>
@@ -63,7 +68,15 @@
         <omni id="leftSideLight" enabled="1">
             <location x="-10" y="6" z="0" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
-            <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+            <attenuation linear="1" />
+        </omni>
+
+        <omni id="sceneLight" enabled="1">
+            <location x="0" y="6" z="2" w="1.0" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation linear="1" />
         </omni>
@@ -83,6 +96,7 @@
         <texture id="tableTop" file="scenes/images/SGI_TP1_XML_T03_G11/table.jpg" />
         <texture id="logsTexture" file="scenes/images/SGI_TP1_XML_T03_G11/logs-texture.jpg" />
         <texture id="shelfTexture" file="scenes/images/SGI_TP1_XML_T03_G11/wooden-shelf.jpg" />
+        <texture id="diamondTexture" file="scenes/images/SGI_TP1_XML_T03_G11/diamond.jpg" />
     </textures>
 
     <materials>
@@ -679,7 +693,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="diamondTexture" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="berlinBall" />
             </children>
@@ -1017,7 +1031,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="1" length_t="2"/>
+            <texture id="logsTexture" length_s="2" length_t="1"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -1032,7 +1046,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="1" length_t="2"/>
+            <texture id="logsTexture" length_s="2" length_t="1"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -1062,7 +1076,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="1" length_t="2"/>
+            <texture id="logsTexture" length_s="2" length_t="1"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -1305,6 +1319,19 @@
                 <componentref id="fridgeAndCounter" />
                 <componentref id="tables" />
                 <componentref id="shelfAndScene" />
+            </children>
+        </component>
+
+        <component id="testRoot">
+            <transformation>
+                <scale x="1.0" y="1.0" z="1.0" />
+            </transformation>
+            <materials>
+                <material id="wallMaterial" />
+            </materials>
+            <texture id="logsTexture" length_s="1" length_t="2" />
+            <children>
+                <primitiveref id="square" />
             </children>
         </component>
     </components>
