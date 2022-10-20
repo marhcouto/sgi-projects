@@ -518,7 +518,7 @@ export class MySceneGraph {
                 return "ID must be unique for each light (conflict: ID = " + lightId + ")";
 
             // Light enable/disable
-            var enableLight = true;
+            var enableLight = aux;
             var aux = this.reader.getBoolean(children[i], 'enabled');
             if (!(aux != null && !isNaN(aux) && (aux == true || aux == false)))
                 this.onXMLMinorError("unable to parse value component of the 'enable light' field for ID = " + lightId + "; assuming 'value = 1'");

@@ -37,10 +37,9 @@
             <to x="-0.7" y="0" z="-7" />
         </perspective>
 
-        <ortho id="orthoView"  near="0.1" far="40" left="-10" right="10" top="12" bottom="0" >
-            <from x="12" y="6" z="12" />
-            <to x="0" y="0" z="0" />
-            <up x="0" y="10" z="0"/>
+        <ortho id="orthoView"  near="0.1" far="40" left="-10" right="10" top="12" bottom="-2" >
+            <from x="-6" y="5" z="12" />
+            <to x="6" y="-2" z="-5" />
         </ortho>
     </views>
 
@@ -105,10 +104,11 @@
         <texture id="aluminiumBlack" file="scenes/images/SGI_TP1_XML_T03_G11/aluminium-black.jpg" />
         <texture id="brushedAluminium" file="scenes/images/SGI_TP1_XML_T03_G11/brushed-aluminium.jpg" />
         <texture id="plasticBlack" file="scenes/images/SGI_TP1_XML_T03_G11/plastic-black.jpg" />
-        <texture id="tableTop" file="scenes/images/SGI_TP1_XML_T03_G11/table.jpg" />
         <texture id="logsTexture" file="scenes/images/SGI_TP1_XML_T03_G11/logs-texture.jpg" />
         <texture id="shelfTexture" file="scenes/images/SGI_TP1_XML_T03_G11/wooden-shelf.jpg" />
         <texture id="pagenotfoundTexture" file="scenes/images/SGI_TP1_XML_T03_G11/pagenotfound.png" />
+        <texture id="chess" file="scenes/images/SGI_TP1_XML_T03_G11/chess.jpg" />
+        <texture id="stripedMetal" file="scenes/images/SGI_TP1_XML_T03_G11/metal_stripes.jpg" />
     </textures>
 
     <materials>
@@ -1601,7 +1601,7 @@
             <materials>
                 <material id="wallMaterial" />
             </materials>
-            <texture id="tableTop" length_s="1" length_t="1"/>
+            <texture id="chess" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="tableTop" />
             </children>
@@ -1615,7 +1615,7 @@
             <materials>
                 <material id="blackMetal" />
             </materials>
-            <texture id="aluminiumBlack" length_s="1" length_t="1"/>
+            <texture id="stripedMetal" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="tableFeet" />
             </children>

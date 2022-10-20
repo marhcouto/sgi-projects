@@ -146,28 +146,11 @@ export class XMLscene extends CGFscene {
         this.axis.display();
 
         if (this.sceneInited) {
-            let i = 0;
             // Lights index.
 
             // Reads the lights from the scene graph.
-            for (let key in this.graph.lights) {
-                if (i >= 8)
-                    break;              // Only eight lights allowed by WebGL.
-
-                if (this.graph.lights.hasOwnProperty(key)) {
-                    let light = this.graph.lights[key];
-
-                    this.lights[i].setVisible(true);
-                    if (light[0])
-                        this.lights[i].enable();
-                    else
-                        this.lights[i].disable();
-
-                    this.lights[i].update();
-                    
-                    //This is a trick to trap the value of i inside a function so that a different callback is called for each light
-                    i++;
-                }
+            for (let i = 0; i < this.lights.length; i++) {
+                this.lights[i].update();
             }
 
             // Draw axis
