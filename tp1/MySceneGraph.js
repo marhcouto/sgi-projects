@@ -1260,6 +1260,10 @@ export class MySceneGraph {
                     mat4.scale(finalTransformation, finalTransformation, vec3.fromValues(scaleArray[0], scaleArray[1], scaleArray[2]));
                     break;
                 case 'transformationref':
+                    if (transformationsList.length > 1) {
+                        // TODO: get this errors to happen
+                        return `transformationref needs to be the only transformation in component with id: ${componentID}`;
+                    }
                     const transformationID = this.reader.getString(curTransformationNode, 'id');
                     if (transformationID == null) {
                         return `missing id from transformationref in component with id: ${componentID}`;

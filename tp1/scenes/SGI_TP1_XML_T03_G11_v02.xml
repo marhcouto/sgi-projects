@@ -213,6 +213,10 @@
             <translate x="0" y="-0.0625" z="0" />
             <scale x="2" y="0.125" z="1" />
         </transformation>
+
+        <transformation id="rotate">
+            <rotate axis="x" angle="90"/>
+        </transformation>
     </transformations>
 
     <primitives>
@@ -309,7 +313,7 @@
 
         <component id="base">
             <transformation>
-                <rotate axis="x" angle="90"/>
+                <transformationref id="rotate" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -810,7 +814,7 @@
         <component id="ceiling2">
             <transformation>
                 <translate x="0" y="12" z="0" />
-                <transformationref id="unitSquareToFloorCeiling" />
+                <scale x="20" y="1" z="20" />
                 <rotate axis="x" angle="90"/>
             </transformation>
             <materials>
@@ -824,7 +828,7 @@
 
         <component id="floor2">
             <transformation>
-                <transformationref id="unitSquareToFloorCeiling" />
+                <scale x="20" y="1" z="20" />
                 <rotate axis="x" angle="-90"/>
             </transformation>
             <materials>
@@ -839,7 +843,7 @@
         <component id="ceiling">
             <transformation>
                 <translate x="0" y="12" z="0" />
-                <transformationref id="unitSquareToFloorCeiling" />
+                <scale x="20" y="1" z="20" />
                 <rotate axis="x" angle="90"/>
             </transformation>
             <materials>
@@ -853,7 +857,7 @@
 
         <component id="floor">
             <transformation>
-                <transformationref id="unitSquareToFloorCeiling" />
+                <scale x="20" y="1" z="20" />
                 <rotate axis="x" angle="-90"/>
             </transformation>
             <materials>
@@ -869,7 +873,7 @@
             <transformation>
                 <translate x="0" y="6" z="-10" />
                 <rotate axis="z" angle="-90" />
-                <transformationref id="unitSquareToWall" />
+                <scale x="12" y="20" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -885,7 +889,7 @@
                 <translate x="-10" y="6" z="0" />
                 <rotate axis="y" angle="90" />
                 <rotate axis="z" angle="-90" />
-                <transformationref id="unitSquareToWall" />
+                <scale x="12" y="20" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -901,7 +905,7 @@
                 <translate x="10" y="6" z="0" />
                 <rotate axis="y" angle="-90" />
                 <rotate axis="z" angle="-90" />
-                <transformationref id="unitSquareToWall" />
+                <scale x="12" y="20" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -917,7 +921,7 @@
                 <translate x="0" y="6" z="10" />
                 <rotate axis="y" angle="180" />
                 <rotate axis="z" angle="-90" />
-                <transformationref id="unitSquareToWall" />
+                <scale x="12" y="20" z="1" />
             </transformation>
             <materials> 
                 <material id="inherit" />
@@ -1703,7 +1707,7 @@
         <!-- Replicated Scene -->
         <component id="backFacingFloor">
             <transformation>
-                <transformationref id="unitSquareToFloorCeiling" />
+                <scale x="20" y="1" z="20" />
                 <rotate axis="x" angle="90"/>
             </transformation>
             <materials>
@@ -1718,7 +1722,7 @@
         <component id="backFacingCeiling">
             <transformation>
                 <translate x="0" y="12" z="0" />
-                <transformationref id="unitSquareToFloorCeiling" />
+                <scale x="20" y="1" z="20" />
                 <rotate axis="x" angle="-90"/>
             </transformation>
             <materials>
@@ -1734,7 +1738,7 @@
             <transformation>
                 <translate x="0" y="6" z="-10" />
                 <rotate axis="z" angle="90" />
-                <transformationref id="unitSquareToWall" />
+                <scale x="12" y="20" z="1" />
                 <rotate axis="x" angle="180"/>
             </transformation>
             <materials>
@@ -1751,7 +1755,7 @@
                 <translate x="-10" y="6" z="0" />
                 <rotate axis="y" angle="-90" />
                 <rotate axis="z" angle="90" />
-                <transformationref id="unitSquareToWall" />
+                <scale x="12" y="20" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -1767,7 +1771,7 @@
                 <translate x="10.01" y="6" z="0" />
                 <rotate axis="y" angle="90" />
                 <rotate axis="z" angle="90" />
-                <transformationref id="unitSquareToWall" />
+                <scale x="12" y="20" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -1818,7 +1822,7 @@
         <component id="shelfTop">
             <transformation>
                 <rotate axis="x" angle="-90" />
-                <transformationref id="unitSquareToShelfBase" />
+                <scale x="4" y="2" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -1833,7 +1837,7 @@
             <transformation>
                 <translate x="0" y="-0.125" z="0" />
                 <rotate axis="x" angle="90" />
-                <transformationref id="unitSquareToShelfBase" />
+                <scale x="4" y="2" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -1846,7 +1850,8 @@
 
         <component id="shelfFront">
             <transformation>
-                <transformationref id="unitSquareToShelfLongSide" />
+                <translate x="0" y="-0.0625" z="1" />
+            <scale x="4" y="0.125" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -1860,7 +1865,8 @@
         <component id="shelfBack">
             <transformation>
                 <rotate axis="y" angle="-180"/>
-                <transformationref id="unitSquareToShelfLongSide" />
+                <translate x="0" y="-0.0625" z="1" />
+            <scale x="4" y="0.125" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -1875,7 +1881,8 @@
             <transformation>
                 <translate x="-2" y="0" z="0" />
                 <rotate axis="y" angle="-90"/>
-                <transformationref id="unitSquareToShelfShortSide" />
+                <translate x="0" y="-0.0625" z="0" />
+            <scale x="2" y="0.125" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -1890,7 +1897,8 @@
             <transformation>
                 <translate x="2" y="0" z="0" />
                 <rotate axis="y" angle="90"/>
-                <transformationref id="unitSquareToShelfShortSide" />
+                <translate x="0" y="-0.0625" z="0" />
+            <scale x="2" y="0.125" z="1" />
             </transformation>
             <materials>
                 <material id="inherit" />
