@@ -1,25 +1,30 @@
 <sxs>
     <scene root="sceneRoot" axis_length="5"/>
 
-    <views default="topView">
+    <views default="customerView">
         <perspective id="customerView" near="0.1" far="500" angle="50">
-            <from x="0" y="6" z="20" />
-            <to x="0" y="5" z="-20" />
+            <from x="0" y="6" z="15" />
+            <to x="0" y="5" z="0" />
         </perspective>
 
-        <perspective id="topView" near="0.1" far="100" angle="50">
-            <from x="0" y="8" z="15" />
-            <to x="0" y="-2" z="-5" />
+        <perspective id="outView" near="0.1" far="100" angle="50">
+            <from x="0" y="8" z="20" />
+            <to x="0" y="0" z="0" />
         </perspective>
 
         <perspective id="employeeView" near="0.1" far="500" angle="50">
-            <from x="4" y="5" z="-16" />
-            <to x="4" y="5" z="16" />
+            <from x="4" y="5" z="-15" />
+            <to x="4" y="5" z="0" />
         </perspective>
 
         <perspective id="observingScene" near="0.1" far="500" angle="50">
-            <from x="0" y="6" z="2" />
-            <to x="6" y="6" z="2" />
+            <from x="4" y="5.2" z="2" />
+            <to x="9" y="4.388" z="2" />
+        </perspective>
+
+        <perspective id="miniature" near="0.1" far="500" angle="50">
+            <from x="8.3" y="4.4" z="2" />
+            <to x="9" y="4.388" z="2" />
         </perspective>
 
         <ortho id="orthoView"  near="0.1" far="40" left="-10" right="10" top="12" bottom="0" >
@@ -153,7 +158,7 @@
     <transformations>
         <!-- This transformation simply makes the unit square the size of a wall/floor -->
         <transformation id="unitSquareToWall">
-            <scale x="20" y="12" z="1" />
+            <scale x="12" y="20" z="1" />
         </transformation>
 
         <transformation id="unitSquareToFloorCeiling">
@@ -374,6 +379,7 @@
         <component id="backWall">
             <transformation>
                 <translate x="0" y="6" z="-10" />
+                <rotate axis="z" angle="-90" />
                 <transformationref id="unitSquareToWall" />
             </transformation>
             <materials>
@@ -389,6 +395,7 @@
             <transformation>
                 <translate x="-10" y="6" z="0" />
                 <rotate axis="y" angle="90" />
+                <rotate axis="z" angle="-90" />
                 <transformationref id="unitSquareToWall" />
             </transformation>
             <materials>
@@ -404,6 +411,7 @@
             <transformation>
                 <translate x="10" y="6" z="0" />
                 <rotate axis="y" angle="-90" />
+                <rotate axis="z" angle="-90" />
                 <transformationref id="unitSquareToWall" />
             </transformation>
             <materials>
@@ -419,9 +427,10 @@
             <transformation>
                 <translate x="0" y="6" z="10" />
                 <rotate axis="y" angle="180" />
+                <rotate axis="z" angle="-90" />
                 <transformationref id="unitSquareToWall" />
             </transformation>
-            <materials>
+            <materials> 
                 <material id="inherit" />
             </materials>
             <texture id="wallTextureWithDoor" length_s="1" length_t="1" />
