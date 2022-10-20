@@ -1157,29 +1157,33 @@ export class MySceneGraph {
         }
 
         if (textureID === 'inherit' || textureID === 'none') {
+            let inheritOrNoneHaveLengths = this.reader.hasAttribute(textureNode, 'length_s') ||
+                this.reader.hasAttribute(textureNode, 'length_t');
+            if (inheritOrNoneHaveLengths) {
+                return `unexpected length_s or length_t of component's ${componentID} texture`
+            }
             return {
                 type: textureID
             }
         }
 
-        const lenS = this.reader.getFloat(textureNode, 'length_s');
-        const lenT = this.reader.getFloat(textureNode, 'length_t');
-
-        if (lenS == null) {
+        if (!this.reader.hasAttribute(textureNode, 'length_s')) {
             return `expected length_s at texture of component with id ${componentID}`;
         }
-        if (lenT == null) {
+        if (!this.reader.hasAttribute(textureNode, 'length_t')) {
             return `expected length_t at texture of component with id ${componentID}`;
         }
 
-        if (lenS == null || isNaN(lenS)) {
+        const lenS = this.reader.getFloat(textureNode, 'length_s');
+        const lenT = this.reader.getFloat(textureNode, 'length_t');
+
+        if (isNaN(lenS)) {
             return `unable to parse length_s of the texture at component with id: ${componentID}`;
         }
         
-        if (lenT == null || isNaN(lenT)) {
+        if (isNaN(lenT)) {
             return `unable to parse length_s of the texture at component with id: ${componentID}`;
         }
-
         return {
             type: 'id_ref',
             id: textureID,
