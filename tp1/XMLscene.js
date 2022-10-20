@@ -82,19 +82,23 @@ export class XMLscene extends CGFscene {
                 
                 //This is a trick to trap the value of i inside a function so that a different callback is called for each light
                 let freezerFunction = (idx) => {
-                    return (enabled) => this.updateLightState(key, enabled)
+                    return (enabled) => this.updateLightState(idx, enabled)
                 } 
 
-                this.interface.createLightSource(key, light[0], freezerFunction(key));
+                this.interface.createLightSource(key, light[0], freezerFunction(i));
 
                 i++;
             }
         }
     }
 
-    updateLightState(key, enabled) {
-        let light = this.graph.lights[key];
-        light[0] = enabled;
+    updateLightState(index, enabled) {
+        this.lights[index].setVisible(true);
+        if (enabled) {
+            this.lights[index].enable();
+        } else {
+            this.lights[index].disable();
+        }
     }
 
     setDefaultAppearance() {
