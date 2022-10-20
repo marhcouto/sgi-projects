@@ -41,8 +41,8 @@ export class MyTorus extends CGFobject {
                 this.vertices.push(curX, curY, curZ);
                 
                 const normal = vec3.fromValues(cosInnerAngle * cosOuterAngle, cosInnerAngle * sinOuterAngle, sinInnerAngle);
-                
-                this.normals.push(normal[0], normal[1], normal[2]);
+                const normLength = vec3.length(normal)
+                this.normals.push(normal[0] / normLength, normal[1] / normLength, normal[2] / normLength);
 
                 if (loop < this.nLoops && iLoop < this.nSlices) {
                     const current = loop * (this.nSlices + 1) + iLoop;
