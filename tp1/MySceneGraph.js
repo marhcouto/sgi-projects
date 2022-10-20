@@ -1143,6 +1143,14 @@ export class MySceneGraph {
         return childrenObj;
     }
 
+    /*
+        This function returns an object with data about a componen't texture.
+        It's propreties are:
+        type: it's a string one of [id_ref, inherit, none]
+        id (only when type is id_ref): the id of the referenced component
+        lenS (only when type is id_ref): the length in S
+        lenT (only when type is id_ref): the length in T
+    */
     parseComponentTextures(componentID, textureNode) {
         if (textureNode.children.length !== 0) {
             return `expected no children at texture of node ${componentID}`;
@@ -1189,6 +1197,7 @@ export class MySceneGraph {
         };
     }
 
+    // Returns an array with a component material id's
     parseComponentMaterials(componentID, materialsNode) {
         const materialList = materialsNode.children; 
         const materialIds = [];
@@ -1220,6 +1229,7 @@ export class MySceneGraph {
         return materialIds;
     }
 
+    // Returns a matrix that represents a multiplication on all the transformations that must be applied to an object
     parseComponentTransformations(componentID, transformationsNode) {
         const transformationsList = transformationsNode.children;
         const finalTransformation = mat4.create();
@@ -1268,6 +1278,11 @@ export class MySceneGraph {
         return finalTransformation;
     }
 
+    /* Returns data about a rotaion. It's format is
+        angle: rotation angle in radians
+        axis: vec3 that represents the axis of rotation
+
+    */
     parseRotation(node, messageError) {
         let axis = this.reader.getString(node, 'axis');
         if (axis.length != 1) {
