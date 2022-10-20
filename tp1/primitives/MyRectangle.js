@@ -67,10 +67,10 @@ export class MyRectangle extends CGFobject {
 	 */
 	 updateTexCoords(lenS, lenT) {
 		this.texCoords = [
-			lenS, 0,
+			0, lenS,
 			lenS, lenT,
 			0, 0,
-			0, lenT
+			lenT, 0
 		];
 		this.updateTexCoordsGLBuffers();
 	}

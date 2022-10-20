@@ -1426,7 +1426,7 @@ export class MySceneGraph {
         } else if (component.texture.type == "inherit") {
             material.setTexture(this.textures[parentComponentTexture.id]);
             lenS = parentComponentTexture.lenS;
-            
+            lenT = parentComponentTexture.lenT;
         } else {
             material.setTexture(null);
         }
