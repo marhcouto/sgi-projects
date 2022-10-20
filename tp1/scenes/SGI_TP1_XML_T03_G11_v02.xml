@@ -37,8 +37,8 @@
             <to x="-0.7" y="0" z="-7" />
         </perspective>
 
-        <ortho id="orthoView"  near="0.1" far="40" left="-10" right="10" top="12" bottom="-2" >
-            <from x="-6" y="5" z="12" />
+        <ortho id="orthoView"  near="0.1" far="100" left="-13" right="13" top="12" bottom="-2" >
+            <from x="-12" y="5" z="20" />
             <to x="6" y="-2" z="-5" />
         </ortho>
     </views>

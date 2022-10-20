@@ -23,7 +23,7 @@
     </lights>
 
     <textures>
-        <texture id="demoTexture" file="scenes/images/SGI_TP1_XML_T03_G11/pagenotfound.png" />
+        <texture id="demoTexture" file="scenes/images/SGI_TP1_XML_T03_G11/metal_stripes.jpg" />
     </textures>
 
     <materials>

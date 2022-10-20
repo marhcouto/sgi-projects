@@ -811,7 +811,7 @@ export class MySceneGraph {
                         const rotationData = this.parseRotation(grandChildren[j], `rotation transformation for ID ${transformationID}`);
                         
                         //Some type checking
-                        if (rotationData instanceof String)
+                        if (typeof rotationData === 'string')
                             return rotationData;
                         
                         transfMatrix = mat4.rotate(transfMatrix, transfMatrix, rotationData.angle, rotationData.axis);
@@ -1079,7 +1079,7 @@ export class MySceneGraph {
 
             // Transformations
             const transformation = this.parseComponentTransformations(componentID, grandChildren[transformationIndex]);
-            if(transformation instanceof String) {
+            if(typeof transformation === 'string') {
                 return transformation;
             }
 
@@ -1091,7 +1091,7 @@ export class MySceneGraph {
 
             // Texture
             const texture = this.parseComponentTextures(componentID, grandChildren[textureIndex]);
-            if (texture instanceof String) {
+            if (typeof texture === 'string') {
                 return texture
             }
 
@@ -1247,7 +1247,7 @@ export class MySceneGraph {
                     break;
                 case 'rotate':
                     const rotationData = this.parseRotation(curTransformationNode, `rotate at component with id: ${componentID}`);
-                    if (rotationData instanceof String) {
+                    if (typeof rotationData === 'string') {
                         return rotationData;
                     }
                     mat4.rotate(finalTransformation, finalTransformation, rotationData.angle, rotationData.axis);
