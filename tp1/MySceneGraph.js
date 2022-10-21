@@ -818,7 +818,6 @@ export class MySceneGraph {
                         break;
                 }
             }
-            console.log("TransformationID: ", transformationID)
             this.transformations[transformationID] = transfMatrix;
         }
 
@@ -1446,7 +1445,10 @@ export class MySceneGraph {
             material.setTexture(this.textures[component.texture.id]);
             lenS = component.texture.lenS;
             lenT = component.texture.lenT;
-        } else if (component.texture.type == "inherit") {
+        } else if (component.texture.type == "inherit" && parentComponentTexture != null) {
+            if (parentComponentTexture == null) {
+                console.warn(`Component with id ${componentID} has texture inherit but it's parent has no texture`);
+            }
             material.setTexture(this.textures[parentComponentTexture.id]);
             lenS = parentComponentTexture.lenS;
             lenT = parentComponentTexture.lenT;
