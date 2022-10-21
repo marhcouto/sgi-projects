@@ -23,7 +23,7 @@
 - which exists in a world created by a computer simulation ... ![Inception View](tp1/screenshots/inceptionView.png)
 - ... that has glitched and is full of bugs ... ![External View](tp1/screenshots/externalView.png) ![External View2](tp1/screenshots/externalView2.png) ![Ortho View](tp1/screenshots/orthoView.png)
 
-[Link to Scene](tp1/scenes/SGI_TP1_XML_T03_G11_v02.xml)
+[Link to Scene](tp1/scenes/SGI_TP1_XML_T03_G11_v03.xml)
 
 -----
 
