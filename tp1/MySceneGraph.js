@@ -1445,13 +1445,14 @@ export class MySceneGraph {
             material.setTexture(this.textures[component.texture.id]);
             lenS = component.texture.lenS;
             lenT = component.texture.lenT;
-        } else if (component.texture.type == "inherit" && parentComponentTexture != null) {
+        } else if (component.texture.type == "inherit") {
             if (parentComponentTexture == null) {
                 console.warn(`Component with id ${componentID} has texture inherit but it's parent has no texture`);
+            } else {
+                material.setTexture(this.textures[parentComponentTexture.id]);
+                lenS = parentComponentTexture.lenS;
+                lenT = parentComponentTexture.lenT;
             }
-            material.setTexture(this.textures[parentComponentTexture.id]);
-            lenS = parentComponentTexture.lenS;
-            lenT = parentComponentTexture.lenT;
         } else {
             material.setTexture(null);
         }
