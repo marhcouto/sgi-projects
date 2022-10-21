@@ -4,22 +4,22 @@
     <views default="customerView">
         <perspective id="customerView" near="0.1" far="500" angle="50">
             <from x="0" y="6" z="7" />
-            <to x="0" y="5.5" z="0" />
+            <to x="3" y="4" z="0" />
         </perspective>
 
         <perspective id="outView" near="0.1" far="100" angle="50">
-            <from x="0" y="15" z="40" />
+            <from x="5" y="15" z="40" />
             <to x="0" y="4" z="0" />
         </perspective>
 
         <perspective id="brokenGlass" near="0.1" far="100" angle="50">
-            <from x="4" y="5" z="-1" />
-            <to x="4" y="0" z="-3" />
+            <from x="4" y="7" z="3" />
+            <to x="4" y="0" z="-4" />
         </perspective>
 
         <perspective id="employeeView" near="0.1" far="500" angle="50">
-            <from x="8" y="5" z="-9.5" />
-            <to x="8" y="4" z="-8" />
+            <from x="8" y="4" z="-9.5" />
+            <to x="6" y="3" z="-4" />
         </perspective>
 
         <perspective id="donuts" near="0.1" far="500" angle="50">
@@ -90,6 +90,15 @@
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation linear="1" />
         </omni>
+
+        <omni id="oustideTop" enabled="1">
+            <location x="0" y="18" z="0" w="0.5" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+            <attenuation linear="1" />
+        </omni>
+
     </lights>
 
     <textures>
@@ -759,7 +768,7 @@
 
         <component id="bigant5">
             <transformation>
-                <translate x="15.6" y="5" z="-20.6" />
+                <translate x="15.6" y="5" z="-10.6" />
                 <rotate axis="y" angle="10" />
                 <rotate axis="z" angle="-8" />
                 <scale x="3" y="3" z="3" />
@@ -786,7 +795,6 @@
                 <componentref id="bigant3" />
                 <componentref id="bigant4" />
                 <componentref id="bigant5" />
-                <componentref id="bigant6" />
             </children>
         </component>
 
@@ -1300,36 +1308,8 @@
         </component>
         <!-- Pasteries -->
 
-        <component id="fridge">
-            <transformation />
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <componentref id="fridgeStructure" />
-                <componentref id="pasteries" />
-            </children>
-        </component>
-        <!-- Fridge -->
-
-        <!-- Register Machine -->
-        <component id="registerMachineMonitorArm">
-            <transformation>
-                <translate x="4" y="2.5" z="0.25" />
-                <rotate axis="x" angle="80" />
-                <scale x="0.5" y="0.1" z="0.7"/>
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <componentref id="cube" />
-            </children>
-        </component>
-
-        <component id="brokenGlass1">
+        <!-- Broken Vitrine -->
+                <component id="brokenGlass1">
             <transformation>
                 <translate x="0" y="0.1" z="-1" />
                 <rotate axis="x" angle="90"/>
@@ -1406,10 +1386,11 @@
 
         <component id="brokenVitrine">
             <transformation>
-                <translate x="5" y="0.1" z="-3" />
+                <translate x="5" y="0.1" z="-2" />
                 <rotate axis="y" angle="90" />
                 <rotate axis="x" angle="90" />
                 <rotate axis="y" angle="90" />
+                <scale x="1" y="2" z="2" />
             </transformation>
             <materials>
                 <material id="ceilingWhite" />
@@ -1423,7 +1404,37 @@
                 <componentref id="brokenGlass5" />
             </children>
         </component>
+        <!-- Broken Vitrine -->
 
+        <component id="fridge">
+            <transformation />
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <componentref id="fridgeStructure" />
+                <componentref id="pasteries" />
+            </children>
+        </component>
+        <!-- Fridge -->
+
+        <!-- Counter -->
+        <!-- Register Machine -->
+        <component id="registerMachineMonitorArm">
+            <transformation>
+                <translate x="4" y="2.5" z="0.25" />
+                <rotate axis="x" angle="80" />
+                <scale x="0.5" y="0.1" z="0.7"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
 
         <component id="registerMachineScreen">
             <transformation>
@@ -1703,8 +1714,9 @@
                 <componentref id="thirdTable" />
             </children>
         </component>
+        <!-- Tables -->
 
-        <!-- Replicated Scene -->
+        <!-- Outside Walls -->
         <component id="backFacingFloor">
             <transformation>
                 <scale x="20" y="1" z="20" />
@@ -1797,7 +1809,27 @@
                 <componentref id="backFacingRightWall" />
             </children>
         </component>
+        <!-- Outside Walls -->
 
+        <!-- Whole Bakery -->
+        <component id="bakery">
+            <transformation/>
+            <materials>
+                <material id="wallMaterial" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <componentref id="backFacingWalls" />
+                <componentref id="walls" />
+                <componentref id="fridgeAndCounter" />
+                <componentref id="tables" />
+                <componentref id="ants" />
+                <componentref id="bigants" />
+                <componentref id="brokenVitrine" />
+            </children>
+        </component>
+
+        <!-- Replicated Scene -->
         <component id="replicatedScene">
             <transformation>
                 <translate x="0" y="0.001" z="0"/>
@@ -1809,12 +1841,7 @@
             </materials>
             <texture id="none"/>
             <children>
-                <componentref id="backFacingWalls" />
-                <componentref id="walls" />
-                <componentref id="fridgeAndCounter" />
-                <componentref id="tables" />
-                <componentref id="ants" />
-                <componentref id="bigant1" />
+                <componentref id="bakery" />
             </children>
         </component>
 
@@ -2011,6 +2038,8 @@
                 <componentref id="replicatedScene" />
             </children>
         </component>
+        <!-- Shelf -->
+        <!-- Replicated Scene -->
 
         <!--Root Component-->
         <component id="sceneRoot">
@@ -2022,15 +2051,9 @@
             </materials>
             <texture id="none"/>
             <children>
-                <componentref id="ants" />
-                <componentref id="walls" />
-                <componentref id="fridgeAndCounter" />
-                <componentref id="tables" />
                 <componentref id="shelfAndScene" />
-                <componentref id="backFacingWalls" />
-                <componentref id="bigants" />
+                <componentref id="bakery" />
                 <componentref id="universe" />
-                <componentref id="brokenVitrine" />
             </children>
         </component>
     </components>
