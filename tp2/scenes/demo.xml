@@ -16,7 +16,7 @@
     <lights>
         <omni id="demoLight" enabled="1">
             <location x="9.8" y="11.9" z="10" w="1.0" />
-            <ambient r="0" g="0" b="0" a="1.0" />
+            <ambient r="1.0" g="1.0" b="1.0" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>
@@ -47,6 +47,23 @@
         <primitive id="demoRectangle">
             <rectangle x1="-0.5" y1="-1" x2="0.5" y2="1" />
         </primitive>
+
+        <primitive id="nurbs">
+            <patch degree_u="2" parts_u="10" degree_v="3" parts_v="10">
+                <controlpoint x="0" y="0" z="0" />
+                <controlpoint x="0" y="1" z="0" />
+                <controlpoint x="0" y="2" z="0" />
+                <controlpoint x="0" y="3" z="0" />
+                <controlpoint x="1" y="0" z="0" />
+                <controlpoint x="1" y="1" z="0" />
+                <controlpoint x="1" y="2" z="0" />
+                <controlpoint x="1" y="3" z="0" />
+                <controlpoint x="2" y="0" z="0" />
+                <controlpoint x="2" y="1" z="0" />
+                <controlpoint x="2" y="2" z="0" />
+                <controlpoint x="2" y="3" z="0" />
+            </patch>
+        </primitive>
     </primitives>
 
     <components>
@@ -60,7 +77,7 @@
             </materials>
             <texture id="demoTexture" length_s="1" length_t="1"/>
             <children>
-                <primitiveref id="demoRectangle" />
+                <primitiveref id="nurbs" />
             </children>
         </component>
     </components>

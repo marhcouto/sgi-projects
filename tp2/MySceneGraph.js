@@ -4,6 +4,7 @@ import { MyTriangle } from './primitives/MyTriangle.js';
 import { MyCylinder } from './primitives/MyCylinder.js';
 import { MySphere } from './primitives/MySphere.js';
 import { MyTorus } from './primitives/MyTorus.js';
+import { MyPatch } from './primitives/MyPatch.js';
 import { degreeToRad } from './utils.js';
 
 // Order of the groups in the XML document.
@@ -1001,7 +1002,7 @@ export class MySceneGraph {
         if (!this.reader.hasAttribute(node, 'parts_v')) {
             return `NURBS with id ${primitiveId} missing attribute parts_v`;
         }
-        const partsV = this.reader.hasAttribute(node, 'parts_v');
+        const partsV = this.reader.getInteger(node, 'parts_v');
         if (isNaN(partsV)) {
             return `NURBS with id ${primitiveId} has invalid number as parts_v`;
         }
@@ -1017,15 +1018,13 @@ export class MySceneGraph {
             for (let j = 0; j < degreeU + 1; j++) {
                 const idx = j * (degreeV + 1) + i;
                 const curControlPoint = this.parseCoordinates3D(XMLControlPoints[idx], `control point at patch with id: ${primitiveId}`);
-                console.log(curControlPoint);
                 if (typeof curControlPoint === 'string') {
                     return curControlPoint;
                 }
                 controlPoints[idx] = [...curControlPoint, 1];
             }
         }
-
-        console.log(controlPoints);
+        return new MyPatch(this.scene, degreeU, partsU, degreeV, partsV, controlPoints);
     }
 
     /**

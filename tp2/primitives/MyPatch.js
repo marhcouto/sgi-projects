@@ -17,6 +17,16 @@ export class MyPatch extends CGFobject {
         this.nurbsObject = new CGFnurbsObject(this.scene, this.partsU, this.partsV, nurbsSurface);
     }
 
+    /**
+	 * @method updateTexCoords
+	 * Updates the list of texture coordinates of the rectangle
+	 * @param lenS 
+     * @param lenT
+	 */
+     updateTexCoords(lenS, lenT) {
+
+	}
+
     display() {
         this.nurbsObject.display();
     }
