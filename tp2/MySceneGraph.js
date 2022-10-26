@@ -1475,11 +1475,11 @@ export class MySceneGraph {
 
         // Textures
         let lenS = 1, lenT = 1, parentLenS = 1, parentLenT = 1;
-        if (component.texture.type == "id_ref") {
+        if (component.texture.type === "id_ref") {
             material.setTexture(this.textures[component.texture.id]);
             lenS = component.texture.lenS;
             lenT = component.texture.lenT;
-        } else if (component.texture.type == "inherit") {
+        } else if (component.texture.type === "inherit") {
             if (parentComponentTexture == null) {
                 console.warn(`Component with id ${componentID} has texture inherit but it's parent has no texture`);
             } else {
@@ -1500,7 +1500,7 @@ export class MySceneGraph {
         for (let child of component.children) {
 
             // Primitives
-            if (child.type == 'primitive') {
+            if (child.type === 'primitive') {
                 this.primitives[child.id].updateTexCoords(lenS, lenT);
                 this.primitives[child.id].display();
                 this.primitives[child.id].updateTexCoords(parentLenS, parentLenT);
