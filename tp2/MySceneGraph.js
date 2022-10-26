@@ -826,7 +826,6 @@ export class MySceneGraph {
     }
 
     parseRectangle(primitiveId, node) {
-        console.log(node)
         // x1
         var x1 = this.reader.getFloat(node, 'x1');
         if (!(x1 != null && !isNaN(x1)))
@@ -851,7 +850,6 @@ export class MySceneGraph {
     }
 
     parseTriangle(primitiveId, node) {
-        console.log(node)
         let x1 = this.reader.getFloat(node, 'x1');
         if (!(x1 != null && !isNaN(x1))) {
             return `unable to parse x1 of the primitive coordinates for ID = ${primitiveId}`;
@@ -976,7 +974,58 @@ export class MySceneGraph {
     }
 
     parsePatch(primitiveId, node) {
-        console.log(node);
+        if (!this.reader.hasAttribute(node, 'degree_u')) {
+            return `NURBS with id ${primitiveId} missing degree_u attribute`;
+        }
+        const degreeU = this.reader.getInteger(node, 'degree_u');
+        if (isNaN(degreeU)) {
+            return `NURBS with id ${primitiveId} has invalid number as degree_u`;
+        }
+
+        if (!this.reader.hasAttribute(node, 'parts_u')) {
+            return `NURBS with id ${primitiveId} missing attribute parts_u`;
+        }
+        const partsU = this.reader.getInteger(node, 'parts_u');
+        if (isNaN(partsU)) {
+            return `NURBS with id ${primitiveId} has invalid number as parts_u`;
+        }
+
+        if (!this.reader.hasAttribute(node, 'degree_v')) {
+            return `NURBS with id ${primitiveId} missing attribute degree_v`;
+        }
+        const degreeV = this.reader.getInteger(node, 'degree_v');
+        if (isNaN(degreeV)) {
+            return `NURBS with id ${primitiveId} has invalid number as degree_v`;
+        }
+
+        if (!this.reader.hasAttribute(node, 'parts_v')) {
+            return `NURBS with id ${primitiveId} missing attribute parts_v`;
+        }
+        const partsV = this.reader.hasAttribute(node, 'parts_v');
+        if (isNaN(partsV)) {
+            return `NURBS with id ${primitiveId} has invalid number as parts_v`;
+        }
+        
+        const controlPoints = new Array((degreeU + 1) * (degreeV + 1));
+        const XMLControlPoints = node.children;
+        if (controlPoints.length !== XMLControlPoints.length) {
+            return `invalid number of control points got '${XMLControlPoints.length}' expected '${controlPoints.length}'`
+        }
+
+        //Parse patch control points
+        for (let i = 0; i < degreeV + 1; i++) {
+            for (let j = 0; j < degreeU + 1; j++) {
+                const idx = j * (degreeV + 1) + i;
+                const curControlPoint = this.parseCoordinates3D(XMLControlPoints[idx], `control point at patch with id: ${primitiveId}`);
+                console.log(curControlPoint);
+                if (typeof curControlPoint === 'string') {
+                    return curControlPoint;
+                }
+                controlPoints[idx] = [...curControlPoint, 1];
+            }
+        }
+
+        console.log(controlPoints);
     }
 
     /**
@@ -1013,7 +1062,7 @@ export class MySceneGraph {
             if (grandChildren.length != 1 ||
                 (grandChildren[0].nodeName != 'rectangle' && grandChildren[0].nodeName != 'triangle' &&
                     grandChildren[0].nodeName != 'cylinder' && grandChildren[0].nodeName != 'sphere' &&
-                    grandChildren[0].nodeName != 'torus')) {
+                    grandChildren[0].nodeName != 'torus') && grandChildren[0].nodeName != 'patch') {
                 return "There must be exactly 1 primitive type (rectangle, triangle, cylinder, sphere or torus)"
             }
 
@@ -1041,8 +1090,6 @@ export class MySceneGraph {
                 case 'patch':
                     primitiveParsingResult = this.parsePatch(primitiveId, grandChildren[0]);
                     break;
-                default:
-                    return `unknown primitive type ${primitiveType}`;
             }
             
             if (typeof primitiveParsingResult === 'string') {
