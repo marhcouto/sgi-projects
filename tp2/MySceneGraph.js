@@ -1007,22 +1007,24 @@ export class MySceneGraph {
             return `NURBS with id ${primitiveId} has invalid number as parts_v`;
         }
         
-        const controlPoints = new Array((degreeU + 1) * (degreeV + 1));
+        const controlPoints = new Array(degreeU + 1);
         const XMLControlPoints = node.children;
-        if (controlPoints.length !== XMLControlPoints.length) {
-            return `invalid number of control points got '${XMLControlPoints.length}' expected '${controlPoints.length}'`
+        if (((degreeU + 1) * (degreeV + 1)) !== XMLControlPoints.length) {
+            return `invalid number of control points got '${XMLControlPoints.length}' expected '${(degreeU + 1) * (degreeV + 1)}'`
         }
 
         //Parse patch control points
-        for (let i = 0; i < degreeV + 1; i++) {
-            for (let j = 0; j < degreeU + 1; j++) {
-                const idx = j * (degreeV + 1) + i;
-                const curControlPoint = this.parseCoordinates3D(XMLControlPoints[idx], `control point at patch with id: ${primitiveId}`);
-                if (typeof curControlPoint === 'string') {
-                    return curControlPoint;
+        for (let i = 0; i < degreeU + 1; i++) {
+            const controlPointGroup = new Array(degreeV + 1);
+            for (let j = 0; j < degreeV + 1; j++) {
+                const curIdx = i * (degreeV + 1) + j;
+                const numCords = this.parseCoordinates3D(XMLControlPoints[curIdx], `patch with id '${primitiveId}'`);
+                if (!Array.isArray(numCords)) {
+                    return numCords;
                 }
-                controlPoints[idx] = [...curControlPoint, 1];
+                controlPointGroup[j] = [...numCords, 1.0];
             }
+            controlPoints[i] = controlPointGroup;
         }
         return new MyPatch(this.scene, degreeU, partsU, degreeV, partsV, controlPoints);
     }

@@ -298,6 +298,48 @@
         <primitive id="shelfSupportUnion">
             <rectangle x1="-0.0625" y1="0" x2="0.0625" y2="1.118"/>
         </primitive>
+
+        <primitive id="rectangleNurbs">
+            <patch degree_u="1" parts_u="20" degree_v="1" parts_v="20">
+                <controlpoint x="-2" y="-2" z="0" />
+                <controlpoint x="-2" y="2" z="0" />
+                <controlpoint x="2" y="-2" z="0" />
+                <controlpoint x="2" y="2" z="0" />
+            </patch>
+        </primitive>
+
+        <primitive id="tentNurbs">
+            <patch degree_u="1" parts_u="20" degree_v="2" parts_v="20">
+                <controlpoint x="-0.5" y="0" z="0" />
+                <controlpoint x="0" y="1" z="0" />
+                <controlpoint x="0.5" y="0" z="0" />
+                <controlpoint x="-0.5" y="0" z="1" />
+                <controlpoint x="0" y="1" z="1" />
+                <controlpoint x="0.5" y="0" z="1" />
+            </patch>
+        </primitive>
+
+        <primitive id="barrelSideSurface">
+            <patch degree_u="2" parts_u="20" degree_v="4" parts_v="20">
+                <controlpoint x="0" y="1" z="0" />
+                <controlpoint x="0.70710678118654752440084436210485" y="0.70710678118654752440084436210485" z="0" />
+                <controlpoint x="1" y="0" z="0" />
+                <controlpoint x="0.70710678118654752440084436210485" y="-0.70710678118654752440084436210485" z="0" />
+                <controlpoint x="0" y="-1" z="0" />
+
+                <controlpoint x="0" y="2" z="1.5" />
+                <controlpoint x="1.4142135623730950488016887242097" y="1.4142135623730950488016887242097" z="1.5" />
+                <controlpoint x="2" y="0" z="1.5" />
+                <controlpoint x="1.4142135623730950488016887242097" y="-1.4142135623730950488016887242097" z="1.5" />
+                <controlpoint x="0" y="-2" z="1.5" />
+
+                <controlpoint x="0" y="1" z="3" />
+                <controlpoint x="0.70710678118654752440084436210485" y="0.70710678118654752440084436210485" z="3" />
+                <controlpoint x="1" y="0" z="3" />
+                <controlpoint x="0.70710678118654752440084436210485" y="-0.70710678118654752440084436210485" z="3" />
+                <controlpoint x="0" y="-1" z="3" />
+            </patch>
+        </primitive>
     </primitives>
 
     <components>
