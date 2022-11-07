@@ -1546,7 +1546,10 @@ export class MySceneGraph {
     graphTraversal(component, parentMaterial, parentComponentTexture) {
         //Shaders
         if (component.highlighted != null) {
-            this.scene.shader.setUniformsValues({ scaleFactor: this.scene.globalPulse * (component.highlighted.scaleH - 1) })
+            this.scene.shader.setUniformsValues({
+                scaleFactor: this.scene.globalPulse * (component.highlighted.scaleH - 1),
+                inColor: vec3.fromValues(...component.highlighted.color)
+            })
             this.scene.setActiveShaderSimple(this.scene.shader);
         }
 

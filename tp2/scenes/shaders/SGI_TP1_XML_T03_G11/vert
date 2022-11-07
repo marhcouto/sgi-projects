@@ -5,11 +5,14 @@ attribute vec2 aTextureCoord;
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
-uniform float scaleFactor;
 
+uniform vec3 inColor;
+varying vec3 color;
+uniform float scaleFactor;
 
 void main() {
 	vec3 scaledVertexPos = (scaleFactor * aVertexNormal) + aVertexPosition;
 	gl_Position = uPMatrix * uMVMatrix * vec4(scaledVertexPos, 1);
+	color = inColor;
 }
 
