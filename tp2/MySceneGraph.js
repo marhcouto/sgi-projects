@@ -1144,6 +1144,7 @@ export class MySceneGraph {
             var materialsIndex = nodeNames.indexOf("materials");
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
+            var highlightedIndex = nodeNames.indexOf("highlighted");
 
             if (transformationIndex === -1) {
                 return `missing node transformation from component with id: ${componentID}`
@@ -1156,6 +1157,10 @@ export class MySceneGraph {
             }
             if (childrenIndex === -1) {
                 return `missing node children from component with id: ${componentID}`
+            }
+            let highlighted = null
+            if (highlightedIndex !== -1) {
+                highlighted = this.parseHighlighted(componentID, grandChildren[highlightedIndex]);
             }
 
             // Transformations
@@ -1185,12 +1190,42 @@ export class MySceneGraph {
                 transformation: transformation,
                 materials: materialList,
                 texture: texture,
+                highlighted: highlighted,
                 children: childrenList
             };
         }
 
         console.log('Parsed components');
         return null;
+    }
+
+    parseHighlighted(componentID, node) {
+        const color = [];
+
+        if (!this.reader.hasAttribute(node, "r")) {
+            return `attribute r missing from color declaration for component with id: ${componentID}`;
+        }
+        color[0] = this.reader.getFloat(node, "r")
+
+        if (!this.reader.hasAttribute(node, "g")) {
+            return `attribute g missing from color declaration for component with id: ${componentID}`;
+        }
+        color[1] = this.reader.getFloat(node, "g")
+
+        if (!this.reader.hasAttribute(node, "b")) {
+            return `attribute b missing from color declaration for component with id: ${componentID}`;
+        }
+        color[2] = this.reader.getFloat(node, "b")
+
+        if (!this.reader.hasAttribute(node, "scale_h")) {
+            return `unable to parse scale_h for component with id: ${componentID}`;
+        }
+        const scaleH = this.reader.getFloat(node, "scale_h")
+
+        return {
+            color: color,
+            scaleH: scaleH
+        }
     }
 
     parseComponentChildren(componentID, childrenNode) {
@@ -1509,6 +1544,11 @@ export class MySceneGraph {
 
 
     graphTraversal(component, parentMaterial, parentComponentTexture) {
+        //Shaders
+        if (component.highlighted != null) {
+            this.scene.shader.setUniformsValues({ scaleFactor: this.scene.globalPulse * (component.highlighted.scaleH - 1) })
+            this.scene.setActiveShaderSimple(this.scene.shader);
+        }
 
         // Transformations
         this.scene.pushMatrix();
@@ -1566,6 +1606,9 @@ export class MySceneGraph {
         if (parentMaterial != null)
             parentMaterial.apply();
         this.scene.popMatrix();
+        if (component.highlighted != null) {
+            this.scene.setActiveShaderSimple(this.scene.defaultShader);
+        }
     }
 
     onKeyPress(event) {

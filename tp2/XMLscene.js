@@ -1,8 +1,9 @@
 import { CGFscene } from '../lib/CGF.js';
-import { CGFaxis,CGFcamera } from '../lib/CGF.js';
+import { CGFaxis, CGFcamera, CGFshader } from '../lib/CGF.js';
 
 
-var DEGREE_TO_RAD = Math.PI / 180;
+const DEGREE_TO_RAD = Math.PI / 180;
+const UPDATE_FREQ = 100;
 
 /**
  * XMLscene class, representing the scene that is to be rendered.
@@ -26,10 +27,14 @@ export class XMLscene extends CGFscene {
         super.init(application);
 
         this.sceneInited = false;
+        this.globalPulse = 0;
 
         this.initCameras();
 
         this.enableTextures(true);
+
+        this.globalPulse = 0
+        this.shader = new CGFshader(this.gl, 'scenes/shaders/SGI_TP1_XML_T03_G11/vert', 'scenes/shaders/SGI_TP1_XML_T03_G11/frag');
 
         this.gl.clearDepth(100.0);
         this.gl.enable(this.gl.DEPTH_TEST);
@@ -37,7 +42,7 @@ export class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
-        this.setUpdatePeriod(100);
+        this.setUpdatePeriod(UPDATE_FREQ);
     }
 
     /**
@@ -79,11 +84,11 @@ export class XMLscene extends CGFscene {
                     this.lights[i].disable();
 
                 this.lights[i].update();
-                
+
                 //This is a trick to trap the value of i inside a function so that a different callback is called for each light
                 let freezerFunction = (idx) => {
                     return (enabled) => this.updateLightState(idx, enabled)
-                } 
+                }
 
                 this.interface.createLightSource(key, light[0], freezerFunction(i));
 
@@ -126,6 +131,10 @@ export class XMLscene extends CGFscene {
         this.interface.subscribeKeyDownEvent(this.graph.onKeyPress.bind(this.graph))
 
         this.sceneInited = true;
+    }
+
+    update(t) {
+        this.globalPulse = 0.5 * Math.cos(t/200) + 0.5;
     }
 
     /**

@@ -14,7 +14,6 @@ export class MyPatch extends CGFobject {
 
     initBuffers() {
         let nurbsSurface = new CGFnurbsSurface(this.degU, this.degV , this.vertices);
-        console.log(this.vertices);
         this.nurbsObject = new CGFnurbsObject(this.scene, this.partsU, this.partsV, nurbsSurface);
     }
 
