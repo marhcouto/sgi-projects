@@ -320,24 +320,21 @@
         </primitive>
 
         <primitive id="barrelSideSurface">
-            <patch degree_u="2" parts_u="20" degree_v="4" parts_v="20">
-                <controlpoint x="0" y="1" z="0" />
-                <controlpoint x="0.70710678118654752440084436210485" y="0.70710678118654752440084436210485" z="0" />
+            <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
+                <controlpoint x="-1" y="0" z="0" />
+                <controlpoint x="-1" y="1.333333333" z="0" />
+                <controlpoint x="1" y="1.333333333" z="0" />
                 <controlpoint x="1" y="0" z="0" />
-                <controlpoint x="0.70710678118654752440084436210485" y="-0.70710678118654752440084436210485" z="0" />
-                <controlpoint x="0" y="-1" z="0" />
 
-                <controlpoint x="0" y="2" z="1.5" />
-                <controlpoint x="1.4142135623730950488016887242097" y="1.4142135623730950488016887242097" z="1.5" />
-                <controlpoint x="2" y="0" z="1.5" />
-                <controlpoint x="1.4142135623730950488016887242097" y="-1.4142135623730950488016887242097" z="1.5" />
-                <controlpoint x="0" y="-2" z="1.5" />
+                <controlpoint x="-2" y="0" z="2" />
+                <controlpoint x="-2" y="2.666666667" z="2" />
+                <controlpoint x="2" y="2.666666667" z="2" />
+                <controlpoint x="2" y="0" z="2" />
 
-                <controlpoint x="0" y="1" z="3" />
-                <controlpoint x="0.70710678118654752440084436210485" y="0.70710678118654752440084436210485" z="3" />
-                <controlpoint x="1" y="0" z="3" />
-                <controlpoint x="0.70710678118654752440084436210485" y="-0.70710678118654752440084436210485" z="3" />
-                <controlpoint x="0" y="-1" z="3" />
+                <controlpoint x="-1" y="0" z="4" />
+                <controlpoint x="-1" y="1.333333333" z="4" />
+                <controlpoint x="1" y="1.333333333" z="4" />
+                <controlpoint x="1" y="0" z="4" />
             </patch>
         </primitive>
     </primitives>
@@ -2083,6 +2080,31 @@
         <!-- Replicated Scene -->
 
         <!--Root Component-->
+        <component id="barrelRightSide">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="wallMaterial" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="barrelSideSurface" />
+            </children>
+        </component>
+
+        <component id="barrelLeftSide">
+            <transformation>
+                <rotate axis="z" angle="-180" />
+            </transformation>
+            <materials>
+                <material id="wallMaterial" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="barrelSideSurface" />
+            </children>
+        </component>
+
         <component id="sceneRoot">
             <transformation>
                 <scale x="1.0" y="1.0" z="1.0" />
@@ -2092,6 +2114,8 @@
             </materials>
             <texture id="none"/>
             <children>
+                <componentref id="barrelLeftSide" />
+                <componentref id="barrelRightSide" />
                 <componentref id="shelfAndScene" />
                 <componentref id="bakery" />
                 <componentref id="universe" />
