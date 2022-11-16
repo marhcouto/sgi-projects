@@ -319,21 +319,54 @@
             </patch>
         </primitive>
 
-        <primitive id="barrelSideSurface">
+        <primitive id="barrelLeftSideSurface">
             <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
-                <controlpoint x="-1" y="0" z="0" />
-                <controlpoint x="-1" y="1.333333333" z="0" />
-                <controlpoint x="1" y="1.333333333" z="0" />
-                <controlpoint x="1" y="0" z="0" />
+                <controlpoint x="0" y="-1" z="4" />
+                <controlpoint x="1.333333333" y="-1" z="4" />
+                <controlpoint x="1.333333333" y="1" z="4" />
+                <controlpoint x="0" y="1" z="4" />
 
-                <controlpoint x="-2" y="0" z="2" />
-                <controlpoint x="-2" y="2.666666667" z="2" />
-                <controlpoint x="2" y="2.666666667" z="2" />
-                <controlpoint x="2" y="0" z="2" />
+                <controlpoint x="0" y="-2" z="2" />
+                <controlpoint x="2.666666667" y="-2" z="2" />
+                <controlpoint x="2.666666667" y="2" z="2" />
+                <controlpoint x="0" y="2" z="2" />
 
+                <controlpoint x="0" y="-1" z="0" />
+                <controlpoint x="1.333333333" y="-1" z="0" />
+                <controlpoint x="1.333333333" y="1" z="0" />
+                <controlpoint x="0" y="1" z="0" />
+            </patch>
+        </primitive>
+
+        <primitive id="barrelRightSideSurface">
+            <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
+                <controlpoint x="0" y="1" z="4" />
+                <controlpoint x="-1.333333333" y="1" z="4" />
+                <controlpoint x="-1.333333333" y="-1" z="4" />
+                <controlpoint x="0" y="-1" z="4" />
+
+                <controlpoint x="0" y="2" z="2" />
+                <controlpoint x="-2.666666667" y="2" z="2" />
+                <controlpoint x="-2.666666667" y="-2" z="2" />
+                <controlpoint x="0" y="-2" z="2" />
+
+                <controlpoint x="0" y="1" z="0" />
+                <controlpoint x="-1.333333333" y="1" z="0" />
+                <controlpoint x="-1.333333333" y="-1" z="0" />
+                <controlpoint x="0" y="-1" z="0" />
+            </patch>
+        </primitive>
+
+        <primitive id="barrelTop">
+            <patch degree_u="1" parts_u="40" degree_v="3" parts_v="40">
                 <controlpoint x="-1" y="0" z="4" />
                 <controlpoint x="-1" y="1.333333333" z="4" />
                 <controlpoint x="1" y="1.333333333" z="4" />
+                <controlpoint x="1" y="0" z="4" />
+
+                <controlpoint x="-1" y="0" z="4" />
+                <controlpoint x="0" y="0" z="4" />
+                <controlpoint x="0" y="0" z="4" />
                 <controlpoint x="1" y="0" z="4" />
             </patch>
         </primitive>
@@ -2080,31 +2113,6 @@
         <!-- Replicated Scene -->
 
         <!--Root Component-->
-        <component id="barrelRightSide">
-            <transformation>
-            </transformation>
-            <materials>
-                <material id="wallMaterial" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="barrelSideSurface" />
-            </children>
-        </component>
-
-        <component id="barrelLeftSide">
-            <transformation>
-                <rotate axis="z" angle="-180" />
-            </transformation>
-            <materials>
-                <material id="wallMaterial" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="barrelSideSurface" />
-            </children>
-        </component>
-
         <component id="sceneRoot">
             <transformation>
                 <scale x="1.0" y="1.0" z="1.0" />
@@ -2114,8 +2122,6 @@
             </materials>
             <texture id="none"/>
             <children>
-                <componentref id="barrelLeftSide" />
-                <componentref id="barrelRightSide" />
                 <componentref id="shelfAndScene" />
                 <componentref id="bakery" />
                 <componentref id="universe" />

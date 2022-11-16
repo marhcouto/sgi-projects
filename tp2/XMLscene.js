@@ -34,7 +34,7 @@ export class XMLscene extends CGFscene {
         this.enableTextures(true);
 
         this.globalPulse = 0
-        this.shader = new CGFshader(this.gl, 'scenes/shaders/SGI_TP1_XML_T03_G11/vert', 'scenes/shaders/SGI_TP1_XML_T03_G11/frag');
+        this.shader = new CGFshader(this.gl, 'scenes/shaders/SGI_TP1_XML_T03_G11/shader.vert', 'scenes/shaders/SGI_TP1_XML_T03_G11/shader.frag');
 
         this.gl.clearDepth(100.0);
         this.gl.enable(this.gl.DEPTH_TEST);

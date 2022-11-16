@@ -7,12 +7,8 @@ uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
 uniform vec3 inColor;
-varying vec3 color;
 uniform float scaleFactor;
 
 void main() {
-	vec3 scaledVertexPos = (scaleFactor * aVertexNormal) + aVertexPosition;
-	gl_Position = uPMatrix * uMVMatrix * vec4(scaledVertexPos, 1);
-	color = inColor;
+	gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition+aVertexNormal*10.0*0.1, 1.0);
 }
-
