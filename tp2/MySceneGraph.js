@@ -1544,15 +1544,6 @@ export class MySceneGraph {
 
 
     graphTraversal(component, parentMaterial, parentComponentTexture) {
-        //Shaders
-        if (component.highlighted != null) {
-            this.scene.shader.setUniformsValues({
-                scaleFactor: this.scene.globalPulse * (component.highlighted.scaleH - 1),
-                inColor: vec3.fromValues(...component.highlighted.color)
-            })
-            this.scene.setActiveShaderSimple(this.scene.shader);
-        }
-
         // Transformations
         this.scene.pushMatrix();
         this.scene.multMatrix(component.transformation);
@@ -1593,7 +1584,21 @@ export class MySceneGraph {
             // Primitives
             if (child.type === 'primitive') {
                 this.primitives[child.id].updateTexCoords(lenS, lenT);
+                if (component.highlighted) {
+                    console.log(this.scene.globalPulse)
+                    this.scene.shader.setUniformsValues({
+                        scaleFactor: this.scene.globalPulse * (component.highlighted.scaleH - 1),
+                        pulseStage: this.scene.globalPulse,
+                        redComp: component.highlighted.color[0],
+                        greenComp: component.highlighted.color[1],
+                        blueComp: component.highlighted.color[2]
+                    })
+                    this.scene.setActiveShader(this.scene.shader);
+                }
                 this.primitives[child.id].display();
+                if (component.highlighted) {
+                    this.scene.setActiveShader(this.scene.defaultShader);
+                }
                 this.primitives[child.id].updateTexCoords(parentLenS, parentLenT);
                 continue;
             } 
@@ -1606,12 +1611,9 @@ export class MySceneGraph {
         }
 
         // Resetting        
-        if (parentMaterial != null)
+        if (parentMaterial)
             parentMaterial.apply();
         this.scene.popMatrix();
-        if (component.highlighted != null) {
-            this.scene.setActiveShaderSimple(this.scene.defaultShader);
-        }
     }
 
     onKeyPress(event) {

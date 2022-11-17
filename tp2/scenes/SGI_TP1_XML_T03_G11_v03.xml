@@ -859,7 +859,7 @@
                 <material id="inherit" />
             </materials>
             <texture id="none"/>
-            <highlighted r="1" g="1" b="1" scale_h="1.05" />
+            <highlighted r="1" g="1" b="1" scale_h="1.10" />
             <children>
                 <componentref id="bigant1" />
                 <componentref id="bigant2" />
