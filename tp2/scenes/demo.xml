@@ -85,7 +85,7 @@
             <materials>
                 <material id="demoMaterial" />
             </materials>
-            <texture id="demoTexture" length_s="1" length_t="1"/>
+            <texture id="none"/>
             <children>
                 <componentref id="BoundLeftRect" />
                 <componentref id="BoundRightRect" />
@@ -146,11 +146,11 @@
             <materials>
                 <material id="demoMaterial" />
             </materials>
-            <texture id="demoTexture" length_s="1" length_t="1"/>
+            <texture id="none"/>
             <children>
                 <primitiveref id="demoSphere" />
             </children>
-            <highlighted r="1" g="1" b="1" scale_h="1.1" />
+            <highlighted r="1" g="0" b="0" scale_h="1.1" />
         </component>
 
         <component id="BoundLeftRect">
