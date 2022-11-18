@@ -319,25 +319,55 @@
             </patch>
         </primitive>
 
-        <primitive id="barrelSideSurface">
-            <patch degree_u="2" parts_u="20" degree_v="4" parts_v="20">
-                <controlpoint x="0" y="1" z="0" />
-                <controlpoint x="0.70710678118654752440084436210485" y="0.70710678118654752440084436210485" z="0" />
-                <controlpoint x="1" y="0" z="0" />
-                <controlpoint x="0.70710678118654752440084436210485" y="-0.70710678118654752440084436210485" z="0" />
+        <primitive id="barrelLeftSideSurface">
+            <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
+                <controlpoint x="0" y="-1" z="4" />
+                <controlpoint x="1.333333333" y="-1" z="4" />
+                <controlpoint x="1.333333333" y="1" z="4" />
+                <controlpoint x="0" y="1" z="4" />
+
+                <controlpoint x="0" y="-2" z="2" />
+                <controlpoint x="2.666666667" y="-2" z="2" />
+                <controlpoint x="2.666666667" y="2" z="2" />
+                <controlpoint x="0" y="2" z="2" />
+
                 <controlpoint x="0" y="-1" z="0" />
+                <controlpoint x="1.333333333" y="-1" z="0" />
+                <controlpoint x="1.333333333" y="1" z="0" />
+                <controlpoint x="0" y="1" z="0" />
+            </patch>
+        </primitive>
 
-                <controlpoint x="0" y="2" z="1.5" />
-                <controlpoint x="1.4142135623730950488016887242097" y="1.4142135623730950488016887242097" z="1.5" />
-                <controlpoint x="2" y="0" z="1.5" />
-                <controlpoint x="1.4142135623730950488016887242097" y="-1.4142135623730950488016887242097" z="1.5" />
-                <controlpoint x="0" y="-2" z="1.5" />
+        <primitive id="barrelRightSideSurface">
+            <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
+                <controlpoint x="0" y="1" z="4" />
+                <controlpoint x="-1.333333333" y="1" z="4" />
+                <controlpoint x="-1.333333333" y="-1" z="4" />
+                <controlpoint x="0" y="-1" z="4" />
 
-                <controlpoint x="0" y="1" z="3" />
-                <controlpoint x="0.70710678118654752440084436210485" y="0.70710678118654752440084436210485" z="3" />
-                <controlpoint x="1" y="0" z="3" />
-                <controlpoint x="0.70710678118654752440084436210485" y="-0.70710678118654752440084436210485" z="3" />
-                <controlpoint x="0" y="-1" z="3" />
+                <controlpoint x="0" y="2" z="2" />
+                <controlpoint x="-2.666666667" y="2" z="2" />
+                <controlpoint x="-2.666666667" y="-2" z="2" />
+                <controlpoint x="0" y="-2" z="2" />
+
+                <controlpoint x="0" y="1" z="0" />
+                <controlpoint x="-1.333333333" y="1" z="0" />
+                <controlpoint x="-1.333333333" y="-1" z="0" />
+                <controlpoint x="0" y="-1" z="0" />
+            </patch>
+        </primitive>
+
+        <primitive id="barrelTop">
+            <patch degree_u="1" parts_u="40" degree_v="3" parts_v="40">
+                <controlpoint x="-1" y="0" z="4" />
+                <controlpoint x="-1" y="1.333333333" z="4" />
+                <controlpoint x="1" y="1.333333333" z="4" />
+                <controlpoint x="1" y="0" z="4" />
+
+                <controlpoint x="-1" y="0" z="4" />
+                <controlpoint x="0" y="0" z="4" />
+                <controlpoint x="0" y="0" z="4" />
+                <controlpoint x="1" y="0" z="4" />
             </patch>
         </primitive>
     </primitives>
@@ -829,7 +859,7 @@
                 <material id="inherit" />
             </materials>
             <texture id="none"/>
-            <highlighted r="1" g="1" b="1" scale_h="1.05" />
+            <highlighted r="1" g="1" b="1" scale_h="1.10" />
             <children>
                 <componentref id="bigant1" />
                 <componentref id="bigant2" />

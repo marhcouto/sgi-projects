@@ -1203,16 +1203,16 @@ export class MySceneGraph {
             }
 
             // Children
-            const childrenList = this.parseComponentChildren(componentID, grandChildren[childrenIndex]);
-            if (!Array.isArray(childrenList)) {
-                return childrenList;
+            const childrenObject = this.parseComponentChildren(componentID, grandChildren[childrenIndex]);
+            if (typeof childrenObject === 'string') {
+                return childrenObject;
             }
             this.components[componentID] = {
                 transformation: transformation,
                 materials: materialList,
                 texture: texture,
                 highlighted: highlighted,
-                children: childrenList
+                children: childrenObject
             };
         }
 
@@ -1255,23 +1255,21 @@ export class MySceneGraph {
             return `expected at least one child when parsing component with id: ${componentID}`;
         }
 
-        const childrenObj = []
+        const childrenObj = {
+            primitives: [],
+            components: []
+        };
+
         for (let i = 0; i < childrenArr.length; i++) {
             const curChild = childrenArr[i];
             const childID = this.reader.getString(curChild, 'id');
             if (curChild.nodeName === 'componentref') {
-                childrenObj.push({
-                    type: 'component',
-                    id: childID
-                });
+                childrenObj.components.push(childID)
             } else if (curChild.nodeName === 'primitiveref') {
                 if (this.primitives[childID] == null) {
                     return `primitive with id ${childID} does not exist when parsing component's ${componentID} children`;
                 }
-                childrenObj.push({
-                    type: 'primitive',
-                    id: childID
-                });
+                childrenObj.primitives.push(childID)
             } else {
                 return `unexpected node with name '${curChild.nodeName}' when parsing component's ${componentID} children`
             }
@@ -1565,15 +1563,6 @@ export class MySceneGraph {
 
 
     graphTraversal(component, parentMaterial, parentComponentTexture) {
-        //Shaders
-        if (component.highlighted != null) {
-            this.scene.shader.setUniformsValues({
-                scaleFactor: this.scene.globalPulse * (component.highlighted.scaleH - 1),
-                inColor: vec3.fromValues(...component.highlighted.color)
-            })
-            this.scene.setActiveShaderSimple(this.scene.shader);
-        }
-
         // Transformations
         this.scene.pushMatrix();
         this.scene.multMatrix(component.transformation);
@@ -1609,30 +1598,41 @@ export class MySceneGraph {
         }
         material.apply();
 
-        for (let child of component.children) {
-
-            // Primitives
-            if (child.type === 'primitive') {
-                this.primitives[child.id].updateTexCoords(lenS, lenT);
-                this.primitives[child.id].display();
-                this.primitives[child.id].updateTexCoords(parentLenS, parentLenT);
-                continue;
-            } 
-
+        // Components
+        for (let childId of component.children.components) {
             // Sub components
-            if (this.components[child.id] == null) {
-                return `component with id ${child.id} does not exist`;
+            if (!this.components[childId]) {
+                return `component with id ${childId} does not exist`;
             }
-            this.graphTraversal(this.components[child.id], material, component.texture);
+            this.graphTraversal(this.components[childId], material, component.texture);
+        }
+
+        if (component.highlighted && component.children.primitives.length !== 0) {
+            this.scene.shader.setUniformsValues({
+                scaleFactor: this.scene.globalPulse * (component.highlighted.scaleH - 1),
+                pulseStage: this.scene.globalPulse,
+                redComp: component.highlighted.color[0],
+                greenComp: component.highlighted.color[1],
+                blueComp: component.highlighted.color[2]
+            })
+            this.scene.setActiveShader(this.scene.shader);
+        }
+
+        // Primitives
+        for (let childId of component.children.primitives) {
+            this.primitives[childId].updateTexCoords(lenS, lenT);
+            this.primitives[childId].display();
+            this.primitives[childId].updateTexCoords(parentLenS, parentLenT);
+        }
+
+        if (component.highlighted && component.children.primitives.length !== 0) {
+            this.scene.setActiveShader(this.scene.defaultShader);
         }
 
         // Resetting        
-        if (parentMaterial != null)
+        if (parentMaterial)
             parentMaterial.apply();
         this.scene.popMatrix();
-        if (component.highlighted != null) {
-            this.scene.setActiveShaderSimple(this.scene.defaultShader);
-        }
     }
 
     onKeyPress(event) {

@@ -45,7 +45,19 @@
 
     <primitives>
         <primitive id="demoRectangle">
-            <rectangle x1="-0.5" y1="-1" x2="0.5" y2="1" />
+            <rectangle x1="-2" y1="-2" x2="2" y2="2" />
+        </primitive>
+
+        <primitive id="demoSphere">
+            <sphere radius="1" slices="50" stacks="50"/>
+        </primitive>
+
+        <primitive id="demoCylinder">
+            <cylinder base="1.0" top="1.0" height="1" slices="20" stacks="20" />
+        </primitive>
+
+        <primitive id="demoCylinder2">
+            <cylinder base="1.1" top="1.1" height="1.1" slices="20" stacks="20" />
         </primitive>
 
         <primitive id="nurbs">
@@ -69,15 +81,89 @@
     <components>
         <component id="demoRoot">
             <transformation>
-                <translate x="0" y="0" z="1" />
-                <scale x="2" y="1" z="1" />
+            </transformation>
+            <materials>
+                <material id="demoMaterial" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <componentref id="BoundLeftRect" />
+                <componentref id="BoundRightRect" />
+                <componentref id="demoCylinder" />
+                <componentref id="demoCylinder2" />
+                <componentref id="demoSphere" />
+            </children>
+        </component>
+
+        <component id="demoCylinder">
+            <transformation>
+                <rotate axis="x" angle="90" />
+                <scale x="2" z="2" y="2"/>
+                <translate x="-3" z="3" y="5.5" />
             </transformation>
             <materials>
                 <material id="demoMaterial" />
             </materials>
             <texture id="demoTexture" length_s="1" length_t="1"/>
             <children>
-                <primitiveref id="nurbs" />
+                <primitiveref id="demoCylinder" />
+            </children>
+            <highlighted r="1" g="1" b="1" scale_h="1.1" />
+        </component>
+
+        <component id="demoCylinder2">
+            <transformation>
+                <rotate axis="x" angle="90" />
+                <scale x="2" z="2" y="2"/>
+                <translate x="-3" z="3" y="5.5" />
+            </transformation>
+            <materials>
+                <material id="demoMaterial" />
+            </materials>
+            <texture id="demoTexture" length_s="1" length_t="1"/>
+            <children>
+                <primitiveref id="demoCylinder2" />
+            </children>
+        </component>
+
+        <component id="BoundRightRect">
+            <transformation>
+                <translate x="1.1" y="0" z="0"/>
+                <rotate axis="y" angle="-90" />
+            </transformation>
+            <materials>
+                <material id="demoMaterial" />
+            </materials>
+            <texture id="demoTexture" length_s="1" length_t="1"/>
+            <children>
+                <primitiveref id="demoRectangle" />
+            </children>
+        </component>
+
+        <component id="demoSphere">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="demoMaterial" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="demoSphere" />
+            </children>
+            <highlighted r="1" g="0" b="0" scale_h="1.1" />
+        </component>
+
+        <component id="BoundLeftRect">
+            <transformation>
+                <translate x="-1.1" y="0" z="0"/>
+                <rotate axis="y" angle="90" />
+            </transformation>
+            <materials>
+                <material id="demoMaterial" />
+            </materials>
+            <texture id="demoTexture" length_s="1" length_t="1"/>
+            <children>
+                <primitiveref id="demoRectangle" />
             </children>
         </component>
     </components>
