@@ -1,15 +1,14 @@
-import { MyAnimation } from './MyAnimation';
-import { MyKeyframe } from './MyKeyframe';
+import { MyAnimation } from './MyAnimation.js'
 
 /**
  * MyKeyFrameAnimation
  * @constructor
  * @param scene - Reference to MyScene object
  */
- class MyKeyframeAnimation extends MyAnimation {
-    constructor(scene) {
+export class MyKeyframeAnimation extends MyAnimation {
+    constructor(scene, keyframes) {
         super(scene);
-        this.keyframes = [];
+        this.keyframes = keyframes;
     }
 
     addKeyFrame(keyframe) {

@@ -5,7 +5,9 @@ import { MyCylinder } from './primitives/MyCylinder.js';
 import { MySphere } from './primitives/MySphere.js';
 import { MyTorus } from './primitives/MyTorus.js';
 import { MyPatch } from './primitives/MyPatch.js';
-import { degreeToRad } from './utils.js';
+import { MyKeyframeAnimation } from './transformations/MyKeyframeAnimation.js'
+import { MyKeyframe } from './transformations/MyKeyframe.js';
+import { axisToVector, degreeToRad } from './utils.js';
 
 // Order of the groups in the XML document.
 var SCENE_INDEX = 0;
@@ -192,14 +194,14 @@ export class MySceneGraph {
         }
 
         // <animations>
-        if ((index = nodeNames.indexOf("animations")) == -1)
+        if ((index = nodeNames.indexOf("animations")) === -1)
             return "tag <animations> missing";
         else {
             if (index != ANIMATIONS_INDEX)
                 this.onXMLMinorError("tag <animations> out of order");
 
             //Parse animations block
-            if ((error = this.parsePrimitives(nodes[index])) != null)
+            if ((error = this.parseAnimations(nodes[index])) != null)
                 return error;
         }
 
@@ -1122,13 +1124,125 @@ export class MySceneGraph {
      * @param {animations block elemet} animationsNode 
      */
     parseAnimations(animationsNode) {
-
+        this.animations = {}
+        const childrenAnimations = animationsNode.children
+        for (let childIdx = 0; childIdx < childrenAnimations.length; childIdx++) {
+            const keyframeAnim = this.parseKeyframeAnim(childrenAnimations[childIdx]);
+            if (typeof keyframeAnim === 'string') {
+                return keyframeAnim;
+            }
+        }
     }
 
+    parseKeyframeAnim(node) {
+        if (node.nodeName !== 'keyframeanim') {
+            return `Error parsing animations: found '${node.nodeName}' expected '${'keyframeanim'}'`;
+        }
+        if (!this.reader.hasAttribute(node, 'id')) {
+            return `Error parsing animations: found keyframeanim with no id`;
+        }
+        const keyframeAnimId = this.reader.getString(node, 'id');
+        const keyframeNodes = node.children
+        const keyframes = []
+        for (let keyframeIdx = 0; keyframeIdx < keyframeNodes.length; keyframeIdx++) { 
+            const keyframe = this.parseKeyframe(keyframeAnimId, keyframeNodes[keyframeIdx]);
+            if (typeof keyframe === 'string') {
+                return keyframe;
+            };
+            keyframes.push(keyframe);
+        }
+        this.animations[keyframeAnimId] = new MyKeyframeAnimation(this.scene, keyframes);
+    }
+
+    parseKeyframe(animId, node) {
+        if (node.nodeName !== 'keyframe') {
+            return `Error parsing animations: found '${node.nodeName}' expected '${'keyframeanim'}'`;
+        }
+
+        if (!this.reader.hasAttribute(node, 'instant')) {
+            return `Error parsing keyframeanim: found keyframe with no instant at animation with id '${animId}'`;
+        }
+        const keyframeInstant = this.reader.getFloat(node, 'instant');
+        if (isNaN(keyframeInstant)) {
+            return `Error parsing keyframeanim: invalid instant at keyframe from animation with id '${animId}'`;
+        }
+
+        const transformations = node.children;
+        if (transformations.length > 5) {
+            return `Error parsing keyframeanim: found ${transformations.length} transformations expected 5 at keyframe from anim with id '${animId}'`;
+        }
+
+        const translationNode = transformations[0];
+        const rotationInZNode = transformations[1];
+        const rotationInYNode = transformations[2];
+        const rotationInXNode = transformations[3];
+        const scaleNode = transformations[4];
+
+        if (!translationNode || translationNode.nodeName !== 'translation') {
+            return `Error parsing keyframeanim: translation not found at keyframe from anim with id '${animId}'`;
+        }
+        const translation = this.parseCoordinates3D(translationNode, `translation from animation with id '${animId}`);
+        if (typeof translationVector === 'string') {
+            return translationVector;
+        }
+
+        const rotationInZ = this.parseRotation(rotationInZNode, `rotation from animation with id '${animId}'`);
+        if (typeof rotationInZ === 'string') {
+            return rotationInZ;
+        }
+
+        const rotationInY = this.parseRotation(rotationInYNode, `rotation from animation with id '${animId}'`);
+        if (typeof rotationInY === 'string') {
+            return rotationInY;
+        }
+
+        const rotationInX = this.parseRotation(rotationInXNode, `rotation from animation with id '${animId}'`);
+        if (typeof rotationInX === 'string') {
+            return rotationInX;
+        }
+
+        const scale = this.parseAnimationScale(scaleNode, `rotation from animation with id '${animId}'`);
+        if (typeof scale === 'string') {
+            return scale;
+        }
+
+        return new MyKeyframe(
+            keyframeInstant,
+            vec3.fromValues(translation[0], translation[1], translation[2]),
+            rotationInZ,
+            rotationInY,
+            rotationInX,
+            vec3.fromValues(scale[0], scale[1], scale[2])
+        );
+    }
+
+    parseAnimationScale(node, messageError) {
+        var position = [];
+
+        // x
+        var x = this.reader.getFloat(node, 'sx');
+        if (!(x != null && !isNaN(x)))
+            return "unable to parse x-coordinate of the " + messageError;
+
+        // y
+        var y = this.reader.getFloat(node, 'sy');
+        if (!(y != null && !isNaN(y)))
+            return "unable to parse y-coordinate of the " + messageError;
+
+        // z
+        var z = this.reader.getFloat(node, 'sz');
+        if (!(z != null && !isNaN(z)))
+            return "unable to parse z-coordinate of the " + messageError;
+
+        position.push(...[x, y, z]);
+
+        return position;
+    }
+    
     /**
-   * Parses the <components> block.
-   * @param {components block element} componentsNode
-   */
+    * Parses the <components> block.
+    * @param {components block element} componentsNode
+    */
     parseComponents(componentsNode) {
         var children = componentsNode.children;
 
@@ -1428,15 +1542,9 @@ export class MySceneGraph {
             return `expected a character as axis but got a string with length ${axis.length} at the ${messageError}`;
         }
 
-        let vectorizedAxis;
-        if (axis === 'x') {
-            vectorizedAxis = vec3.fromValues(1, 0, 0);
-        } else if (axis === 'y') {
-            vectorizedAxis = vec3.fromValues(0, 1, 0);
-        } else if (axis === 'z') {
-            vectorizedAxis = vec3.fromValues(0, 0, 1);
-        } else {
-            return `invalid axis expected one of [x, y, z] but got '${axis}' at the ${messageError}`;
+        let vectorizedAxis = axisToVector(axis, messageError);
+        if (typeof vectorizedAxis === 'string') {
+            return vectorizedAxis;
         }
 
         let angle = this.reader.getFloat(node, 'angle');
