@@ -133,16 +133,11 @@ export class XMLscene extends CGFscene {
         this.sceneInited = true;
 
         this.setUpdatePeriod(UPDATE_FREQ);
-
-        this.startTime = null;
     }
 
     update(t) {
-        if (this.startTime === null) this.startTime = t;
-        
-        // TODO: Call animation root
-
         this.globalPulse = 0.5 * Math.cos(t/200) + 0.5;
+        this.graph.update(t);
     }
 
     /**

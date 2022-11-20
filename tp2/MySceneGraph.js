@@ -1209,9 +1209,9 @@ export class MySceneGraph {
         return new MyKeyframe(
             keyframeInstant,
             vec3.fromValues(translation[0], translation[1], translation[2]),
-            rotationInZ,
-            rotationInY,
-            rotationInX,
+            rotationInZ.angle,
+            rotationInY.angle,
+            rotationInX.angle,
             vec3.fromValues(scale[0], scale[1], scale[2])
         );
     }
@@ -1279,6 +1279,7 @@ export class MySceneGraph {
             var materialsIndex = nodeNames.indexOf("materials");
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
+            var animationIndex = nodeNames.indexOf("animation");
             var highlightedIndex = nodeNames.indexOf("highlighted");
 
             if (transformationIndex === -1) {
@@ -1293,6 +1294,20 @@ export class MySceneGraph {
             if (childrenIndex === -1) {
                 return `missing node children from component with id: ${componentID}`
             }
+
+            let animation = null
+            if (animationIndex !== -1) {
+                if (!this.reader.hasAttribute(grandChildren[animationIndex], 'id')) {
+                    return `attribute id missing from component's ${componentID} animation`;
+                }
+                const animationID = this.reader.getString(grandChildren[animationIndex], 'id');
+                if (animationID in this.animations) {
+                    animation = this.animations[animationID];
+                } else {
+                    return `component '${componentID}' references missing animation with id '${animationID}'`;
+                }
+            }
+
             let highlighted = null
             if (highlightedIndex !== -1) {
                 highlighted = this.parseHighlighted(componentID, grandChildren[highlightedIndex]);
@@ -1322,10 +1337,12 @@ export class MySceneGraph {
                 return childrenObject;
             }
             this.components[componentID] = {
+                id: componentID,
                 transformation: transformation,
                 materials: materialList,
                 texture: texture,
                 highlighted: highlighted,
+                animation: animation,
                 children: childrenObject
             };
         }
@@ -1671,8 +1688,18 @@ export class MySceneGraph {
 
 
     graphTraversal(component, parentMaterial, parentComponentTexture) {
+        if (component.animation && !component.animation.active()) {
+            return;
+        }
+        
         // Transformations
         this.scene.pushMatrix();
+
+        //Animations
+        if (component.animation) {
+            component.animation.apply();
+        }
+
         this.scene.multMatrix(component.transformation);
 
         // Materials
@@ -1738,14 +1765,23 @@ export class MySceneGraph {
         }
 
         // Resetting        
-        if (parentMaterial)
+        if (parentMaterial) {
             parentMaterial.apply();
+        }
         this.scene.popMatrix();
     }
 
     onKeyPress(event) {
         if (event.code === "KeyM") {
             this.curMaterial += 1
+        }
+    }
+
+    update(t) {
+        if (this.scene.sceneInited) {
+            Object.values(this.animations).forEach(elem => {
+                elem.update(t);
+            })
         }
     }
 
