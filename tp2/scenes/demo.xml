@@ -29,9 +29,9 @@
     <materials>
         <material id="demoMaterial" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="1.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="0.6" g="0.0" b="0.0" a="1.0" />
-            <specular r="0.6" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.3" g="0.3" b="0.3" a="1.0" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </material>
     </materials>
 
@@ -44,104 +44,43 @@
     </transformations>
 
     <primitives>
-        <primitive id="demoRectangle">
-            <rectangle x1="-2" y1="-2" x2="2" y2="2" />
-        </primitive>
-
         <primitive id="demoSphere">
-            <sphere radius="1" slices="50" stacks="50"/>
-        </primitive>
-
-        <primitive id="demoCylinder">
-            <cylinder base="1.0" top="1.0" height="1" slices="20" stacks="20" />
-        </primitive>
-
-        <primitive id="demoCylinder2">
-            <cylinder base="1.1" top="1.1" height="1.1" slices="20" stacks="20" />
-        </primitive>
-
-        <primitive id="nurbs">
-            <patch degree_u="2" parts_u="10" degree_v="3" parts_v="10">
-                <controlpoint x="0" y="0" z="0" />
-                <controlpoint x="0" y="1" z="0" />
-                <controlpoint x="0" y="2" z="0" />
-                <controlpoint x="0" y="3" z="0" />
-                <controlpoint x="1" y="0" z="0" />
-                <controlpoint x="1" y="1" z="0" />
-                <controlpoint x="1" y="2" z="0" />
-                <controlpoint x="1" y="3" z="0" />
-                <controlpoint x="2" y="0" z="0" />
-                <controlpoint x="2" y="1" z="0" />
-                <controlpoint x="2" y="2" z="0" />
-                <controlpoint x="2" y="3" z="0" />
-            </patch>
+            <sphere radius="2" slices="100" stacks="100"/>
         </primitive>
     </primitives>
+
+    <animations>
+        <keyframeanim id="ufoMovement">
+            <keyframe instant="1">
+                <translation x="0" y="0" z="0" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="1" sy="1" sz="1" />
+            </keyframe>
+
+            <keyframe instant="5">
+                <translation x="10" y="10" z="10" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="2" sy="2" sz="2" />
+            </keyframe>
+
+            <keyframe instant="10">
+                <translation x="-10" y="5" z="10" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="2" sy="2" sz="2" />
+            </keyframe>
+        </keyframeanim>
+    </animations>
 
     <components>
         <component id="demoRoot">
             <transformation>
-            </transformation>
-            <materials>
-                <material id="demoMaterial" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <componentref id="BoundLeftRect" />
-                <componentref id="BoundRightRect" />
-                <componentref id="demoCylinder" />
-                <componentref id="demoCylinder2" />
-                <componentref id="demoSphere" />
-            </children>
-        </component>
-
-        <component id="demoCylinder">
-            <transformation>
-                <rotate axis="x" angle="90" />
-                <scale x="2" z="2" y="2"/>
-                <translate x="-3" z="3" y="5.5" />
-            </transformation>
-            <materials>
-                <material id="demoMaterial" />
-            </materials>
-            <texture id="demoTexture" length_s="1" length_t="1"/>
-            <children>
-                <primitiveref id="demoCylinder" />
-            </children>
-            <highlighted r="1" g="1" b="1" scale_h="1.1" />
-        </component>
-
-        <component id="demoCylinder2">
-            <transformation>
-                <rotate axis="x" angle="90" />
-                <scale x="2" z="2" y="2"/>
-                <translate x="-3" z="3" y="5.5" />
-            </transformation>
-            <materials>
-                <material id="demoMaterial" />
-            </materials>
-            <texture id="demoTexture" length_s="1" length_t="1"/>
-            <children>
-                <primitiveref id="demoCylinder2" />
-            </children>
-        </component>
-
-        <component id="BoundRightRect">
-            <transformation>
-                <translate x="1.1" y="0" z="0"/>
-                <rotate axis="y" angle="-90" />
-            </transformation>
-            <materials>
-                <material id="demoMaterial" />
-            </materials>
-            <texture id="demoTexture" length_s="1" length_t="1"/>
-            <children>
-                <primitiveref id="demoRectangle" />
-            </children>
-        </component>
-
-        <component id="demoSphere">
-            <transformation>
+                <scale x="1" y="0.3" z="1"/>
             </transformation>
             <materials>
                 <material id="demoMaterial" />
@@ -150,21 +89,7 @@
             <children>
                 <primitiveref id="demoSphere" />
             </children>
-            <highlighted r="1" g="0" b="0" scale_h="1.1" />
-        </component>
-
-        <component id="BoundLeftRect">
-            <transformation>
-                <translate x="-1.1" y="0" z="0"/>
-                <rotate axis="y" angle="90" />
-            </transformation>
-            <materials>
-                <material id="demoMaterial" />
-            </materials>
-            <texture id="demoTexture" length_s="1" length_t="1"/>
-            <children>
-                <primitiveref id="demoRectangle" />
-            </children>
+            <animation id="ufoMovement" />
         </component>
     </components>
 </sxs>

@@ -131,10 +131,13 @@ export class XMLscene extends CGFscene {
         this.interface.subscribeKeyDownEvent(this.graph.onKeyPress.bind(this.graph))
 
         this.sceneInited = true;
+
+        this.setUpdatePeriod(UPDATE_FREQ);
     }
 
     update(t) {
         this.globalPulse = 0.5 * Math.cos(t/200) + 0.5;
+        this.graph.update(t);
     }
 
     /**

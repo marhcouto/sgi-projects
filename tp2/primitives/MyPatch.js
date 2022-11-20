@@ -1,5 +1,15 @@
 import { CGFnurbsObject, CGFnurbsSurface, CGFobject } from '../../lib/CGF.js';
 
+/**
+ * MyPatch
+ * @constructor
+ * @param scene - Reference to MyScene object
+ * @param degU - Degree of the curve in U
+ * @param degV - Degree of the curve in V
+ * @param partsU - Divisions in U
+ * @param partsV - Divisions in V
+ * @param vertices - Array of vertices
+ */
 export class MyPatch extends CGFobject {
     constructor(scene, degU, partsU, degV, partsV, vertices) {
         super(scene);
