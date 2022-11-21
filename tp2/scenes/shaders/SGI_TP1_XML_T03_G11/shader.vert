@@ -7,9 +7,8 @@ uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
-uniform float redComp;
-uniform float greenComp;
-uniform float blueComp;
+uniform vec4 highlightColor;
+uniform vec4 materialColor;
 
 uniform float scaleFactor;
 uniform float pulseStage;

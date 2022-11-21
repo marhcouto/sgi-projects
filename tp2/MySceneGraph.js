@@ -1705,7 +1705,7 @@ export class MySceneGraph {
         // Materials
         let material = parentMaterial;
         let curMaterial = component.materials[this.curMaterial % component.materials.length]
-        if (curMaterial != "inherit") {
+        if (curMaterial !== "inherit") {
             material = this.materials[curMaterial];
         }
 
@@ -1746,9 +1746,8 @@ export class MySceneGraph {
             this.scene.shader.setUniformsValues({
                 scaleFactor: this.scene.globalPulse * (component.highlighted.scaleH - 1),
                 pulseStage: this.scene.globalPulse,
-                redComp: component.highlighted.color[0],
-                greenComp: component.highlighted.color[1],
-                blueComp: component.highlighted.color[2]
+                highlightColor: vec4.fromValues(...component.highlighted.color, 1.0),
+                materialColor: material.ambient
             })
             this.scene.setActiveShader(this.scene.shader);
         }
