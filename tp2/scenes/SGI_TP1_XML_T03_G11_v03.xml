@@ -7,7 +7,7 @@
             <to x="3" y="4" z="0" />
         </perspective>
 
-        <perspective id="outView" near="0.1" far="100" angle="50">
+        <perspective id="outView" near="0.1" far="500" angle="50">
             <from x="5" y="15" z="40" />
             <to x="0" y="4" z="0" />
         </perspective>
@@ -118,6 +118,7 @@
         <texture id="pagenotfoundTexture" file="scenes/images/SGI_TP1_XML_T03_G11/pagenotfound.png" />
         <texture id="chess" file="scenes/images/SGI_TP1_XML_T03_G11/chess.jpg" />
         <texture id="stripedMetal" file="scenes/images/SGI_TP1_XML_T03_G11/metal_stripes.jpg" />
+        <texture id="stripesOnTransparentBg" file="scenes/images/SGI_TP1_XML_T03_G11/beam_stripes.png" />
     </textures>
 
     <materials>
@@ -133,6 +134,20 @@
             <ambient r="0.7" g="0.3" b="0.5" a="1.0" />
             <diffuse r="0.7" g="0.3" b="0.5" a="1.0" />
             <specular r="0.4" g="0.1" b="0.3" a="1.0" />
+        </material>
+
+        <material id="alienGreen" shininess="10">
+            <emission r="0.220" g="0.361" b="0.259" a="1.0" />
+            <ambient r="0.220" g="0.361" b="0.259" a="1.0" />
+            <diffuse r="0.220" g="0.361" b="0.259" a="1.0" />
+            <specular r="0.220" g="0.361" b="0.259" a="1.0" />
+        </material>
+
+        <material id="abductionGrey" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.3" g="0.3" b="0.3" a="1.0" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+            <specular r="0.65" g="0.65" b="0.65" a="1.0" />
         </material>
 
         <material id="ceilingWhite" shininess="10">
@@ -370,24 +385,140 @@
                 <controlpoint x="1" y="0" z="4" />
             </patch>
         </primitive>
+
+        <primitive id="alienBeam">
+            <cylinder base="2" top="3" height="13" slices="50" stacks="50" />
+        </primitive>
+
+        <primitive id="alienShip">
+            <sphere radius="2" stacks="100" slices="100"/>
+        </primitive>
     </primitives>
 
     <animations>
-        <keyframeanim id="firstAnim">
+        <keyframeanim id="shipMovement">
             <keyframe instant="2">
-                <translation x="1" y="2" z="3" />
-                <rotation axis="z" angle="4" />
-                <rotation axis="y" angle="5" />
-                <rotation axis="x" angle="6" />
-                <scale sx="7" sy="8" sz="9" />
+                <translation x="50" y="50" z="50" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="1" sy="1" sz="1" />
+            </keyframe>
+
+            <keyframe instant="5">
+                <translation x="-16.6" y="20" z="10.6" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="4" sy="4" sz="4" />
+            </keyframe>
+
+            <keyframe instant="10.31">
+                <translation x="-16.6" y="20" z="10.6" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="4" sy="4" sz="4" />
+            </keyframe>
+
+            <keyframe instant="12.31">
+                <translation x="16.6" y="20" z="-10.6" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="4" sy="4" sz="4" />
+            </keyframe>
+
+            <keyframe instant="14">
+                <translation x="16.6" y="45" z="-10.6" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="4" sy="4" sz="4" />
+            </keyframe>
+
+            <keyframe instant="14.01">
+                <translation x="0" y="0" z="0" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="0" sy="0" sz="0" />
+            </keyframe>
+        </keyframeanim>
+
+        <keyframeanim id="abductionBeam">
+            <keyframe instant="5">
+                <translation x="-16.6" y="16" z="10.6" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="1" sy="0" sz="1" />
+            </keyframe>
+
+            <keyframe instant="6">
+                <translation x="-16.6" y="16" z="10.6" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="1" sy="1" sz="1" />
             </keyframe>
 
             <keyframe instant="10">
-                <translation x="10" y="11" z="12" />
-                <rotation axis="z" angle="13" />
-                <rotation axis="y" angle="14" />
-                <rotation axis="x" angle="15" />
-                <scale sx="16" sy="17" sz="18" />
+                <translation x="-16.6" y="16" z="10.6" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="180" />
+                <rotation axis="x" angle="0" />
+                <scale sx="1" sy="1" sz="1" />
+            </keyframe>
+
+            <keyframe instant="10.3">
+                <translation x="-16.6" y="16" z="10.6" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="1" sy="0" sz="1" />
+            </keyframe>
+
+            <keyframe instant="10.31">
+                <translation x="-16.6" y="16" z="10.6" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="0" sy="0" sz="0" />
+            </keyframe>
+        </keyframeanim>
+
+        <keyframeanim id="antAbduction">
+            <keyframe instant="0.01">
+                <translation x="0" y="0" z="0" />
+                <rotate axis="z" angle="0" />
+                <rotate axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="1" sy="1" sz="1" />
+            </keyframe>
+
+            <keyframe instant="6">
+                <translation x="0" y="0" z="0" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="1" sy="1" sz="1" />
+            </keyframe>
+
+            <keyframe instant="10">
+                <translation x="0" y="6" z="0" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="1" sy="1" sz="1" />
+            </keyframe>
+
+            <keyframe instant="10.1">
+                <translation x="0" y="0" z="0" />
+                <rotation axis="z" angle="0" />
+                <rotation axis="y" angle="0" />
+                <rotation axis="x" angle="0" />
+                <scale sx="0" sy="0" sz="0" />
             </keyframe>
         </keyframeanim>
     </animations>
@@ -810,7 +941,7 @@
 
         <component id="bigant2">
             <transformation>
-                <translate x="-15.6" y="15" z="10.6" />
+                <translate x="-16.6" y="8" z="10.6" />
                 <rotate axis="y" angle="110" />
                 <rotate axis="z" angle="-30" />
                 <scale x="3" y="3" z="3" />
@@ -822,6 +953,7 @@
             <children>
                 <componentref id="ant" />
             </children>
+            <animation id="antAbduction"/>
         </component>
 
         <component id="bigant3">
@@ -879,7 +1011,7 @@
                 <material id="inherit" />
             </materials>
             <texture id="none"/>
-            <highlighted r="1" g="1" b="1" scale_h="1.10" />
+            <highlighted r="1" g="1" b="1" scale_h="1.30" />
             <children>
                 <componentref id="bigant1" />
                 <componentref id="bigant2" />
@@ -2132,6 +2264,94 @@
         <!-- Shelf -->
         <!-- Replicated Scene -->
 
+        <!-- X Factor -->
+        <component id="alienBeam">
+            <transformation>
+                <translate x="0" y="2" z="0" />
+                <rotate axis="x" angle="90" />
+            </transformation>
+            <materials>
+                <material id="alienGreen" />
+            </materials>
+            <texture id="stripesOnTransparentBg" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="alienBeam" />
+            </children>
+            <highlighted r="0.580" g="0.820" b="0.647" scale_h="1.2" />
+            <animation id="abductionBeam" />
+        </component>
+        
+        <component id="alienShipBasis">
+            <transformation>
+                <scale x="1" y="0.25" z="1" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="alienShip" />
+            </children>
+        </component>
+
+        <component id="alienShipMiddle">
+            <transformation>
+                <translate x="0" y="0.25" z="0" />
+                <scale x="0.75" y="0.25" z="0.75" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="alienShip" />
+            </children>
+        </component>
+
+        <component id="alienShipTop">
+            <transformation>
+                <translate x="0" y="0.70" z="0" />
+                <scale x="0.25" y="0.10" z="0.25" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="alienShip" />
+            </children>
+        </component>
+
+        <component id="alienShipBottom">
+            <transformation>
+                <translate x="0" y="-0.10" z="0" />
+                <scale x="0.75" y="0.25" z="0.75" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="alienShip" />
+            </children>
+        </component>
+
+        <component id="alienShip">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="abductionGrey" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <componentref id="alienShipBottom" />
+                <componentref id="alienShipMiddle" />
+                <componentref id="alienShipTop" />
+                <componentref id="alienShipBasis" />
+            </children>
+            <animation id="shipMovement" />
+        </component>
+
         <!--Root Component-->
         <component id="sceneRoot">
             <transformation>
@@ -2142,10 +2362,13 @@
             </materials>
             <texture id="none"/>
             <children>
+                <componentref id="alienBeam" />
+                <componentref id="alienShip" />
                 <componentref id="shelfAndScene" />
                 <componentref id="bakery" />
                 <componentref id="universe" />
             </children>
+            <highlighted r="1.0" g="1.0" b="1.0" scale_h="1.20" />
         </component>
     </components>
 </sxs>
