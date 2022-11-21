@@ -2141,6 +2141,7 @@
             <children>
                 <primitiveref id="square" />
             </children>
+            <highlighted r="1" g="1" b="1" scale_h="2" />
         </component>
 
         <component id="shelfRight">
