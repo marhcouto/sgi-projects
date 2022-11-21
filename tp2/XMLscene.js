@@ -45,6 +45,19 @@ export class XMLscene extends CGFscene {
         this.setUpdatePeriod(UPDATE_FREQ);
     }
 
+
+    initHiglightedList() {
+
+        let switchHighlight = (id) => {
+            return (enabled) => this.updateObjectHighlighting(id, enabled);
+        }
+
+        for (let entry of this.graph.highlightedComponentsData) {
+            this.interface.createHighlightedEntry(entry.id, entry.active, switchHighlight(entry.id));
+        }
+    }
+    
+
     /**
      * Initializes the scene cameras.
      */
@@ -85,7 +98,7 @@ export class XMLscene extends CGFscene {
 
                 this.lights[i].update();
 
-                //This is a trick to trap the value of i inside a function so that a different callback is called for each light
+                // This is a trick to trap the value of i inside a function so that a different callback is called for each light
                 let freezerFunction = (idx) => {
                     return (enabled) => this.updateLightState(idx, enabled)
                 }
@@ -103,6 +116,14 @@ export class XMLscene extends CGFscene {
             this.lights[index].enable();
         } else {
             this.lights[index].disable();
+        }
+    }
+
+    updateObjectHighlighting(id, enabled) {
+        if (enabled) {
+            this.graph.components[id].highlighted.active = true;
+        } else {
+            this.graph.components[id].highlighted.active = false;
         }
     }
 
@@ -125,6 +146,10 @@ export class XMLscene extends CGFscene {
         this.interface.initCameras(this.graph.views, this.graph.defaultView, (camera) => this.camera = camera);
 
         this.interface.initLightFolder();
+
+        this.interface.initHighlightedFolder();
+
+        this.initHiglightedList();
 
         this.initLights();
 

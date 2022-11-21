@@ -42,6 +42,9 @@ export class MySceneGraph {
         this.axisCoords['y'] = [0, 1, 0];
         this.axisCoords['z'] = [0, 0, 1];
 
+        // Highlighted components
+        this.highlightedComponentsData = [];
+
         // File reading 
         this.reader = new CGFXMLreader();
 
@@ -1308,6 +1311,7 @@ export class MySceneGraph {
                 }
             }
 
+            // Highlighting
             let highlighted = null
             if (highlightedIndex !== -1) {
                 highlighted = this.parseHighlighted(componentID, grandChildren[highlightedIndex]);
@@ -1352,6 +1356,7 @@ export class MySceneGraph {
     }
 
     parseHighlighted(componentID, node) {
+
         const color = [];
 
         if (!this.reader.hasAttribute(node, "r")) {
@@ -1372,11 +1377,17 @@ export class MySceneGraph {
         if (!this.reader.hasAttribute(node, "scale_h")) {
             return `unable to parse scale_h for component with id: ${componentID}`;
         }
-        const scaleH = this.reader.getFloat(node, "scale_h")
+        const scaleH = this.reader.getFloat(node, "scale_h");
+
+        this.highlightedComponentsData.push({
+            id: componentID,
+            active: true
+        });
 
         return {
             color: color,
-            scaleH: scaleH
+            scaleH: scaleH, 
+            active: true,
         }
     }
 
@@ -1742,7 +1753,8 @@ export class MySceneGraph {
             this.graphTraversal(this.components[childId], material, component.texture);
         }
 
-        if (component.highlighted && component.children.primitives.length !== 0) {
+        // Highlight
+        if (component.highlighted && component.highlighted.active && component.children.primitives.length !== 0) {
             this.scene.shader.setUniformsValues({
                 scaleFactor: this.scene.globalPulse * (component.highlighted.scaleH - 1),
                 pulseStage: this.scene.globalPulse,
@@ -1760,7 +1772,8 @@ export class MySceneGraph {
             this.primitives[childId].updateTexCoords(parentLenS, parentLenT);
         }
 
-        if (component.highlighted && component.children.primitives.length !== 0) {
+        // Highlight off
+        if (component.highlighted && component.highlighted.active && component.children.primitives.length !== 0) {
             this.scene.setActiveShader(this.scene.defaultShader);
         }
 
