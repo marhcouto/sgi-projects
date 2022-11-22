@@ -1755,13 +1755,20 @@ export class MySceneGraph {
 
         // Highlight
         if (component.highlighted && component.highlighted.active && component.children.primitives.length !== 0) {
+            let scaleFactor;
+            if (component.highlighted.scaleH > 0) {
+                scaleFactor = this.scene.globalPulse * (component.highlighted.scaleH - 1);
+            } else {
+                scaleFactor = this.scene.globalPulse * (component.highlighted.scaleH + 1);
+            }
+            
             this.scene.shader.setUniformsValues({
-                scaleFactor: this.scene.globalPulse * (component.highlighted.scaleH - 1),
+                scaleFactor: scaleFactor,
                 pulseStage: this.scene.globalPulse,
                 highlightColor: vec4.fromValues(...component.highlighted.color, 1.0),
                 materialColor: material.ambient
             })
-            this.scene.setActiveShader(this.scene.shader);
+            this.scene.setActiveShaderSimple(this.scene.shader);
         }
 
         // Primitives

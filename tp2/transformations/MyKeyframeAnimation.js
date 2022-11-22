@@ -67,8 +67,6 @@ export class MyKeyframeAnimation extends MyAnimation {
             ]
         }
 
-        console.log(rotX);
-
         this.scene.translate(...translation);
         this.scene.rotate(rotZ, 0, 0, 1);
         this.scene.rotate(rotY, 0, 1, 0);

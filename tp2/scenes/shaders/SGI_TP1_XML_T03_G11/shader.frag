@@ -18,6 +18,6 @@ void main() {
     }
 
     vec4 xmlComponent = normalizedPulseStage * highlightColor;
-    vec4 textureComponent = (1.0 - normalizedPulseStage) * (0.5 * texture2D(uSampler, vTextureCoord) + 0.5 * materialColor);
+    vec4 textureComponent = (1.0 - normalizedPulseStage) * (0.8 * texture2D(uSampler, vTextureCoord) + 0.2 * materialColor);
     gl_FragColor = textureComponent + xmlComponent;
 }

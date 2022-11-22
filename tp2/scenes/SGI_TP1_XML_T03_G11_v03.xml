@@ -92,7 +92,7 @@
         </omni>
 
         <omni id="oustideTop" enabled="1">
-            <location x="0" y="18" z="0" w="0.5" />
+            <location x="0" y="22" z="0" w="0.5" />
             <ambient r="0" g="0" b="0" a="1.0" />
             <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -104,7 +104,6 @@
     <textures>
         <texture id="wallTexture" file="scenes/images/SGI_TP1_XML_T03_G11/wall-texture.png" />
         <texture id="matrixTexture" file="scenes/images/SGI_TP1_XML_T03_G11/matrix.jpg" />
-        <texture id="wallTextureWithDoor" file="scenes/images/SGI_TP1_XML_T03_G11/wall-with-door.png" />
         <texture id="floorTexture" file="scenes/images/SGI_TP1_XML_T03_G11/floor-texture.jpg" />
         <texture id="donutPink" file="scenes/images/SGI_TP1_XML_T03_G11/donut-pink.jpg" />
         <texture id="donutChoc" file="scenes/images/SGI_TP1_XML_T03_G11/donut-choc.jpg" />
@@ -119,6 +118,10 @@
         <texture id="chess" file="scenes/images/SGI_TP1_XML_T03_G11/chess.jpg" />
         <texture id="stripedMetal" file="scenes/images/SGI_TP1_XML_T03_G11/metal_stripes.jpg" />
         <texture id="stripesOnTransparentBg" file="scenes/images/SGI_TP1_XML_T03_G11/beam_stripes.png" />
+        <texture id="explodingBarrelTexture" file="scenes/images/SGI_TP1_XML_T03_G11/barrel-texture.png" />
+        <texture id="explodingBarrelInternalTexture" file="scenes/images/SGI_TP1_XML_T03_G11/barrel-texture-interior.png" />
+        <texture id="explodingBarrelLidTexture" file="scenes/images/SGI_TP1_XML_T03_G11/barrel-texture-lid.png" />
+        <texture id="roofTiles" file="scenes/images/SGI_TP1_XML_T03_G11/roof-tiles.png" />
     </textures>
 
     <materials>
@@ -210,6 +213,13 @@
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.4" g="0.4" b="0.4" a="1.0" />
             <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />
+            <specular r="0.5" g="0.5" b="0.5" a="1.0" />
+        </material>
+
+        <material id="explodingBarrel" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="1.0" g="0.256" b="0" a="1.0" />
+            <diffuse r="1.0" g="0.256" b="0" a="1.0" />
             <specular r="0.5" g="0.5" b="0.5" a="1.0" />
         </material>
     </materials>
@@ -314,37 +324,62 @@
             <rectangle x1="-0.0625" y1="0" x2="0.0625" y2="1.118"/>
         </primitive>
 
-        <primitive id="rectangleNurbs">
+        <primitive id="rectangleSurface">
             <patch degree_u="1" parts_u="20" degree_v="1" parts_v="20">
-                <controlpoint x="-2" y="-2" z="0" />
-                <controlpoint x="-2" y="2" z="0" />
-                <controlpoint x="2" y="-2" z="0" />
-                <controlpoint x="2" y="2" z="0" />
+                <controlpoint x="-0.5" y="-0.5" z="0" />
+                <controlpoint x="-0.5" y="0.5" z="0" />
+                <controlpoint x="0.5" y="-0.5" z="0" />
+                <controlpoint x="0.5" y="0.5" z="0" />
             </patch>
         </primitive>
 
-        <primitive id="tentNurbs">
+        <primitive id="tentOutsideSurface">
             <patch degree_u="1" parts_u="20" degree_v="2" parts_v="20">
                 <controlpoint x="-0.5" y="0" z="0" />
                 <controlpoint x="0" y="1" z="0" />
                 <controlpoint x="0.5" y="0" z="0" />
+
                 <controlpoint x="-0.5" y="0" z="1" />
                 <controlpoint x="0" y="1" z="1" />
                 <controlpoint x="0.5" y="0" z="1" />
             </patch>
         </primitive>
 
+        <primitive id="tentInsideSurface">
+            <patch degree_u="1" parts_u="20" degree_v="2" parts_v="20">
+                <controlpoint x="0.5" y="0" z="0" />
+                <controlpoint x="0" y="1" z="0" />
+                <controlpoint x="-0.5" y="0" z="0" />
+
+                <controlpoint x="0.5" y="0" z="1" />
+                <controlpoint x="0" y="1" z="1" />
+                <controlpoint x="-0.5" y="0" z="1" />
+            </patch>
+        </primitive>
+
+        <primitive id="tentFrontSurface">
+            <patch degree_u="1" parts_u="20" degree_v="2" parts_v="20">
+                <controlpoint x="-0.5" y="0" z="0" />
+                <controlpoint x="0" y="1" z="0" />
+                <controlpoint x="0.5" y="0" z="0" />
+
+                <controlpoint x="-0.5" y="0" z="0" />
+                <controlpoint x="0" y="0" z="0" />
+                <controlpoint x="0.5" y="0" z="0" />
+            </patch>
+        </primitive>
+
         <primitive id="barrelLeftSideSurface">
             <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
-                <controlpoint x="0" y="-1" z="4" />
-                <controlpoint x="1.333333333" y="-1" z="4" />
-                <controlpoint x="1.333333333" y="1" z="4" />
-                <controlpoint x="0" y="1" z="4" />
+                <controlpoint x="0" y="-1" z="3" />
+                <controlpoint x="1.333333333" y="-1" z="3" />
+                <controlpoint x="1.333333333" y="1" z="3" />
+                <controlpoint x="0" y="1" z="3" />
 
-                <controlpoint x="0" y="-2" z="2" />
-                <controlpoint x="2.666666667" y="-2" z="2" />
-                <controlpoint x="2.666666667" y="2" z="2" />
-                <controlpoint x="0" y="2" z="2" />
+                <controlpoint x="0" y="-2" z="1.5" />
+                <controlpoint x="2.666666667" y="-2" z="1.5" />
+                <controlpoint x="2.666666667" y="2" z="1.5" />
+                <controlpoint x="0" y="2" z="1.5" />
 
                 <controlpoint x="0" y="-1" z="0" />
                 <controlpoint x="1.333333333" y="-1" z="0" />
@@ -353,17 +388,36 @@
             </patch>
         </primitive>
 
+        <primitive id="barrelLeftSideSurfaceInternal">
+            <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
+                <controlpoint x="0" y="1" z="3" />
+                <controlpoint x="1.333333333" y="1" z="3" />
+                <controlpoint x="1.333333333" y="-1" z="3" />
+                <controlpoint x="0" y="-1" z="3" />
+
+                <controlpoint x="0" y="2" z="1.5" />
+                <controlpoint x="2.666666667" y="2" z="1.5" />
+                <controlpoint x="2.666666667" y="-2" z="1.5" />
+                <controlpoint x="0" y="-2" z="1.5" />
+
+                <controlpoint x="0" y="1" z="0" />
+                <controlpoint x="1.333333333" y="1" z="0" />
+                <controlpoint x="1.333333333" y="-1" z="0" />
+                <controlpoint x="0" y="-1" z="0" />
+            </patch>
+        </primitive>
+
         <primitive id="barrelRightSideSurface">
             <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
-                <controlpoint x="0" y="1" z="4" />
-                <controlpoint x="-1.333333333" y="1" z="4" />
-                <controlpoint x="-1.333333333" y="-1" z="4" />
-                <controlpoint x="0" y="-1" z="4" />
+                <controlpoint x="0" y="1" z="3" />
+                <controlpoint x="-1.333333333" y="1" z="3" />
+                <controlpoint x="-1.333333333" y="-1" z="3" />
+                <controlpoint x="0" y="-1" z="3" />
 
-                <controlpoint x="0" y="2" z="2" />
-                <controlpoint x="-2.666666667" y="2" z="2" />
-                <controlpoint x="-2.666666667" y="-2" z="2" />
-                <controlpoint x="0" y="-2" z="2" />
+                <controlpoint x="0" y="2" z="1.5" />
+                <controlpoint x="-2.666666667" y="2" z="1.5" />
+                <controlpoint x="-2.666666667" y="-2" z="1.5" />
+                <controlpoint x="0" y="-2" z="1.5" />
 
                 <controlpoint x="0" y="1" z="0" />
                 <controlpoint x="-1.333333333" y="1" z="0" />
@@ -372,17 +426,50 @@
             </patch>
         </primitive>
 
-        <primitive id="barrelTop">
-            <patch degree_u="1" parts_u="40" degree_v="3" parts_v="40">
-                <controlpoint x="-1" y="0" z="4" />
-                <controlpoint x="-1" y="1.333333333" z="4" />
-                <controlpoint x="1" y="1.333333333" z="4" />
-                <controlpoint x="1" y="0" z="4" />
+        <primitive id="barrelRightSideSurfaceInternal">
+            <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
+                <controlpoint x="0" y="-1" z="3" />
+                <controlpoint x="-1.333333333" y="-1" z="3" />
+                <controlpoint x="-1.333333333" y="1" z="3" />
+                <controlpoint x="0" y="1" z="3" />
 
-                <controlpoint x="-1" y="0" z="4" />
-                <controlpoint x="0" y="0" z="4" />
-                <controlpoint x="0" y="0" z="4" />
-                <controlpoint x="1" y="0" z="4" />
+                <controlpoint x="0" y="-2" z="1.5" />
+                <controlpoint x="-2.666666667" y="-2" z="1.5" />
+                <controlpoint x="-2.666666667" y="2" z="1.5" />
+                <controlpoint x="0" y="2" z="1.5" />
+
+                <controlpoint x="0" y="-1" z="0" />
+                <controlpoint x="-1.333333333" y="-1" z="0" />
+                <controlpoint x="-1.333333333" y="1" z="0" />
+                <controlpoint x="0" y="1" z="0" />
+            </patch>
+        </primitive>
+
+        <primitive id="barrelRightTop">
+            <patch degree_u="1" parts_u="40" degree_v="3" parts_v="40">
+                <controlpoint x="-1.15" y="0" z="2.7" />
+                <controlpoint x="-1.15" y="1.533333333" z="2.7" />
+                <controlpoint x="1.15" y="1.533333333" z="2.7" />
+                <controlpoint x="1.15" y="0" z="2.7" />
+
+                <controlpoint x="-1.15" y="0" z="2.7" />
+                <controlpoint x="0" y="0" z="2.7" />
+                <controlpoint x="0" y="0" z="2.7" />
+                <controlpoint x="1.15" y="0" z="2.7" />
+            </patch>
+        </primitive>
+
+        <primitive id="barrelLeftTop">
+            <patch degree_u="1" parts_u="40" degree_v="3" parts_v="40">
+                <controlpoint x="1.15" y="0" z="2.7" />
+                <controlpoint x="1.15" y="-1.533333333" z="2.7" />
+                <controlpoint x="-1.15" y="-1.533333333" z="2.7" />
+                <controlpoint x="-1.15" y="0" z="2.7" />
+
+                <controlpoint x="1.15" y="0" z="2.7" />
+                <controlpoint x="0" y="0" z="2.7" />
+                <controlpoint x="0" y="0" z="2.7" />
+                <controlpoint x="-1.15" y="0" z="2.7" />
             </patch>
         </primitive>
 
@@ -1011,7 +1098,6 @@
                 <material id="inherit" />
             </materials>
             <texture id="none"/>
-            <highlighted r="1" g="1" b="1" scale_h="1.30" />
             <children>
                 <componentref id="bigant1" />
                 <componentref id="bigant2" />
@@ -2034,6 +2120,78 @@
         </component>
         <!-- Outside Walls -->
 
+        <!-- Ceiling-->
+        <component id="roofBack">
+            <transformation>
+                <translate x="0" y="0" z="0.1"/>
+                <rotate axis="y" angle="180" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id="tentFrontSurface" />
+            </children>
+        </component>
+
+        <component id="roofFront">
+            <transformation>
+                <translate x="0" y="0" z="0.9"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id="tentFrontSurface" />
+            </children>
+        </component>
+
+        <component id="roofBottom">
+            <transformation>
+                <translate x="0" y="0" z="0.5" />
+                <scale x="1" y="1" z="0.8" />
+                <rotate axis="x" angle="90" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id="rectangleSurface" />
+            </children>
+        </component>
+
+        <component id="roofTop">
+            <transformation />
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="roofTiles" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="tentInsideSurface" />
+                <primitiveref id="tentOutsideSurface" />
+            </children>
+        </component>
+
+        <component id="roof">
+            <transformation>
+                <translate x="0" y="12.01" z="-12.5"/>
+                <scale x="24" y="9" z="25" />
+            </transformation>
+            <materials>
+                <material id="wallMaterial" />
+            </materials>
+            <texture id="ceilingPaint" length_s="1" length_t="1" />
+            <children>
+                <componentref id="roofBack" />
+                <componentref id="roofBottom" />
+                <componentref id="roofFront" />
+                <componentref id="roofTop" />
+            </children>
+        </component>
+
         <!-- Whole Bakery -->
         <component id="bakery">
             <transformation/>
@@ -2048,7 +2206,9 @@
                 <componentref id="tables" />
                 <componentref id="ants" />
                 <componentref id="bigants" />
+                <componentref id="explodingBarrelGroup" />
                 <componentref id="brokenVitrine" />
+                <componentref id="roof" />
             </children>
         </component>
 
@@ -2141,7 +2301,6 @@
             <children>
                 <primitiveref id="square" />
             </children>
-            <highlighted r="1" g="1" b="1" scale_h="2" />
         </component>
 
         <component id="shelfRight">
@@ -2353,6 +2512,138 @@
             <animation id="shipMovement" />
         </component>
 
+        <!-- Exploding Barrels -->
+
+        <component id="explodingBarrelInternal">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="explodingBarrelInternalTexture" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="barrelLeftSideSurfaceInternal" />
+                <primitiveref id="barrelRightSideSurfaceInternal" />
+            </children>
+            <highlighted r="1" g="0.48" b="0" scale_h="-1.2" />
+        </component>
+
+        <component id="explodingBarrelExternal">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="explodingBarrelTexture" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="barrelRightSideSurface" />
+                <primitiveref id="barrelLeftSideSurface" />
+            </children>
+            <highlighted r="1" g="0.48" b="0" scale_h="1.2" />
+        </component>
+
+        <component id="explodingBarrelTopCovers">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="explodingBarrelLidTexture" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="barrelRightTop" />
+                <primitiveref id="barrelLeftTop" />
+            </children>
+            <highlighted r="1" g="0.48" b="0" scale_h="1.2" />
+        </component>
+
+        <component id="explodingBarrelBottomCovers">
+            <transformation>
+                <rotate axis="x" angle="180" />
+                <translate x="0" y="0" z="-3" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="explodingBarrelLidTexture" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="barrelRightTop" />
+                <primitiveref id="barrelLeftTop" />
+            </children>
+            <highlighted r="1" g="0.48" b="0" scale_h="1.2" />
+        </component>
+
+        <component id="explodingBarrel">
+            <transformation>
+                <rotate axis="y" angle="90" />
+                <rotate axis="x" angle="-90" />
+            </transformation>
+            <materials>
+                <material id="explodingBarrel" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="explodingBarrelBottomCovers" />
+                <componentref id="explodingBarrelExternal" />
+                <componentref id="explodingBarrelInternal" />
+                <componentref id="explodingBarrelTopCovers" />
+            </children>
+        </component>
+
+        <component id="explodingBarrelRight">
+            <transformation>
+                <translate x="1.7" y="0.1" z="0" />
+            </transformation>
+            <materials>
+                <material id="explodingBarrel" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="explodingBarrel" />
+            </children>
+        </component>
+
+        <component id="explodingBarrelLeft">
+            <transformation>
+                <translate x="-1.7" y="0.1" z="0" />
+            </transformation>
+            <materials>
+                <material id="explodingBarrel" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="explodingBarrel" />
+            </children>
+        </component>
+
+        <component id="explodingBarrelFront">
+            <transformation>
+                <translate x="-1" y="1" z="3" />
+                <rotate axis="z" angle="-45" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="explodingBarrel" />
+            </children>
+        </component>
+
+        <component id="explodingBarrelGroup">
+            <transformation>
+                <translate x="-5" y="0" z="-8" />
+            </transformation>
+            <materials>
+                <material id="explodingBarrel" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="explodingBarrelRight" />
+                <componentref id="explodingBarrelLeft" />
+                <componentref id="explodingBarrelFront" />
+            </children>
+        </component>
+
         <!--Root Component-->
         <component id="sceneRoot">
             <transformation>
@@ -2369,7 +2660,6 @@
                 <componentref id="bakery" />
                 <componentref id="universe" />
             </children>
-            <highlighted r="1.0" g="1.0" b="1.0" scale_h="1.20" />
         </component>
     </components>
 </sxs>
