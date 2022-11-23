@@ -232,11 +232,11 @@
             <specular r="0.5" g="0.5" b="0.5" a="1.0" />
         </material>
 
-        <material id="bakeryFloor" shininess="20">
+        <material id="bakeryFloor" shininess="5">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.2353" g="0.0078" b="0.4196" a="1.0" />
-            <diffuse r="0.3098" g="0.1098" b="0.4392" a="1.0" />
-            <specular r="0.1176" g="0.0078" b="0.2118" a="1.0" />
+            <ambient r="0.9412" g="0.6314" b="0.7882" a="1.0" />
+            <diffuse r="0.9412" g="0.6314" b="0.7882" a="1.0" />
+            <specular r="0.5686" g="0.3294" b="0.4549" a="1.0" />
         </material>
 
         <material id="ceilingMaterial" shininess="20">
