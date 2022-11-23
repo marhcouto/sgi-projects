@@ -370,7 +370,7 @@
         </primitive>
 
         <primitive id="barrelLeftSideSurface">
-            <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
+            <patch degree_u="2" parts_u="10" degree_v="3" parts_v="10">
                 <controlpoint x="0" y="-1" z="3" />
                 <controlpoint x="1.333333333" y="-1" z="3" />
                 <controlpoint x="1.333333333" y="1" z="3" />
@@ -389,7 +389,7 @@
         </primitive>
 
         <primitive id="barrelLeftSideSurfaceInternal">
-            <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
+            <patch degree_u="2" parts_u="10" degree_v="3" parts_v="10">
                 <controlpoint x="0" y="1" z="3" />
                 <controlpoint x="1.333333333" y="1" z="3" />
                 <controlpoint x="1.333333333" y="-1" z="3" />
@@ -408,7 +408,7 @@
         </primitive>
 
         <primitive id="barrelRightSideSurface">
-            <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
+            <patch degree_u="2" parts_u="10" degree_v="3" parts_v="10">
                 <controlpoint x="0" y="1" z="3" />
                 <controlpoint x="-1.333333333" y="1" z="3" />
                 <controlpoint x="-1.333333333" y="-1" z="3" />
@@ -427,7 +427,7 @@
         </primitive>
 
         <primitive id="barrelRightSideSurfaceInternal">
-            <patch degree_u="2" parts_u="40" degree_v="3" parts_v="40">
+            <patch degree_u="2" parts_u="10" degree_v="3" parts_v="10">
                 <controlpoint x="0" y="-1" z="3" />
                 <controlpoint x="-1.333333333" y="-1" z="3" />
                 <controlpoint x="-1.333333333" y="1" z="3" />
@@ -446,7 +446,7 @@
         </primitive>
 
         <primitive id="barrelRightTop">
-            <patch degree_u="1" parts_u="40" degree_v="3" parts_v="40">
+            <patch degree_u="1" parts_u="10" degree_v="3" parts_v="10">
                 <controlpoint x="-1.15" y="0" z="2.7" />
                 <controlpoint x="-1.15" y="1.533333333" z="2.7" />
                 <controlpoint x="1.15" y="1.533333333" z="2.7" />
@@ -460,7 +460,7 @@
         </primitive>
 
         <primitive id="barrelLeftTop">
-            <patch degree_u="1" parts_u="40" degree_v="3" parts_v="40">
+            <patch degree_u="1" parts_u="10" degree_v="3" parts_v="10">
                 <controlpoint x="1.15" y="0" z="2.7" />
                 <controlpoint x="1.15" y="-1.533333333" z="2.7" />
                 <controlpoint x="-1.15" y="-1.533333333" z="2.7" />
@@ -1566,6 +1566,7 @@
             <children>
                 <primitiveref id="donut"/>
             </children>
+            <highlighted r="0.831" g="0.498" b="0.820" scale_h="1.05" />
         </component>
 
         <component id="ninethDonut">
@@ -2206,7 +2207,7 @@
                 <componentref id="tables" />
                 <componentref id="ants" />
                 <componentref id="bigants" />
-                <componentref id="explodingBarrelGroup" />
+                <componentref id="explodingBarrel" />
                 <componentref id="brokenVitrine" />
                 <componentref id="roof" />
             </children>
@@ -2556,24 +2557,9 @@
             <highlighted r="1" g="0.48" b="0" scale_h="1.2" />
         </component>
 
-        <component id="explodingBarrelBottomCovers">
-            <transformation>
-                <rotate axis="x" angle="180" />
-                <translate x="0" y="0" z="-3" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="explodingBarrelLidTexture" length_s="1" length_t="1" />
-            <children>
-                <primitiveref id="barrelRightTop" />
-                <primitiveref id="barrelLeftTop" />
-            </children>
-            <highlighted r="1" g="0.48" b="0" scale_h="1.2" />
-        </component>
-
         <component id="explodingBarrel">
             <transformation>
+                <translate x="-8" y="0.1" z="-8" />
                 <rotate axis="y" angle="90" />
                 <rotate axis="x" angle="-90" />
             </transformation>
@@ -2582,67 +2568,13 @@
             </materials>
             <texture id="none" />
             <children>
-                <componentref id="explodingBarrelBottomCovers" />
                 <componentref id="explodingBarrelExternal" />
                 <componentref id="explodingBarrelInternal" />
                 <componentref id="explodingBarrelTopCovers" />
             </children>
         </component>
 
-        <component id="explodingBarrelRight">
-            <transformation>
-                <translate x="1.7" y="0.1" z="0" />
-            </transformation>
-            <materials>
-                <material id="explodingBarrel" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <componentref id="explodingBarrel" />
-            </children>
-        </component>
 
-        <component id="explodingBarrelLeft">
-            <transformation>
-                <translate x="-1.7" y="0.1" z="0" />
-            </transformation>
-            <materials>
-                <material id="explodingBarrel" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <componentref id="explodingBarrel" />
-            </children>
-        </component>
-
-        <component id="explodingBarrelFront">
-            <transformation>
-                <translate x="-1" y="1" z="3" />
-                <rotate axis="z" angle="-45" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <componentref id="explodingBarrel" />
-            </children>
-        </component>
-
-        <component id="explodingBarrelGroup">
-            <transformation>
-                <translate x="-5" y="0" z="-8" />
-            </transformation>
-            <materials>
-                <material id="explodingBarrel" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <componentref id="explodingBarrelRight" />
-                <componentref id="explodingBarrelLeft" />
-                <componentref id="explodingBarrelFront" />
-            </children>
-        </component>
 
         <!--Root Component-->
         <component id="sceneRoot">

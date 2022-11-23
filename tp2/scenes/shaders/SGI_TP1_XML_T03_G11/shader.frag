@@ -9,6 +9,7 @@ uniform vec4 highlightColor;
 uniform vec4 materialColor;
 
 uniform float pulseStage;
+uniform bool hasTexture;
 
 void main() {
     float normalizedPulseStage;
@@ -17,7 +18,13 @@ void main() {
         normalizedPulseStage = 0.85;
     }
 
+    vec4 textureComponent;
+    if (hasTexture) {
+        textureComponent = (1.0 - normalizedPulseStage) * (0.8 * texture2D(uSampler, vTextureCoord) + 0.2 * materialColor);
+    } else {
+        textureComponent = (1.0 - normalizedPulseStage) * materialColor;
+    }
+
     vec4 xmlComponent = normalizedPulseStage * highlightColor;
-    vec4 textureComponent = (1.0 - normalizedPulseStage) * (0.8 * texture2D(uSampler, vTextureCoord) + 0.2 * materialColor);
     gl_FragColor = textureComponent + xmlComponent;
 }

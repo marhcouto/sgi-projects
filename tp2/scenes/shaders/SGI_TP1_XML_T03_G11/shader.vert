@@ -13,6 +13,8 @@ uniform vec4 materialColor;
 uniform float scaleFactor;
 uniform float pulseStage;
 
+uniform bool hasTexture;
+
 void main() {
 	vec3 scaledVertexPos = scaleFactor * aVertexNormal + aVertexPosition;
 	gl_Position = uPMatrix * uMVMatrix * vec4(scaledVertexPos, 1);

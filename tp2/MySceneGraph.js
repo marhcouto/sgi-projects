@@ -1722,6 +1722,7 @@ export class MySceneGraph {
 
         // Textures
         let lenS = 1, lenT = 1, parentLenS = 1, parentLenT = 1;
+        let hasTexture = true;
         if (component.texture.type === "id_ref") {
             material.setTexture(this.textures[component.texture.id]);
             lenS = component.texture.lenS;
@@ -1729,6 +1730,7 @@ export class MySceneGraph {
         } else if (component.texture.type === "inherit") {
             if (parentComponentTexture == null) {
                 console.warn(`Component with id ${componentID} has texture inherit but it's parent has no texture`);
+                hasTexture = false;
             } else {
                 material.setTexture(this.textures[parentComponentTexture.id]);
                 lenS = parentComponentTexture.lenS;
@@ -1736,6 +1738,7 @@ export class MySceneGraph {
             }
         } else {
             material.setTexture(null);
+            hasTexture = false;
         }
 
         if (parentComponentTexture != null) {
@@ -1766,9 +1769,10 @@ export class MySceneGraph {
                 scaleFactor: scaleFactor,
                 pulseStage: this.scene.globalPulse,
                 highlightColor: vec4.fromValues(...component.highlighted.color, 1.0),
-                materialColor: material.ambient
+                materialColor: material.diffuse,
+                hasTexture: hasTexture
             })
-            this.scene.setActiveShaderSimple(this.scene.shader);
+            this.scene.setActiveShader(this.scene.shader);
         }
 
         // Primitives
