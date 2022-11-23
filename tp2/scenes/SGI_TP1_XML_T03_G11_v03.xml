@@ -75,8 +75,8 @@
             <attenuation linear="1" />
         </omni>
 
-        <omni id="topLight" enabled="1">
-            <location x="0" y="12" z="0" w="0.5" />
+        <omni id="rightOutsideSideLight" enabled="1">
+            <location x="15" y="6" z="0" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
             <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -85,6 +85,14 @@
 
         <omni id="leftSideLight" enabled="1">
             <location x="-10" y="6" z="0" w="1.0" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+            <attenuation linear="1" />
+        </omni>
+
+        <omni id="leftOutsideSideLight" enabled="1">
+            <location x="-15" y="6" z="0" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
             <diffuse r="0.9568" g="0.8784" b="0.7098" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -104,15 +112,14 @@
     <textures>
         <texture id="wallTexture" file="scenes/images/SGI_TP1_XML_T03_G11/wall-texture.png" />
         <texture id="matrixTexture" file="scenes/images/SGI_TP1_XML_T03_G11/matrix.jpg" />
-        <texture id="floorTexture" file="scenes/images/SGI_TP1_XML_T03_G11/floor-texture.jpg" />
+        <texture id="floorTexture" file="scenes/images/SGI_TP1_XML_T03_G11/floor-texture.png" />
         <texture id="donutPink" file="scenes/images/SGI_TP1_XML_T03_G11/donut-pink.jpg" />
         <texture id="donutChoc" file="scenes/images/SGI_TP1_XML_T03_G11/donut-choc.jpg" />
-        <texture id="ceilingPaint" file="scenes/images/SGI_TP1_XML_T03_G11/ceiling.jpg" />
+        <texture id="ceilingTiles" file="scenes/images/SGI_TP1_XML_T03_G11/ceiling-tiles.png" />
         <texture id="stainlessSteel" file="scenes/images/SGI_TP1_XML_T03_G11/stainless-steel.jpg" />
         <texture id="aluminiumBlack" file="scenes/images/SGI_TP1_XML_T03_G11/aluminium-black.jpg" />
         <texture id="brushedAluminium" file="scenes/images/SGI_TP1_XML_T03_G11/brushed-aluminium.jpg" />
         <texture id="plasticBlack" file="scenes/images/SGI_TP1_XML_T03_G11/plastic-black.jpg" />
-        <texture id="logsTexture" file="scenes/images/SGI_TP1_XML_T03_G11/logs-texture.jpg" />
         <texture id="shelfTexture" file="scenes/images/SGI_TP1_XML_T03_G11/wooden-shelf.jpg" />
         <texture id="pagenotfoundTexture" file="scenes/images/SGI_TP1_XML_T03_G11/pagenotfound.png" />
         <texture id="chess" file="scenes/images/SGI_TP1_XML_T03_G11/chess.jpg" />
@@ -122,6 +129,8 @@
         <texture id="explodingBarrelInternalTexture" file="scenes/images/SGI_TP1_XML_T03_G11/barrel-texture-interior.png" />
         <texture id="explodingBarrelLidTexture" file="scenes/images/SGI_TP1_XML_T03_G11/barrel-texture-lid.png" />
         <texture id="roofTiles" file="scenes/images/SGI_TP1_XML_T03_G11/roof-tiles.png" />
+        <texture id="roofTilesVertical" file="scenes/images/SGI_TP1_XML_T03_G11/roof-tiles-vertical.png" />
+        <texture id="outsideWood" file="scenes/images/SGI_TP1_XML_T03_G11/outside-wood.png" />
     </textures>
 
     <materials>
@@ -162,9 +171,9 @@
 
         <material id="wallMaterial" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.8" g="0.8" b="0.6" a="1.0" />
-            <diffuse r="0.8" g="0.8" b="0.6" a="1.0" />
-            <specular r="0.2" g="0.2" b="0.2" a="1.0" />
+            <ambient r="0.5" g="0.5" b="0.5" a="1.0" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+            <specular r="0.5" g="0.5" b="0.5" a="1.0" />
         </material>
 
         <material id="radiantBlue" shininess="10">
@@ -221,6 +230,20 @@
             <ambient r="1.0" g="0.256" b="0" a="1.0" />
             <diffuse r="1.0" g="0.256" b="0" a="1.0" />
             <specular r="0.5" g="0.5" b="0.5" a="1.0" />
+        </material>
+
+        <material id="bakeryFloor" shininess="20">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.2353" g="0.0078" b="0.4196" a="1.0" />
+            <diffuse r="0.3098" g="0.1098" b="0.4392" a="1.0" />
+            <specular r="0.1176" g="0.0078" b="0.2118" a="1.0" />
+        </material>
+
+        <material id="ceilingMaterial" shininess="20">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
+            <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />
+            <specular r="0.3" g="0.3" b="0.3" a="1.0" />
         </material>
     </materials>
 
@@ -1164,9 +1187,9 @@
                 <rotate axis="x" angle="90"/>
             </transformation>
             <materials>
-                <material id="inherit" />
+                <material id="ceilingMaterial" />
             </materials>
-            <texture id="ceilingPaint" length_s="1" length_t="1"/>
+            <texture id="ceilingTiles" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="square" />
             </children>
@@ -1178,11 +1201,11 @@
                 <rotate axis="x" angle="-90"/>
             </transformation>
             <materials>
-                <material id="inherit" />
+                <material id="bakeryFloor" />
             </materials>
             <texture id="floorTexture" length_s="1" length_t="1"/>
             <children>
-                <primitiveref id="square" />
+                <primitiveref id="rectangleSurface" />
             </children>
         </component>
 
@@ -2035,9 +2058,9 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="1" length_t="2"/>
+            <texture id="outsideWood" length_s="1" length_t="1"/>
             <children>
-                <primitiveref id="square" />
+                <primitiveref id="rectangleSurface" />
             </children>
         </component>
 
@@ -2050,9 +2073,9 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="1" length_t="2"/>
+            <texture id="outsideWood" length_s="1" length_t="1"/>
             <children>
-                <primitiveref id="square" />
+                <primitiveref id="rectangleSurface" />
             </children>
         </component>
 
@@ -2066,9 +2089,9 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="1" length_t="2"/>
+            <texture id="outsideWood" length_s="1" length_t="1"/>
             <children>
-                <primitiveref id="square" />
+                <primitiveref id="rectangleSurface" />
             </children>
         </component>
 
@@ -2082,9 +2105,9 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="2" length_t="2"/>
+            <texture id="outsideWood" length_s="1" length_t="1"/>
             <children>
-                <primitiveref id="square" />
+                <primitiveref id="rectangleSurface" />
             </children>
         </component>
 
@@ -2098,9 +2121,9 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="logsTexture" length_s="1" length_t="2"/>
+            <texture id="outsideWood" length_s="1" length_t="1"/>
             <children>
-                <primitiveref id="square" />
+                <primitiveref id="rectangleSurface" />
             </children>
         </component>
 
@@ -2130,7 +2153,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="roofTilesVertical" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id="tentFrontSurface" />
             </children>
@@ -2143,7 +2166,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="roofTilesVertical" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="tentFrontSurface" />
             </children>
@@ -2184,7 +2207,7 @@
             <materials>
                 <material id="wallMaterial" />
             </materials>
-            <texture id="ceilingPaint" length_s="1" length_t="1" />
+            <texture id="roofTiles" length_s="1" length_t="1" />
             <children>
                 <componentref id="roofBack" />
                 <componentref id="roofBottom" />
