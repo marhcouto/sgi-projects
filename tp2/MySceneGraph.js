@@ -7,7 +7,7 @@ import { MyTorus } from './primitives/MyTorus.js';
 import { MyPatch } from './primitives/MyPatch.js';
 import { MyKeyframeAnimation } from './transformations/MyKeyframeAnimation.js'
 import { MyKeyframe } from './transformations/MyKeyframe.js';
-import { axisToVector, degreeToRad } from './utils.js';
+import { axisToVector, degreeToRad, vectorToAxis } from './utils.js';
 
 // Order of the groups in the XML document.
 var SCENE_INDEX = 0;
@@ -1147,11 +1147,15 @@ export class MySceneGraph {
         const keyframeAnimId = this.reader.getString(node, 'id');
         const keyframeNodes = node.children
         const keyframes = []
+
         for (let keyframeIdx = 0; keyframeIdx < keyframeNodes.length; keyframeIdx++) { 
             const keyframe = this.parseKeyframe(keyframeAnimId, keyframeNodes[keyframeIdx]);
             if (typeof keyframe === 'string') {
                 return keyframe;
             };
+            if (keyframes.length > 0 && (keyframe.instant <= keyframes[keyframes.length - 1].instant )) {
+                return `Out of order keyframe instants at animation with id ${keyframeAnimId}`
+            }
             keyframes.push(keyframe);
         }
         this.animations[keyframeAnimId] = new MyKeyframeAnimation(this.scene, keyframes);
@@ -1175,6 +1179,7 @@ export class MySceneGraph {
             return `Error parsing keyframeanim: found ${transformations.length} transformations expected 5 at keyframe from anim with id '${animId}'`;
         }
 
+        let rotationAxis;
         const translationNode = transformations[0];
         const rotationInZNode = transformations[1];
         const rotationInYNode = transformations[2];
@@ -1189,21 +1194,45 @@ export class MySceneGraph {
             return translationVector;
         }
 
+        if (!rotationInZNode || rotationInZNode.nodeName !== 'rotation') {
+            return `Error parsing keyframeanim: rotation in Z not found at keyframe from anim with id '${animId}'`;
+        }
         const rotationInZ = this.parseRotation(rotationInZNode, `rotation from animation with id '${animId}'`);
         if (typeof rotationInZ === 'string') {
             return rotationInZ;
         }
+        rotationAxis = vectorToAxis(rotationInZ.axis); 
+        if (rotationAxis !== 'z') {
+            return `Expected rotation in Z at animation with id '${animId} found rotation in ${rotationAxis.toUpperCase()}`;
+        }
 
+        if (!rotationInYNode || rotationInYNode.nodeName !== 'rotation') {
+            return `Error parsing keyframeanim: rotation in Y not found at keyframe from anim with id '${animId}'`;
+        }
         const rotationInY = this.parseRotation(rotationInYNode, `rotation from animation with id '${animId}'`);
         if (typeof rotationInY === 'string') {
             return rotationInY;
         }
+        rotationAxis = vectorToAxis(rotationInY.axis); 
+        if (rotationAxis !== 'y') {
+            return `Expected rotation in Y at animation with id '${animId} found rotation in ${rotationAxis.toUpperCase()}`;
+        }
 
+        if (!rotationInXNode || rotationInXNode.nodeName !== 'rotation') {
+            return `Error parsing keyframeanim: rotation in X not found at keyframe from anim with id '${animId}'`;
+        }
         const rotationInX = this.parseRotation(rotationInXNode, `rotation from animation with id '${animId}'`);
         if (typeof rotationInX === 'string') {
             return rotationInX;
         }
+        rotationAxis = vectorToAxis(rotationInX.axis); 
+        if (rotationAxis !== 'x') {
+            return `Expected rotation in X at animation with id '${animId} found rotation in ${rotationAxis.toUpperCase()}`;
+        }
 
+        if (!scaleNode || scaleNode.nodeName !== 'scale') {
+            return `Error parsing keyframeanim: scale not found at keyframe from anim with id '${animId}'`;
+        }
         const scale = this.parseAnimationScale(scaleNode, `rotation from animation with id '${animId}'`);
         if (typeof scale === 'string') {
             return scale;

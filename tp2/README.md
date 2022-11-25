@@ -1,19 +1,23 @@
-# SGI 2022/2023 - TP2
+# SGI 2022/2023 - TP1
 
-## Group: T0xG0y
+## Group T03G11
 
-| Name             | Number    | E-Mail             |
-| ---------------- | --------- | ------------------ |
-| John Doe         | 201801010 | ...                |
-| Jane Doe         | 201801011 | ...                |
+| Name                        | Number    | E-Mail                   |
+| --------------------------- | --------- | ------------------------ |
+| Francisco Pinto de Oliveira | 201907361 | up201907361@edu.fe.up.pt |
+| Marcelo Henriques Couto     | 201906086 | up201906086@edu.fe.up.pt |
 
 ----
 ## Project information
 
-- (items describing main strong points)
-- Scene
-  - (Brief description of the created scene)
-  - (relative link to the scene)
+#### Strong Points
+ - Our animations are synchronized to produce a bigger animation
+ - Creativity at the choice of textures
+ - We used creactive freedom to improve the highlight shader so that the texture color still appears.
+
+#### Scene Description - Glitched Bakery
+  
+
 ----
 ## Issues/Problems
 

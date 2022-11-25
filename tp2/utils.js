@@ -39,12 +39,16 @@ export function axisToVector(axisStr, messageError) {
     }
 }
 
+export function vecExactEquals(a, b) {
+    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+}
+
 export function vectorToAxis(axisVec) {
-    if (vec3.exactEquals(axisVec, vec3.fromValues(1, 0, 0))) {
+    if (vecExactEquals(axisVec, vec3.fromValues(1, 0, 0))) {
         return 'x';
-    } else if (vec3.exactEquals(axisVec, vec3.fromValues(0, 1, 0))) {
+    } else if (vecExactEquals(axisVec, vec3.fromValues(0, 1, 0))) {
         return 'y';
-    } else if (vec3.exactEquals(axisVec, vec3.fromValues(0, 0, 1))) {
+    } else if (vecExactEquals(axisVec, vec3.fromValues(0, 0, 1))) {
         return 'z';
     }
     throw 'Invalid axis';
