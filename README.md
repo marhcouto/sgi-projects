@@ -28,16 +28,17 @@
 -----
 
 ### [TP2 - NURBS, animations and shaders](tp2)
-#### Strong Points 
-- Variety of objects
-- Multitude of prespectives and scales
-- Interesting usage of component references
+#### Strong Points
+ - Our animations are synchronized to produce a bigger animation
+ - Creativity at the choice of textures
+ - We used creactive freedom to improve the highlight shader so that the texture color still appears.
+ - We grouped all primitives that were children of a same component to minimize the number of shader swaps. 
 
 #### Scene Description - Glitched Bakery
-
-- The scenario described in the scene aludes to a misterious bakery ![Customer View](tp1/screenshots/customerView.png) ![Donuts View](tp1/screenshots/donutsView.png) ![Ants View](tp1/screenshots/antsView.png) ![Employee View](tp1/screenshots/employeeView.png) ![Vitrine View](tp1/screenshots/brokenVitrineView.png)
-- which exists in a world created by a computer simulation ... ![Inception View](tp1/screenshots/inceptionView.png)
-- ... that has glitched and is full of bugs ... ![External View](tp1/screenshots/externalView.png) ![External View2](tp1/screenshots/externalView2.png) ![Ortho View](tp1/screenshots/orthoView.png)
+  - Overall view of our bakery (now with minecraft textures)![Overall View](tp2/screenshots/scene-overall.png)
+  ![Outside NURBS View](tp2/screenshots/improved-shades.png)
+  - Out of nowhere an ant was abducted![Animation](tp2/screenshots/abduction.gif)
+  - Oh no! There is a barrel ready to explode, maybe the ant abduction was good afterall![Barrel View](tp2/screenshots/nurbs.png)
 
 [Link to Scene](tp2/scenes/SGI_TP1_XML_T03_G11_v03.xml)
 ----
