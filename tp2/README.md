@@ -14,9 +14,13 @@
  - Our animations are synchronized to produce a bigger animation
  - Creativity at the choice of textures
  - We used creactive freedom to improve the highlight shader so that the texture color still appears.
+ - We grouped all primitives that were children of a same component to minimize the number of shader swaps. 
 
 #### Scene Description - Glitched Bakery
-  
+  - Overall view of our bakery (now with minecraft textures)![Overall View](tp2/screenshots/scene-overall.png)
+  ![Outside NURBS View](tp2/screenshots/improved-shades-png)
+  - Out of nowhere an ant was abducted![Animation](tp2/screenshots/abduction.gif)
+  - Oh no! There is a barrel ready to explode, maybe the ant abduction was good afterall![Barrel View](tp2/screenshots/nurbs.png)
 
 ----
 ## Issues/Problems
