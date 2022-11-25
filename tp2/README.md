@@ -18,7 +18,7 @@
 
 #### Scene Description - Glitched Bakery
   - Overall view of our bakery (now with minecraft textures)![Overall View](tp2/screenshots/scene-overall.png)
-  ![Outside NURBS View](tp2/screenshots/improved-shades-png)
+  ![Outside NURBS View](tp2/screenshots/improved-shades.png)
   - Out of nowhere an ant was abducted![Animation](tp2/screenshots/abduction.gif)
   - Oh no! There is a barrel ready to explode, maybe the ant abduction was good afterall![Barrel View](tp2/screenshots/nurbs.png)
 
