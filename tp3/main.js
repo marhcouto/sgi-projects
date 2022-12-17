@@ -2,6 +2,7 @@ import { CGFapplication } from '../lib/CGF.js';
 import { XMLscene } from './XMLscene.js';
 import { MyInterface } from './MyInterface.js';
 import { MySceneGraph } from './MySceneGraph.js';
+import { CheckerBoard } from './checkers/CheckerBoard.js';
 
 function getUrlVars() {
     var vars = {};
@@ -13,6 +14,8 @@ function getUrlVars() {
 }	 
 
 function main() {
+    console.log(new CheckerBoard());
+
 
 	// Standard application, scene and interface setup
     var app = new CGFapplication(document.body);
