@@ -1,15 +1,25 @@
-export const PieceType = Object.freeze({
+/**
+ * @readonly
+ * @enum {Symbol<string>}
+ */
+export const PieceType = {
   Black: Symbol("Black"),
   White: Symbol("White"),
   KingWhite: Symbol("KingWhite"),
   KingBlack: Symbol("KingBlack"),
   Empty: Symbol("Empty")
-});
+}
+Object.freeze(PieceType);
 
+/**
+ * @readonly
+ * @enum {Symbol<string>}
+ */
 export const CellColor = Object.freeze({
   Black: Symbol("Black"),
   White: Symbol("White")
 });
+Object.freeze(CellColor);
 
 export class CheckerCell {
   constructor(color, piece) {
@@ -21,13 +31,5 @@ export class CheckerCell {
     }
     this.color = color;
     this.piece = piece;
-  }
-
-  getPiece() {
-    return this.piece;
-  }
-
-  getColor() {
-    return this.color;
   }
 }
