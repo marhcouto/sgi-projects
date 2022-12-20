@@ -1,5 +1,5 @@
 import { PieceType } from "./CheckerCell.js";
-import {enemyPieceColor, getPiece} from "./CheckerState.js";
+import { enemyPieceColor, getPiece } from "./CheckerState.js";
 
 /**
  * @typedef {import('./CheckerState.js').GameState} GameState
@@ -116,13 +116,6 @@ const generateValidMovesInDirection = (gameState, piecePos, direction) => {
   return validMoves;
 }
 
-const generateValidMovesForKing = (board, piecePos) => {
-  const validMoves = [];
-  
-  for (const direction in Direction) {
-    validMoves.push(...generateValidMovesInDirection(board, piecePos, Direction[direction]));
-  }
-}
 
 /**
  *
@@ -183,6 +176,21 @@ function generateValidMovesForNormal(gameState, piecePos, direction) {
           moveType: MoveType.Capture
         })
       }
+    }
+  }
+
+  /**
+   *
+   * @param {GameState} gameState
+   * @param {Position} piecePos
+   * @param {Direction} direction
+   * @return {CheckerMove[]}
+   */
+  const generateValidMovesForKing = (board, piecePos) => {
+    const validMoves = [];
+
+    for (const direction in Direction) {
+      validMoves.push(...generateValidMovesInDirection(board, piecePos, Direction[direction]));
     }
   }
 

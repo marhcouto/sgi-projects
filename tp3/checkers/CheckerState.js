@@ -1,6 +1,9 @@
 import { CheckerCell, CellColor, PieceType } from "./CheckerCell.js";
 import {generateValidMoves as generateValidMovesForPiece} from "./CheckerPiece.js";
 
+
+// Datatypes
+
 /**
  * @typedef {import('./CheckerPiece.js').CheckerMove} CheckerMove
  */
@@ -16,9 +19,18 @@ export const PlayerTurn = {
 };
 Object.freeze(PlayerTurn);
 
+
+
+/**
+ * @typedef {Object} Score
+ * @property {Number} blacksScore
+ * @property {Number} whitesScore
+ */
+
 /**
  * @typedef {Object} GameState
  * @property {Number} size
+ * @property {Score} score
  * @property {PlayerTurn} turn
  * @property {CheckerCell[][]} board
  * @property {Map<string, CheckerMove[]>} [validMoves]
@@ -31,6 +43,9 @@ Object.freeze(PlayerTurn);
  * @property {Number} row
  * @property {Number} col
  */
+
+
+// Main Functions
 
 /**
  * Generate a board that respects GameState interface
@@ -53,7 +68,7 @@ export function generateGameState(size) {
         cell = PieceType.White;
       }
 
-      if ((i % 2) === (j % 2)) {
+      if ((i % 2) !== (j % 2)) {
         board[i].push(new CheckerCell(CellColor.Black, cell));
       } else {
         board[i].push(new CheckerCell(CellColor.White, PieceType.Empty));
@@ -63,6 +78,10 @@ export function generateGameState(size) {
 
   const initialState = {
     size: size,
+    score: {
+      whitesScore: 0,
+      blacksScore: 0
+    },
     turn: PlayerTurn.Black,
     board: board,
     numberOfCells: size * size - 1,
@@ -70,45 +89,6 @@ export function generateGameState(size) {
   }
   initialState.validMoves = generateValidMoves(initialState);
   return initialState;
-}
-
-/**
- *
- * @param {GameState} gameState
- * @returns {Map<string, CheckerMove[]>}
- */
-function generateValidMoves(gameState) {
-  const validPieces = turnPieceColor(gameState);
-  const validMoves = new Map();
-  for (let row = 0; row < gameState.size; row++) {
-    for (let col = 0; col < gameState.size; col++) {
-      const cell = gameState.board[row][col];
-      if (!validPieces.includes(cell.piece)) {
-        continue;
-      }
-      validMoves.set(
-          JSON.stringify({row, col}),
-          generateValidMovesForPiece(gameState, { row, col }, cell.piece)
-      );
-    }
-  }
-  return validMoves;
-}
-
-
-/**
- *
- * @param {Number} arrIdx
- * @return {Position}
- */
-function arrayIdxToCord(arrIdx) {
-  if (!arrIdx) {
-    throw new Error("Can't convert array index with undefined/null index");
-  }
-  return {
-    row: Math.floor(arrIdx / 9),
-    col: arrIdx % 9
-  };
 }
 
 /**
@@ -170,52 +150,6 @@ export function movePiece(gameState, orig, dest) {
 /**
  *
  * @param {GameState} gameState
- * @param {Position} origPos
- * @param {Position} finalPos
- * @return {CheckerMove|null}
- */
-function findMovementEvent(gameState, origPos, finalPos) {
-  if (!gameState.validMoves) {
-    gameState.validMoves = generateValidMoves(gameState);
-  }
-
-  if (!gameState.validMoves.has(JSON.stringify(origPos))) {
-    return null;
-  }
-  const validMovesForPosition = gameState.validMoves.get(JSON.stringify(origPos));
-  for (const move of validMovesForPosition) {
-    if (JSON.stringify(move.finalPos) === JSON.stringify(finalPos)) {
-      return move;
-    }
-  }
-  return null;
-}
-
-/**
- *
- * @param {GameState} gameState
- */
-function lastRowForPlayer(gameState) {
-  if (gameState.turn === PlayerTurn.Black) {
-    return gameState.size - 1;
-  }
-  return 0;
-}
-
-/**
- *
- * @param {GameState} gameState
- * @param {Position} position
- * @param {PieceType} piece
- */
-function replacePiece(gameState, position, piece) {
-  const cell = gameState.board[position.row][position.col];
-  cell.piece = piece;
-}
-
-/**
- *
- * @param {GameState} gameState
  * @param {Position} pos
  * @return {PieceType | null}
  */
@@ -252,6 +186,92 @@ export function turnPieceColor(gameState) {
       [PieceType.KingWhite, PieceType.White];
 }
 
+
+// Auxiliary Functions
+
+/**
+ *
+ * @param {GameState} gameState
+ * @returns {Map<string, CheckerMove[]>}
+ */
+function generateValidMoves(gameState) {
+  const validPieces = turnPieceColor(gameState);
+  const validMoves = new Map();
+  for (let row = 0; row < gameState.size; row++) {
+    for (let col = 0; col < gameState.size; col++) {
+      const cell = gameState.board[row][col];
+      if (!validPieces.includes(cell.piece)) {
+        continue;
+      }
+      validMoves.set(
+          JSON.stringify({row, col}),
+          generateValidMovesForPiece(gameState, { row, col }, cell.piece)
+      );
+    }
+  }
+  return validMoves;
+}
+
+/**
+ *
+ * @param {Number} arrIdx
+ * @return {Position}
+ */
+function arrayIdxToCord(arrIdx) {
+  if (!arrIdx) {
+    throw new Error("Can't convert array index with undefined/null index");
+  }
+  return {
+    row: Math.floor(arrIdx / 8),
+    col: arrIdx % 8
+  };
+}
+
+/**
+ *
+ * @param {GameState} gameState
+ * @param {Position} origPos
+ * @param {Position} finalPos
+ * @return {CheckerMove|null}
+ */
+function findMovementEvent(gameState, origPos, finalPos) {
+  gameState.validMoves = generateValidMoves(gameState);
+
+  if (!gameState.validMoves.has(JSON.stringify(origPos))) {
+    return null;
+  }
+
+  const validMovesForPosition = gameState.validMoves.get(JSON.stringify(origPos));
+  for (const move of validMovesForPosition) {
+    if (JSON.stringify(move.finalPos) === JSON.stringify(finalPos)) {
+      return move;
+    }
+  }
+  return null;
+}
+
+/**
+ *
+ * @param {GameState} gameState
+ */
+function lastRowForPlayer(gameState) {
+  if (gameState.turn === PlayerTurn.Black) {
+    return gameState.size - 1;
+  }
+  return 0;
+}
+
+/**
+ *
+ * @param {GameState} gameState
+ * @param {Position} position
+ * @param {PieceType} piece
+ */
+function replacePiece(gameState, position, piece) {
+  const cell = gameState.board[position.row][position.col];
+  cell.piece = piece;
+}
+
 /**
  *
  * @param {GameState} gameState
@@ -260,6 +280,7 @@ export function turnPieceColor(gameState) {
 function copy(gameState) {
   const newGameState = {
     size: gameState.size,
+    score: gameState.score,
     turn: gameState.turn,
     numberOfCells: gameState.numberOfCells,
     validMoves: gameState.validMoves,

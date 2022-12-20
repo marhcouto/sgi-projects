@@ -3,8 +3,8 @@
 
     <views default="defaultCamera">
         <perspective id="defaultCamera" near="0.1" far="500" angle="45">
-            <from x="3" y="3" z="3" />
-            <to x="0" y="0" z="0" />
+            <from x="4" y="-4" z="10" />
+            <to x="4" y="-4" z="0" />
         </perspective>
     </views>
 
@@ -53,11 +53,13 @@
 
     <components>
         <component id="demoRoot">
-            <transformation/>
+            <transformation>
+                <translate x="-3" y="-0.5" z="0" />
+            </transformation>
             <materials>
                 <material id="demoMaterial" />
             </materials>
-            <texture id="demoTexture" length_s="1" length_t="2"/>
+            <texture id="none"/>
             <children>
                 <primitiveref id="square" />
             </children>

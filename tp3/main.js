@@ -3,6 +3,7 @@ import { XMLscene } from './XMLscene.js';
 import { MyInterface } from './MyInterface.js';
 import { MySceneGraph } from './MySceneGraph.js';
 import {generateGameState, movePiece} from './checkers/CheckerState.js';
+import { MyGameView } from './view/MyGameView.js';
 
 function getUrlVars() {
     var vars = {};
@@ -14,15 +15,15 @@ function getUrlVars() {
 }	 
 
 function main() {
-    const gameState = generateGameState();
-    console.log(gameState);
-    console.log(movePiece(gameState, 18, 28));
+    const gameState = generateGameState(8);
+    //console.log(gameState);
+    //console.log(movePiece(gameState, 18, 28));
 
 
 	// Standard application, scene and interface setup
-    var app = new CGFapplication(document.body);
-    var myInterface = new MyInterface();
-    var myScene = new XMLscene(myInterface);
+    const app = new CGFapplication(document.body);
+    const myInterface = new MyInterface();
+    const myScene = new XMLscene(myInterface);
 
     app.init();
 
@@ -33,15 +34,18 @@ function main() {
 
 	// get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
 	// or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
-	
-    var filename=getUrlVars()['file'] || "SGI_TP1_XML_T03_G11_v03.xml";
 
-	// create and load graph, and associate it to scene. 
+    const filename = getUrlVars()['file'] || "demo.xml";
+
+    // create and load graph, and associate it to scene.
 	// Check console for loading errors
-	var myGraph = new MySceneGraph(filename, myScene);
+    const myGraph = new MySceneGraph(filename, myScene);
+    const myGameView = new MyGameView(myScene, gameState);
 
-	// start
+    // start
     app.run();
 }
+
+
 
 main();

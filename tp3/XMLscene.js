@@ -43,6 +43,7 @@ export class XMLscene extends CGFscene {
 
         this.axis = new CGFaxis(this);
         this.setUpdatePeriod(UPDATE_FREQ);
+        this.setPickEnabled(true);
     }
 
 
@@ -133,6 +134,7 @@ export class XMLscene extends CGFscene {
         this.setSpecular(0.2, 0.4, 0.8, 1.0);
         this.setShininess(10.0);
     }
+
     /** Handler called when the graph is finally loaded. 
      * As loading is asynchronous, this may be called already after the application has started the run loop
      */
@@ -198,6 +200,7 @@ export class XMLscene extends CGFscene {
 
             // Displays the scene (MySceneGraph function).
             this.graph.displayScene();
+            this.gameView.displayBoard();
         }
 
         this.popMatrix();
