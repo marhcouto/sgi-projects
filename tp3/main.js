@@ -2,6 +2,7 @@ import { CGFapplication } from '../lib/CGF.js';
 import { XMLscene } from './XMLscene.js';
 import { MyInterface } from './MyInterface.js';
 import { MySceneGraph } from './MySceneGraph.js';
+import {generateGameState, movePiece} from './checkers/CheckerState.js';
 
 function getUrlVars() {
     var vars = {};
@@ -13,6 +14,10 @@ function getUrlVars() {
 }	 
 
 function main() {
+    const gameState = generateGameState();
+    console.log(gameState);
+    console.log(movePiece(gameState, 18, 28));
+
 
 	// Standard application, scene and interface setup
     var app = new CGFapplication(document.body);
