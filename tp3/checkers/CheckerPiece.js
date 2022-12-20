@@ -1,129 +1,115 @@
 import { PieceType } from "./CheckerCell.js";
-import { CheckerMove, MoveType } from "./CheckerMove.js";
+import {enemyPieceColor, getPiece} from "./CheckerState.js";
 
-export const Direction = Object.freeze({
+/**
+ * @typedef {import('./CheckerState.js').GameState} GameState
+ * @typedef {import('./CheckerState.js').Position} Position
+ * @typedef {import('./CheckerCell.js').PieceType} PieceType
+ * @typedef {import('./CheckerCell.js').CellColor} CellColor
+ */
+
+/**
+ * @typedef {Object} CheckerMove
+ * @property {Position} initPos
+ * @property {Position} finalPos
+ * @property {MoveType} moveType
+ */
+
+/**
+ * Enum for valid move types
+ * @readonly
+ * @enum {Symbol<string>}
+ */
+export const MoveType = Object.freeze({
+  Move: Symbol("Move"),
+  Capture: Symbol("Capture"),
+});
+Object.freeze(MoveType);
+
+/**
+ * Enum for valid directions
+ * @readonly
+ * @enum {Symbol<string>}
+ */
+export const Direction = {
   TopRight: Symbol("TopRight"),
   TopLeft: Symbol("TopLeft"),
   BottomRight: Symbol("BottomRight"),
   BottomLeft: Symbol("BottomLeft")
-});
+};
+Object.freeze(Direction);
 
-function* moveGenerator(board, initPost, direction) {
-  const size = board.n;
-  const { row, col } = initPost;
+/**
+ * 
+ * @param {GameState} gameState
+ * @param {Position} initPos
+ * @param {Direction} direction
+ * @yields {Position}
+ */
+function* moveGenerator(gameState, initPos, direction) {
   const transformationFunction = {
     [Direction.TopRight]: (row, col) => [row + 1, col + 1],
     [Direction.TopLeft]: (row, col) => [row + 1, col - 1],
     [Direction.BottomRight]: (row, col) => [row - 1, col + 1],
     [Direction.BottomLeft]: (row, col) => [row - 1, col - 1]
   }
+  let [ row, col ] = transformationFunction[direction](initPos.row, initPos.col);
 
-  while(row > 0 && col > 0 && row < size && col < size) {
+  while(row >= 0 && col >= 0 && row < gameState.size && col < gameState.size) {
+    yield { row, col };
     const [newRow, newCol] = transformationFunction[direction](row, col);
-    yield {
-      row: newRow,
-      col: newCol,
-    };
     row = newRow;
     col = newCol;
   }
 }
 
-export const generateValidMoves = (board, piecePos, piece) =>{
+/**
+ * 
+ * @param {GameState} gameState 
+ * @param {Position} piecePos 
+ * @param {PieceType} piece 
+ * @returns 
+ */
+export const generateValidMoves = (gameState, piecePos, piece) =>{
   switch(piece) {
     case PieceType.Black:
-      return generateValidMovesForBlack(board, piecePos);
+      return generateValidMovesForBlack(gameState, piecePos);
     case PieceType.White:
-      return generateValidMovesForWhite(board, piecePos);
+      return generateValidMovesForWhite(gameState, piecePos);
     case PieceType.KingWhite:
     case PieceType.KingBlack:
-      return generateValidMovesForKing(board, piecePos);
+      return generateValidMovesForKing(gameState, piecePos);
   }
 }
 
-const generateValidMovesForBlack = (board, piecePos) => {
+/**
+ *
+ * @param {GameState} gameState
+ * @param {Position} piecePos
+ * @param {Direction} direction
+ * @return {CheckerMove[]}
+ */
+const generateValidMovesInDirection = (gameState, piecePos, direction) => {
   const validMoves = [];
-  const hasTopRightFree = 
-    piecePos.row < board.n - 1  &&
-    piecePos.col < board.n - 1 &&
-    board.getPiece(piecePos.row + 1, piecePos.col + 1) === PieceType.Empty;
-  if (hasTopRightFree) {
-    validMoves.push(
-      new CheckerMove(
-        piecePos,
-        [piecePos.row + 1, piecePos.col + 1],
-        MoveType.Move,
-      )
-    );
-  }
-
-  const hasTopLeftFree =
-    piecePos.row < board.n - 1 &&
-    piecePos.col > 0 &&
-    board.getPiece(piecePos.row + 1, piecePos.col - 1) === PieceType.Empty;
-  if (hasTopLeftFree) {
-    validMoves.push(
-      new CheckerMove(
-        piecePos,
-        [piecePos.row + 1, piecePos.col - 1],
-        MoveType.Move,
-      ),
-    );
-  }
-
-  const canCaptureTopRight = 
-    piecePos.row < board.n - 2 &&
-    piecePos.col < board.n - 2 &&
-    board.getPiece(piecePos.row + 1, piecePos.col + 1) === PieceType.White &&
-    board.getPiece(piecePos.row + 2, piecePos.col + 2) === PieceType.Empty;
-  if (canCaptureTopRight) {
-    validMoves.push(
-      new CheckerMove(
-        piecePos,
-        [piecePos.row + 2, piecePos.col + 2],
-        MoveType.Capture,
-      ),
-    );
-  }
-
-  const canCaptureTopLeft =
-    piecePos.row < board.n - 2 &&
-    piecePos.col > 1 &&
-    board.getPiece(piecePos.row + 1, piecePos.col - 1) === PieceType.White &&
-    board.getPiece(piecePos.row + 1, piecePos.col - 2) === PieceType.Empty;
-  if (canCaptureTopLeft) {
-    validMoves.push(
-      new CheckerMove(
-        piecePos,
-        [piecePos.row + 2, piecePos.col - 2],
-        MoveType.Capture,
-      ),
-    );
-  }
-
-  return validMoves;
-}
-
-const generateValidMovesInDirection = (board, piecePos, direction) => {
-  const validMoves = [];
-  const hasGoneThroughDiffColor = false;
-  const mvGen = moveGenerator(board, piecePos, direction);
+  let hasGoneThroughDiffColor = false;
+  const mvGen = moveGenerator(gameState, piecePos, direction);
   for (const {row, col} of mvGen) {
-    if (board.getPiece(piecePos.row + 1, piecePos.col + 1) === PieceType.Empty) {
-      validMoves.push(
-        new CheckerMove(
-          piecePos,
-          [row, col],
-          !hasGoneThroughDiffColor ? MoveType.Move : MoveType.Capture,
-        ),
-      );
+    if (getPiece(gameState, {row: piecePos.row + 1, col: piecePos.col + 1}) === PieceType.Empty) {
+      validMoves.push({
+        initPos: piecePos,
+        finalPos: {
+          row,
+          col,
+        },
+        moveType: !hasGoneThroughDiffColor ? MoveType.Move : MoveType.Capture,
+      });
     }
 
-    if (board.getPiece(piecePos.row + 1, piecePos.col + 1) === board.enemyPieceColor()) {
+    if (getPiece(gameState, {row: piecePos.row + 1, col: piecePos.col + 1}) === enemyPieceColor(gameState)) {
       hasGoneThroughDiffColor = true;
     }
 
-    if (board.getPiece(piecePos.row + 1, piecePos.col + 1) === board.turnPieceColor()) {
+    if (getPiece(gameState, {row: piecePos.row + 1, col: piecePos.col + 1}) === turnPieceColor()) {
       break;
     }
   }
@@ -138,64 +124,66 @@ const generateValidMovesForKing = (board, piecePos) => {
   }
 }
 
-const generateValidMovesForWhite = (board, piecePos) => {
+/**
+ *
+ * @param {GameState} gameState
+ * @param {Position} piecePos
+ * @return {CheckerMove[]}
+ */
+function generateValidMovesForWhite(gameState, piecePos) {
+  return [
+    ...generateValidMovesForNormal(gameState, piecePos, Direction.BottomRight),
+    ...generateValidMovesForNormal(gameState, piecePos, Direction.BottomLeft),
+  ]
+}
+
+/**
+ *
+ * @param {GameState} gameState
+ * @param {Position} piecePos
+ * @return {CheckerMove[]}
+ */
+function generateValidMovesForBlack(gameState, piecePos) {
+  return [
+    ...generateValidMovesForNormal(gameState, piecePos, Direction.TopRight),
+    ...generateValidMovesForNormal(gameState, piecePos, Direction.TopLeft),
+  ]
+}
+
+/**
+ *
+ * @param {GameState} gameState
+ * @param {Position} piecePos
+ * @param {Direction} direction
+ * @return {CheckerMove[]}
+ */
+function generateValidMovesForNormal(gameState, piecePos, direction) {
   const validMoves = [];
-  const hasBottomRightFree =
-    piecePos.row > 0 &&
-    piecePos.col < board.n - 1 &&
-    board.getPiece(piecePos.row - 1, piecePos.col + 1) === PieceType.Empty;
-  if (hasBottomRightFree) {
-    validMoves.push(
-      new CheckerMove(
-        piecePos,
-        [piecePos.row - 1, piecePos.col + 1],
-        MoveType.Move,
-      ),
-    );
-  }
+  const movGen = moveGenerator(gameState, piecePos, direction);
+  const enemyPieces = enemyPieceColor(gameState);
 
-  const hasBottomLeftFree =
-    piecePos.row > 0 &&
-    piecePos.col > 0 &&
-    board.getPiece(piecePos.row - 1, piecePos.col - 1) === PieceType.Empty;
-  if (hasBottomLeftFree) {
-    validMoves.push(
-      new CheckerMove(
-        piecePos,
-        [piecePos.row - 1, piecePos.col - 1],
-        MoveType.Move,
-      ),
-    );
-  }
-
-  const canCaptureBottomRight =
-    piecePos.row > 1 &&
-    piecePos.col < board.n - 1 &&
-    board.getPiece(piecePos.row - 1, piecePos.col + 1) === PieceType.Black &&
-    board.getPiece(piecePos.row - 2, piecePos.col + 2) === PieceType.Empty;
-  if (canCaptureBottomRight) {
-    validMoves.push(
-      new CheckerMove(
-        piecePos,
-        [piecePos.row - 2, piecePos.col + 2],
-        MoveType.Capture,
-      ),
-    );
-  }
-
-  const canCaptureBottomLeft =
-    piecePos.row > 1 &&
-    piecePos.col > 1 &&
-    board.getPiece(piecePos.row - 1, piecePos.col - 1) === PieceType.Black &&
-    board.getPiece(piecePos.row - 2, piecePos.col - 2) === PieceType.Empty;
-  if (canCaptureBottomLeft) {
-    validMoves.push(
-      new CheckerMove(
-        piecePos,
-        [piecePos.row - 2, piecePos.col - 2],
-        MoveType.Capture,
-      ),
-    );
+  const directionMove = movGen.next();
+  if (!movGen.done && directionMove.value) {
+    const piece = getPiece(gameState, directionMove.value);
+    if (!piece) {
+      console.log(directionMove.value);
+    }
+    if (piece === PieceType.Empty) {
+      validMoves.push({
+        initPos: piecePos,
+        finalPos: directionMove.value,
+        moveType: MoveType.Move
+      });
+    } else if(enemyPieces.includes(piece)) {
+      const captureMove = movGen.next();
+      if (captureMove.value) {
+        validMoves.push({
+          initPos: piecePos,
+          finalPos: captureMove.value,
+          moveType: MoveType.Capture
+        })
+      }
+    }
   }
 
   return validMoves;
