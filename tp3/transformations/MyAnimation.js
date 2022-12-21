@@ -9,10 +9,14 @@ export class MyAnimation {
   }
 
   update(t) {
-    throw 'Child class must override update(t)'
+    throw new Error('Child class must override update(t)');
   }
 
   apply() {
-    throw 'Child class must override apply()'
+    throw new Error('Child class must override apply()');
+  }
+
+  done() {
+    throw new Error('');
   }
 }

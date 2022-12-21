@@ -1,12 +1,13 @@
-import {MyRectangle} from "../primitives/MyRectangle.js";
-import {CGFappearance} from "../../lib/CGF.js";
-import {MyCylinder} from "../primitives/MyCylinder.js";
-import {isFromTurn, movePiece, PieceType} from "../checkers/CheckerState.js";
+import { MyRectangle } from "../primitives/MyRectangle.js";
+import { CGFappearance } from "../../lib/CGF.js";
+import { MyCylinder } from "../primitives/MyCylinder.js";
+import { cordToArrayIdx, isFromTurn, lastMove, movePiece, PieceType} from "../checkers/CheckerState.js";
+import { MyPieceMoveAnimation } from "../transformations/MyPieceMoveAnimation.js";
 
 /**
  * @typedef {import('./CheckerState.js').PieceType} PieceType
+ * @typedef {import('./CheckerState.js').CheckerMove} CheckerMove
  */
-
 
 export class MyGameView {
   /**
@@ -19,7 +20,25 @@ export class MyGameView {
     this.scene = scene;
     this.gameState = gameState;
     scene.gameView = this;
+    this.interactionHaltingAnimationQueue = new Map();
+    this.scene.registerForUpdate('GameView', this.update.bind(this));
     this.build();
+  }
+
+  static positionToCord(pos) {
+    return vec3.fromValues(pos.col + 0.5, -pos.row - 0.5, 0);
+  }
+
+  update(t) {
+    const animationsToRemove = [];
+    for (const [animationIdx, animationObj] of this.interactionHaltingAnimationQueue.entries()) {
+      if (animationObj.done()) {
+        animationsToRemove.push(animationIdx);
+        continue;
+      }
+      animationObj.update(t);
+    }
+    animationsToRemove.forEach((animIdx) => this.interactionHaltingAnimationQueue.delete(animIdx));
   }
 
   build() {
@@ -81,18 +100,35 @@ export class MyGameView {
       let obj = this.scene.pickResults[i][0];
       if (!obj) continue;
       let customId = this.scene.pickResults[i][1];
-      console.log(customId)
       if (!this.pickedCell) {
+        if (this.interactionHaltingAnimationQueue.size !== 0) {
+          this.interactionHaltingAnimationQueue = new Map();
+        }
         this.pickedCell = isFromTurn(this.gameState, customId) ? customId : null;
       } else {
         let result = movePiece(this.gameState, this.pickedCell, customId);
         console.log("Result:", result.success);
         this.gameState = result.gameState;
+        if (result.success) {
+          this.setupAnimation(lastMove(this.gameState));
+        }
         this.pickedCell = null;
       }
       console.log("Picked object: " + obj + ", with pick id " + customId);
     }
     this.scene.pickResults.splice(0,this.scene.pickResults.length);
+  }
+
+  /**
+   *
+   * @param {CheckerMove} movement
+   */
+  setupAnimation(movement) {
+    const pieceIdx = cordToArrayIdx(this.gameState, movement.finalPos);
+    this.interactionHaltingAnimationQueue.set(pieceIdx, new MyPieceMoveAnimation(
+      this.scene,
+      movement,
+    ));
   }
 
   displayBoard() {
@@ -121,10 +157,15 @@ export class MyGameView {
           this.materialWhitePawns.apply();
         }
         this.scene.pushMatrix();
-        this.scene.translate(col + 0.5, -row - 0.5, 0);
+        const pieceIdx = cordToArrayIdx(this.gameState, {row, col});
+        if (this.interactionHaltingAnimationQueue.has(pieceIdx)) {
+          this.interactionHaltingAnimationQueue.get(pieceIdx).apply();
+        } else {
+          const cords = MyGameView.positionToCord({row, col});
+          this.scene.translate(cords[0], cords[1], cords[2]);
+        }
         this.pawn.display();
         this.scene.popMatrix();
-
       }
     }
   }

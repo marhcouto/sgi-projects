@@ -119,7 +119,7 @@ function generateValidMovesInDirection(gameState, piecePos, direction) {
       });
     } else if(enemyPieces.includes(piece)) {
       const captureMove = movGen.next();
-      if (captureMove.value) {
+      if (captureMove.value && (getPiece(gameState, captureMove.value) === PieceType.Empty)) {
         nFoundCaptures++;
         validMoves.push({
           initPos: piecePos,

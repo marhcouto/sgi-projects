@@ -133,11 +133,21 @@ export function generateGameState(size) {
  */
 export function movePiece(gameState, orig, dest) {
   if (!orig || !(typeof orig === 'number')) {
-    throw new Error("Can't move piece with invalid orig");
+    console.error("Can't move piece with invalid orig");
+    return {
+      success: false,
+      gameState: gameState
+    }
   }
   if (!dest || !(typeof dest === 'number')) {
-    throw new Error("Can't move piece with invalid dest");
+    console.error("Can't move piece with invalid dest");
+    return {
+      success: false,
+      gameState: gameState
+    }
   }
+
+  console.log(gameState)
   if (orig > gameState.numberOfCells) {
     return {
       success: false,
@@ -170,6 +180,7 @@ export function movePiece(gameState, orig, dest) {
   replacePiece(newGameState, destPos, getPiece(gameState, movement.initPos));
 
   if (movement.moveType === MoveType.Capture) {
+    gameState.turn === PlayerTurn.Black ? newGameState.score.blacksScore++ : newGameState.score.whitesScore++;
     const capturePosition = getCapturePosition(movement);
     replacePiece(newGameState, capturePosition, PieceType.Empty);
   }
@@ -295,7 +306,7 @@ function generateValidMoves(gameState) {
  * @param {Number} arrIdx
  * @return {Position}
  */
-function arrayIdxToCord(gameState, arrIdx) {
+export function arrayIdxToCord(gameState, arrIdx) {
   if (!arrIdx) {
     throw new Error("Can't convert array index with undefined/null index");
   }
@@ -303,6 +314,24 @@ function arrayIdxToCord(gameState, arrIdx) {
     row: Math.floor(arrIdx / gameState.size),
     col: arrIdx % gameState.size
   };
+}
+
+/**
+ *
+ * @param {GameState} gameState
+ * @param {Position} position
+ */
+export function cordToArrayIdx(gameState, position) {
+  return position.row * gameState.size + position.col;
+}
+
+/**
+ *
+ * @param {GameState} gameState
+ * @return {CheckerMove}
+ */
+export function lastMove(gameState) {
+  return gameState.moves.at(-1);
 }
 
 /**
@@ -345,9 +374,7 @@ function lastRowForPlayer(gameState) {
  */
 function replacePiece(gameState, position, piece) {
   const cell = gameState.board[position.row][position.col];
-  console.log(piece);
   cell.piece = piece;
-  console.log(gameState.board[position.row][position.col]);
 }
 
 /**
@@ -358,13 +385,13 @@ function replacePiece(gameState, position, piece) {
 function copy(gameState) {
   const newGameState = {
     size: gameState.size,
-    score: gameState.score,
+    score: { ...gameState.score },
     turn: gameState.turn,
     numberOfCells: gameState.numberOfCells,
     validMoves: gameState.validMoves,
     nCaptures: gameState.nCaptures,
     board: [],
-    moves: [...gameState.moves]
+    moves: [ ...gameState.moves ]
   };
 
   for (const line of gameState.board) {

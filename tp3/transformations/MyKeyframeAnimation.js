@@ -39,6 +39,10 @@ export class MyKeyframeAnimation extends MyAnimation {
     return this.initialPhaseState != null;
   }
 
+  done() {
+    return this.keyframes.length === 0;
+  }
+
   apply() {
     if (this.initialPhaseState == null) return;
 
