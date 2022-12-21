@@ -16,7 +16,7 @@ function getUrlVars() {
 
 function main() {
     const gameState = generateGameState(8);
-    //console.log(gameState);
+    console.log(gameState);
     //console.log(movePiece(gameState, 18, 28));
 
 

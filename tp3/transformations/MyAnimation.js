@@ -4,15 +4,15 @@
  * @param scene - Reference to MyScene object
  */
 export class MyAnimation {
-    constructor(scene) {
-        this.scene = scene;
-    }
+  constructor(scene) {
+    this.scene = scene;
+  }
 
-    update(t) {
-        throw 'Child class must override update(t)'
-    }
+  update(t) {
+    throw 'Child class must override update(t)'
+  }
 
-    apply() {
-        throw 'Child class must override apply()'
-    }
+  apply() {
+    throw 'Child class must override apply()'
+  }
 }

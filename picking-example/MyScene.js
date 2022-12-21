@@ -65,16 +65,16 @@ export class MyScene extends CGFscene {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(10, 5, 20), vec3.fromValues(0, 0, 0));
     }
 
-	logPicking()
-	{
-		if (this.pickMode == false) {
+	logPicking() {
+      console.log("This");
+		if (!this.pickMode) {
 			// results can only be retrieved when picking mode is false
 			if (this.pickResults != null && this.pickResults.length > 0) {
-				for (var i=0; i< this.pickResults.length; i++) {
-					var obj = this.pickResults[i][0];
+				for (let i = 0; i< this.pickResults.length; i++) {
+					const obj = this.pickResults[i][0];
 					if (obj)
 					{
-						var customId = this.pickResults[i][1];				
+						const customId = this.pickResults[i][1];
 						console.log("Picked object: " + obj + ", with pick id " + customId);
 					}
 				}
@@ -116,8 +116,8 @@ export class MyScene extends CGFscene {
 		this.rotate(Math.PI/2.0,1,0,0);
 	
 		// draw objects
-		var pickId = 1
-		for (var i =0; i<this.objects.length; i++) {
+		let pickId = 1
+		for (let i =0; i < this.objects.length; i++) {
 			this.pushMatrix();
 			// demo transformation
 			this.translate(0, i * 2, 0);
