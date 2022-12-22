@@ -1,12 +1,29 @@
 import { MyRectangle } from "../primitives/MyRectangle.js";
 import { CGFappearance } from "../../lib/CGF.js";
 import { MyCylinder } from "../primitives/MyCylinder.js";
-import { cordToArrayIdx, isFromTurn, lastMove, movePiece, PieceType} from "../checkers/CheckerState.js";
+import {
+  cordToArrayIdx,
+  getCapturePosition, getPiece,
+  isFromTurn,
+  lastMove,
+  movePiece,
+  PieceType
+} from "../checkers/CheckerState.js";
 import { MyPieceMoveAnimation } from "../transformations/MyPieceMoveAnimation.js";
+import { MyBoardFrame } from "./components/MyBoardFrame.js";
+import { MyPawn } from "./components/MyPawn.js";
+import { MyCaptureAnimation } from "../transformations/MyCaptureAnimation.js";
+import {MoveType} from "../checkers/CheckerPiece.js";
 
 /**
  * @typedef {import('./CheckerState.js').PieceType} PieceType
  * @typedef {import('./CheckerState.js').CheckerMove} CheckerMove
+ */
+
+/**
+ * @typedef {Object} animatedSubject
+ * @property component
+ * @property {MyAnimation} animation
  */
 
 export class MyGameView {
@@ -31,12 +48,12 @@ export class MyGameView {
 
   update(t) {
     const animationsToRemove = [];
-    for (const [animationIdx, animationObj] of this.interactionHaltingAnimationQueue.entries()) {
-      if (animationObj.done()) {
+    for (const [animationIdx, animatedObj] of this.interactionHaltingAnimationQueue.entries()) {
+      if (animatedObj.animation.done()) {
         animationsToRemove.push(animationIdx);
         continue;
       }
-      animationObj.update(t);
+      animatedObj.animation.update(t);
     }
     animationsToRemove.forEach((animIdx) => this.interactionHaltingAnimationQueue.delete(animIdx));
   }
@@ -55,8 +72,11 @@ export class MyGameView {
     }
 
     // Pieces
-    this.pawn = new MyCylinder(this.scene, 0.3, 0.2, 0.4, 10, 10);
+    this.pawn = new MyPawn(this.scene);
     this.king = new MyCylinder(this.scene, 0.3, 0.1, 0.8, 10, 10);
+
+    //Board Frame
+    this.frame = new MyBoardFrame(this.scene);
 
     // Materials
     this.materialWhiteCells = new CGFappearance(this.scene);
@@ -71,17 +91,24 @@ export class MyGameView {
     this.materialBlackCells.setSpecular(0.3, 0.2, 0.1, 1);
     this.materialBlackCells.setShininess(120);
 
-    this.materialWhitePawns = new CGFappearance(this.scene);
-    this.materialWhitePawns.setAmbient(0.8, 0.75, 0.6, 1);
-    this.materialWhitePawns.setDiffuse(0.8, 0.75, 0.6, 1);
-    this.materialWhitePawns.setSpecular(0.8, 0.75, 0.6, 1);
-    this.materialWhitePawns.setShininess(120);
+    const materialWhitePawns = new CGFappearance(this.scene);
+    materialWhitePawns.setAmbient(0.8, 0.75, 0.6, 1);
+    materialWhitePawns.setDiffuse(0.8, 0.75, 0.6, 1);
+    materialWhitePawns.setSpecular(0.8, 0.75, 0.6, 1);
+    materialWhitePawns.setShininess(120);
 
-    this.materialBlackPawns = new CGFappearance(this.scene);
-    this.materialBlackPawns.setAmbient(0.15, 0.1, 0.05, 1);
-    this.materialBlackPawns.setDiffuse(0.15, 0.1, 0.05, 1);
-    this.materialBlackPawns.setSpecular(0.15, 0.1, 0.05, 1);
-    this.materialBlackPawns.setShininess(120);
+    const materialBlackPawns = new CGFappearance(this.scene);
+    materialBlackPawns.setAmbient(0.15, 0.1, 0.05, 1);
+    materialBlackPawns.setDiffuse(0.15, 0.1, 0.05, 1);
+    materialBlackPawns.setSpecular(0.15, 0.1, 0.05, 1);
+    materialBlackPawns.setShininess(120);
+
+    this.pieceMaterials = {
+      [PieceType.Black]: materialBlackPawns,
+      [PieceType.KingBlack]: materialBlackPawns,
+      [PieceType.White]: materialWhitePawns,
+      [PieceType.KingWhite]: materialWhitePawns,
+    }
   }
 
   /**
@@ -102,16 +129,25 @@ export class MyGameView {
       let customId = this.scene.pickResults[i][1];
       if (!this.pickedCell) {
         if (this.interactionHaltingAnimationQueue.size !== 0) {
-          this.interactionHaltingAnimationQueue = new Map();
+          return;
         }
         this.pickedCell = isFromTurn(this.gameState, customId) ? customId : null;
       } else {
         let result = movePiece(this.gameState, this.pickedCell, customId);
         console.log("Result:", result.success);
-        this.gameState = result.gameState;
         if (result.success) {
-          this.setupAnimation(lastMove(this.gameState));
+          const lastPieceMove = lastMove(result.gameState);
+          lastPieceMove.moveType === MoveType.Move ?
+            this.setupAnimation(lastPieceMove,
+              getPiece(result.gameState, lastPieceMove.finalPos)
+            ) :
+            this.setupCaptureAnimation(
+              lastPieceMove,
+              getPiece(this.gameState, lastPieceMove.initPos),
+              getPiece(this.gameState, getCapturePosition(lastPieceMove))
+            );
         }
+        this.gameState = result.gameState;
         this.pickedCell = null;
       }
       console.log("Picked object: " + obj + ", with pick id " + customId);
@@ -123,12 +159,28 @@ export class MyGameView {
    *
    * @param {CheckerMove} movement
    */
-  setupAnimation(movement) {
+  setupAnimation(movement, movingPieceType) {
     const pieceIdx = cordToArrayIdx(this.gameState, movement.finalPos);
-    this.interactionHaltingAnimationQueue.set(pieceIdx, new MyPieceMoveAnimation(
-      this.scene,
-      movement,
-    ));
+    this.interactionHaltingAnimationQueue.set(pieceIdx, {
+      animation: new MyPieceMoveAnimation(this.scene, movement),
+      pieceType: movingPieceType
+    });
+  }
+
+  setupCaptureAnimation(movement, movingPieceType, capturedPieceType) {
+    this.setupAnimation(movement, movingPieceType);
+    const capturePosition = getCapturePosition(movement);
+    const capturedPieceIdx = cordToArrayIdx(this.gameState, capturePosition);
+    this.interactionHaltingAnimationQueue.set(capturedPieceIdx, {
+      animation: new MyCaptureAnimation(
+        this.scene,
+        500,
+        MyGameView.positionToCord(capturePosition),
+        [0, 0, 0],
+        10000
+      ),
+      pieceType: capturedPieceType
+    });
   }
 
   displayBoard() {
@@ -150,16 +202,18 @@ export class MyGameView {
         this.cells[row][col].display();
 
         // Pieces
-        if (this.gameState.board[row][col].piece === PieceType.Empty) continue;
-        if (this.gameState.board[row][col].piece === PieceType.Black) {
-          this.materialBlackPawns.apply();
-        } else if (this.gameState.board[row][col].piece === PieceType.White) {
-          this.materialWhitePawns.apply();
-        }
-        this.scene.pushMatrix();
         const pieceIdx = cordToArrayIdx(this.gameState, {row, col});
+        const piece = this.interactionHaltingAnimationQueue.has(pieceIdx) ?
+          this.interactionHaltingAnimationQueue.get(pieceIdx).pieceType :
+          getPiece(this.gameState, {row, col});
+
+        if (piece === PieceType.Empty) continue;
+        this.pieceMaterials[piece].apply();
+
+        this.scene.pushMatrix();
         if (this.interactionHaltingAnimationQueue.has(pieceIdx)) {
-          this.interactionHaltingAnimationQueue.get(pieceIdx).apply();
+          const animatedComponent = this.interactionHaltingAnimationQueue.get(pieceIdx);
+          animatedComponent.animation.apply();
         } else {
           const cords = MyGameView.positionToCord({row, col});
           this.scene.translate(cords[0], cords[1], cords[2]);
@@ -168,5 +222,6 @@ export class MyGameView {
         this.scene.popMatrix();
       }
     }
+    this.frame.display();
   }
 }

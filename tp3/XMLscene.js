@@ -1,9 +1,8 @@
 import { CGFscene } from '../lib/CGF.js';
 import { CGFaxis, CGFcamera, CGFshader } from '../lib/CGF.js';
+import {MyRectangle} from "./primitives/MyRectangle.js";
 
-
-const DEGREE_TO_RAD = Math.PI / 180;
-const UPDATE_FREQ = 100;
+export const UPDATE_FREQ = 100;
 
 /**
  * XMLscene class, representing the scene that is to be rendered.
@@ -213,6 +212,8 @@ export class XMLscene extends CGFscene {
 
       // Displays the scene (MySceneGraph function).
       this.graph.displayScene();
+
+      // Displays board
       this.gameView.displayBoard();
     }
 

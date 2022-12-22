@@ -521,7 +521,7 @@ export class MySceneGraph {
             var enableLight = aux;
             var aux = this.reader.getBoolean(children[i], 'enabled');
             if (!(aux != null && !isNaN(aux) && (aux == true || aux == false)))
-                this.onXMLMinorError("unable to parse value component of the 'enable light' field for ID = " + lightId + "; assuming 'value = 1'");
+                this.onXMLMinorError("unable to parse value components of the 'enable light' field for ID = " + lightId + "; assuming 'value = 1'");
             
             enableLight = aux;
 
@@ -1042,14 +1042,14 @@ export class MySceneGraph {
                 continue;
             }
 
-            // Get id of the current component.
+            // Get id of the current components.
             var componentID = this.reader.getString(children[i], 'id');
             if (componentID == null)
                 return "no ID defined for componentID";
 
             // Checks for repeated IDs.
             if (this.components[componentID] != null)
-                return "ID must be unique for each component (conflict: ID = " + componentID + ")";
+                return "ID must be unique for each components (conflict: ID = " + componentID + ")";
 
             grandChildren = children[i].children;
 
@@ -1146,7 +1146,7 @@ export class MySceneGraph {
         This function returns an object with data about a componen't texture.
         It's propreties are:
         type: it's a string one of [id_ref, inherit, none]
-        id (only when type is id_ref): the id of the referenced component
+        id (only when type is id_ref): the id of the referenced components
         lenS (only when type is id_ref): the length in S
         lenT (only when type is id_ref): the length in T
     */
@@ -1196,7 +1196,7 @@ export class MySceneGraph {
         };
     }
 
-    // Returns an array with a component material id's
+    // Returns an array with a components material id's
     parseComponentMaterials(componentID, materialsNode) {
         const materialList = materialsNode.children; 
         const materialIds = [];
@@ -1378,22 +1378,22 @@ export class MySceneGraph {
         // R
         var r = this.reader.getFloat(node, 'r');
         if (!(r != null && !isNaN(r) && r >= 0 && r <= 1))
-            return "unable to parse R component of the " + messageError;
+            return "unable to parse R components of the " + messageError;
 
         // G
         var g = this.reader.getFloat(node, 'g');
         if (!(g != null && !isNaN(g) && g >= 0 && g <= 1))
-            return "unable to parse G component of the " + messageError;
+            return "unable to parse G components of the " + messageError;
 
         // B
         var b = this.reader.getFloat(node, 'b');
         if (!(b != null && !isNaN(b) && b >= 0 && b <= 1))
-            return "unable to parse B component of the " + messageError;
+            return "unable to parse B components of the " + messageError;
 
         // A
         var a = this.reader.getFloat(node, 'a');
         if (!(a != null && !isNaN(a) && a >= 0 && a <= 1))
-            return "unable to parse A component of the " + messageError;
+            return "unable to parse A components of the " + messageError;
 
         color.push(...[r, g, b, a]);
 

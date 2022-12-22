@@ -53,3 +53,7 @@ export function vectorToAxis(axisVec) {
     }
     throw 'Invalid axis';
 }
+
+export function millisecondsToUpdates(updateCadence, milliseconds) {
+  return Math.floor(milliseconds / updateCadence);
+}
