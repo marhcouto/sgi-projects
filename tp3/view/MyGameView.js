@@ -174,10 +174,10 @@ export class MyGameView {
     this.interactionHaltingAnimationQueue.set(capturedPieceIdx, {
       animation: new MyCaptureAnimation(
         this.scene,
-        500,
+        100,
         MyGameView.positionToCord(capturePosition),
         [0, 0, 0],
-        10000
+        3000
       ),
       pieceType: capturedPieceType
     });

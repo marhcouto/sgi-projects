@@ -19,6 +19,7 @@ export class MyPatch extends CGFobject {
         this.partsU = partsU;
         this.partsV = partsV;
         this.vertices = vertices;
+        console.log(vertices);
         this.initBuffers();
     }
 
