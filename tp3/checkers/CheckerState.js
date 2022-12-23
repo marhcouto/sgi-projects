@@ -307,7 +307,7 @@ function generateValidMoves(gameState) {
  * @return {Position}
  */
 export function arrayIdxToCord(gameState, arrIdx) {
-  if (!arrIdx) {
+  if (arrIdx === null) {
     throw new Error("Can't convert array index with undefined/null index");
   }
   return {
