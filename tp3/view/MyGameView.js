@@ -124,7 +124,6 @@ export class MyGameView {
       let customId = this.scene.pickResults[i][1];
       if (!this.pickedCell) {
         if (this.interactionHaltingAnimationQueue.size !== 0) {
-          console.log("What is happening?");
           return;
         }
         this.pickedCell = isFromTurn(this.gameState, customId) ? customId : null;
