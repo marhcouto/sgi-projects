@@ -14,6 +14,8 @@ import { MyBoardFrame } from "./components/MyBoardFrame.js";
 import { MyPawn } from "./components/MyPawn.js";
 import { MyCaptureAnimation } from "../transformations/MyCaptureAnimation.js";
 import {MoveType} from "../checkers/CheckerPiece.js";
+import {MyPieceContainer} from "./components/MyPieceContainer.js";
+import {MyScoreBoard} from "./components/MyScoreBoard.js";
 
 /**
  * @typedef {import('./CheckerState.js').PieceType} PieceType
@@ -78,6 +80,12 @@ export class MyGameView {
     //Board Frame
     this.frame = new MyBoardFrame(this.scene);
 
+    // Piece Container
+    this.pieceContainer = new MyPieceContainer(this.scene, null);
+
+    // Score Board
+    this.scoreBoard = new MyScoreBoard(this.scene, null);
+
     // Materials
     this.materialWhiteCells = new CGFappearance(this.scene);
     this.materialWhiteCells.setAmbient(0.75, 0.7, 0.5, 1);
@@ -91,24 +99,11 @@ export class MyGameView {
     this.materialBlackCells.setSpecular(0.3, 0.2, 0.1, 1);
     this.materialBlackCells.setShininess(120);
 
-    const materialWhitePawns = new CGFappearance(this.scene);
-    materialWhitePawns.setAmbient(0.8, 0.75, 0.6, 1);
-    materialWhitePawns.setDiffuse(0.8, 0.75, 0.6, 1);
-    materialWhitePawns.setSpecular(0.8, 0.75, 0.6, 1);
-    materialWhitePawns.setShininess(120);
-
-    const materialBlackPawns = new CGFappearance(this.scene);
-    materialBlackPawns.setAmbient(0.15, 0.1, 0.05, 1);
-    materialBlackPawns.setDiffuse(0.15, 0.1, 0.05, 1);
-    materialBlackPawns.setSpecular(0.15, 0.1, 0.05, 1);
-    materialBlackPawns.setShininess(120);
-
-    this.pieceMaterials = {
-      [PieceType.Black]: materialBlackPawns,
-      [PieceType.KingBlack]: materialBlackPawns,
-      [PieceType.White]: materialWhitePawns,
-      [PieceType.KingWhite]: materialWhitePawns,
-    }
+    this.materialSelectedPawns = new CGFappearance(this.scene);
+    this.materialSelectedPawns.setAmbient(0.15, 0.8, 0.55, 1);
+    this.materialSelectedPawns.setDiffuse(0.15, 0.8, 0.55, 1);
+    this.materialSelectedPawns.setSpecular(0.15, 0.8, 0.55, 1);
+    this.materialSelectedPawns.setShininess(120);
   }
 
   /**
@@ -129,6 +124,7 @@ export class MyGameView {
       let customId = this.scene.pickResults[i][1];
       if (!this.pickedCell) {
         if (this.interactionHaltingAnimationQueue.size !== 0) {
+          console.log("What is happening?");
           return;
         }
         this.pickedCell = isFromTurn(this.gameState, customId) ? customId : null;
@@ -176,13 +172,16 @@ export class MyGameView {
         this.scene,
         100,
         MyGameView.positionToCord(capturePosition),
-        [0, 0, 0],
+          vec3.fromValues(-2, -4, 0),
         3000
       ),
       pieceType: capturedPieceType
     });
   }
 
+  /**
+   * Displays the checkers board and its components
+   */
   displayBoard() {
     this.scene.clearPickRegistration();
     this.checkPick();
@@ -208,7 +207,11 @@ export class MyGameView {
           getPiece(this.gameState, {row, col});
 
         if (piece === PieceType.Empty) continue;
-        this.pieceMaterials[piece].apply();
+        if (row * this.cells.length + col === this.pickedCell) { // Selected piece different material
+          this.materialSelectedPawns.apply();
+        } else {
+          this.pawn.retrieveMaterials(piece).apply();
+        }
 
         this.scene.pushMatrix();
         if (this.interactionHaltingAnimationQueue.has(pieceIdx)) {
@@ -223,5 +226,7 @@ export class MyGameView {
       }
     }
     this.frame.display();
+    this.pieceContainer.display();
+    this.scoreBoard.display(this.gameState.score);
   }
 }
