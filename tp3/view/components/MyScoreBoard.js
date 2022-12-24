@@ -1,5 +1,6 @@
-import {MyRectangle} from "../../primitives/MyRectangle.js";
-import {CGFappearance, CGFtexture} from "../../../lib/CGF.js";
+import { MyRectangle } from "../../primitives/MyRectangle.js";
+import { MySpriteRectangle } from "../../primitives/MySpriteRectangle.js";
+import { CGFappearance, CGFtexture } from "../../../lib/CGF.js";
 
 /**
  * @typedef {import('../../checkers/CheckerState.js').Score} Score
@@ -32,20 +33,16 @@ export class MyScoreBoard {
 
         this.scoreSquareMaterials = [];
 
-        for (let i = 0; i <= 12; i++) {
-            let smallSquareMaterial = new CGFappearance(this.scene);
-            smallSquareMaterial.setAmbient(1, 1, 1, 1);
-            smallSquareMaterial.setDiffuse(1, 1, 1, 1);
-            smallSquareMaterial.setSpecular(1, 1, 1, 1);
-            smallSquareMaterial.setShininess(120);
-            let tex = new CGFtexture(this.scene, `./images/${i}.png`);
-            smallSquareMaterial.setTexture(tex);
-            this.scoreSquareMaterials.push(smallSquareMaterial);
-        }
-
+        this.smallSquareMaterial = new CGFappearance(this.scene);
+        this.smallSquareMaterial.setAmbient(1, 1, 1, 1);
+        this.smallSquareMaterial.setDiffuse(1, 1, 1, 1);
+        this.smallSquareMaterial.setSpecular(1, 1, 1, 1);
+        this.smallSquareMaterial.setShininess(120);
+        const tex = new CGFtexture(this.scene, `./images/numbers.png`);
+        this.smallSquareMaterial.setTexture(tex);
 
         this.rectangeFront = new MyRectangle(this.scene, -2, 2, -1, 1);
-        this.smallSquare = new MyRectangle(this.scene, -0.75, 0.75, -0.75, 0.75);
+        this.smallSquare = new MySpriteRectangle(this.scene, -0.75, 0.75, -0.75, 0.75, 13);
 
         if (!center) {
             this.center = vec3.fromValues(10, -4, 0);
@@ -74,17 +71,18 @@ export class MyScoreBoard {
         this.scene.popMatrix();
 
         // Score Squares
+        this.smallSquareMaterial.apply();
         this.scene.pushMatrix();
         this.scene.translate(0, 0, 0.01);
         this.scene.rotate(- Math.PI / 2, 0, 0, 1);
         this.scene.pushMatrix();
         this.scene.translate(-1, 0, 0);
-        this.scoreSquareMaterials[score.blacksScore].apply();
+        this.smallSquare.updateSprite(score.blacksScore);
         this.smallSquare.display();
         this.scene.popMatrix();
         this.scene.pushMatrix();
         this.scene.translate(1, 0, 0);
-        this.scoreSquareMaterials[score.whitesScore].apply();
+        this.smallSquare.updateSprite(score.whitesScore);
         this.smallSquare.display();
         this.scene.popMatrix();
         this.scene.popMatrix();

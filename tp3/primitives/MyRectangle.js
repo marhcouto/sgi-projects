@@ -74,5 +74,10 @@ export class MyRectangle extends CGFobject {
 		];
 		this.updateTexCoordsGLBuffers();
 	}
+
+  injectTexCoords(texCoords) {
+     this.texCoords = texCoords;
+     this.updateTexCoordsGLBuffers();
+  }
 }
 
