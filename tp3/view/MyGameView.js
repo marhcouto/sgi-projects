@@ -1,6 +1,5 @@
 import { MyRectangle } from "../primitives/MyRectangle.js";
 import { CGFappearance } from "../../lib/CGF.js";
-import { MyCylinder } from "../primitives/MyCylinder.js";
 import {
   cordToArrayIdx,
   getCapturePosition, getPiece,
@@ -9,13 +8,17 @@ import {
   movePiece,
   PieceType
 } from "../checkers/CheckerState.js";
-import { MyPieceMoveAnimation } from "../transformations/MyPieceMoveAnimation.js";
+import { MyLinearAnimation } from "../transformations/MyLinearAnimation.js";
 import { MyBoardFrame } from "./components/MyBoardFrame.js";
-import { MyPawn } from "./components/MyPawn.js";
-import { MyCaptureAnimation } from "../transformations/MyCaptureAnimation.js";
-import {MoveType} from "../checkers/CheckerPiece.js";
-import {MyPieceContainer} from "./components/MyPieceContainer.js";
-import {MyScoreBoard} from "./components/MyScoreBoard.js";
+import { DEFAULT_PAWN_HEIGHT, DEFAULT_PAWN_RADIUS, MyPawn } from "./components/MyPawn.js";
+import { MoveType } from "../checkers/CheckerPiece.js";
+import { MyPieceContainer } from "./components/MyPieceContainer.js";
+import { MyScoreBoard } from "./components/MyScoreBoard.js";
+import {
+  MyComposedAnimation,
+  upgradeCallbackFactory
+} from "../transformations/MyComposedAnimation.js";
+import {Animator} from "./Animator.js";
 
 /**
  * @typedef {import('./CheckerState.js').PieceType} PieceType
@@ -39,7 +42,7 @@ export class MyGameView {
     this.scene = scene;
     this.gameState = gameState;
     scene.gameView = this;
-    this.interactionHaltingAnimationQueue = new Map();
+    this.animator = new Animator();
     this.scene.registerForUpdate('GameView', this.update.bind(this));
     this.build();
   }
@@ -49,15 +52,7 @@ export class MyGameView {
   }
 
   update(t) {
-    const animationsToRemove = [];
-    for (const [animationIdx, animatedObj] of this.interactionHaltingAnimationQueue.entries()) {
-      if (animatedObj.animation.done()) {
-        animationsToRemove.push(animationIdx);
-        continue;
-      }
-      animatedObj.animation.update(t);
-    }
-    animationsToRemove.forEach((animIdx) => this.interactionHaltingAnimationQueue.delete(animIdx));
+    this.animator.update(t);
   }
 
   build() {
@@ -74,8 +69,15 @@ export class MyGameView {
     }
 
     // Pieces
-    this.pawn = new MyPawn(this.scene);
-    this.king = new MyCylinder(this.scene, 0.3, 0.1, 0.8, 10, 10);
+    const pawn = new MyPawn(this.scene);
+    const king = new MyPawn(this.scene, DEFAULT_PAWN_HEIGHT * 2, DEFAULT_PAWN_RADIUS);
+    this.pieceModel = Object.freeze({
+      [PieceType.KingBlack]: king,
+      [PieceType.KingWhite]: king,
+      [PieceType.Black]: pawn,
+      [PieceType.White]: pawn,
+    });
+
 
     //Board Frame
     this.frame = new MyBoardFrame(this.scene);
@@ -123,24 +125,14 @@ export class MyGameView {
       if (!obj) continue;
       let customId = this.scene.pickResults[i][1];
       if (!this.pickedCell) {
-        if (this.interactionHaltingAnimationQueue.size !== 0) {
-          return;
-        }
+        if (this.animator.hasBoardAnimations()) return;
         this.pickedCell = isFromTurn(this.gameState, customId) ? customId : null;
       } else {
         let result = movePiece(this.gameState, this.pickedCell, customId);
         console.log("Result:", result.success);
         if (result.success) {
           const lastPieceMove = lastMove(result.gameState);
-          lastPieceMove.moveType === MoveType.Move ?
-            this.setupAnimation(lastPieceMove,
-              getPiece(result.gameState, lastPieceMove.finalPos)
-            ) :
-            this.setupCaptureAnimation(
-              lastPieceMove,
-              getPiece(this.gameState, lastPieceMove.initPos),
-              getPiece(this.gameState, getCapturePosition(lastPieceMove))
-            );
+          this.setupAnimation(lastPieceMove);
         }
         this.gameState = result.gameState;
         this.pickedCell = null;
@@ -150,33 +142,89 @@ export class MyGameView {
     this.scene.pickResults.splice(0,this.scene.pickResults.length);
   }
 
+  getCapturedPieceData(movement) {
+    const capturedPiecePosition = getCapturePosition(movement);
+    const capturedPieceCoordinates = MyGameView.positionToCord(capturedPiecePosition);
+    const capturedPieceIndex = cordToArrayIdx(this.gameState, capturedPiecePosition);
+    return {
+      idx: capturedPieceIndex,
+      coords: capturedPieceCoordinates,
+      type: getPiece(this.gameState, capturedPiecePosition)
+    }
+  }
+
   /**
    *
    * @param {CheckerMove} movement
    */
-  setupAnimation(movement, movingPieceType) {
-    const pieceIdx = cordToArrayIdx(this.gameState, movement.finalPos);
-    this.interactionHaltingAnimationQueue.set(pieceIdx, {
-      animation: new MyPieceMoveAnimation(this.scene, movement),
-      pieceType: movingPieceType
-    });
+  setupAnimation(movement) {
+    const mainAnimationIndex = cordToArrayIdx(this.gameState, movement.finalPos);
+    const mainPieceType = getPiece(this.gameState, movement.initPos);
+    const animationObj = {
+      [MoveType.Move]: () => [{ idx: mainAnimationIndex, animation: MyLinearAnimation.moveAnimationFactory(this.scene, movement), pieceType: mainPieceType }],
+      [MoveType.Capture]: () => {
+        const captureAnimation = MyComposedAnimation.captureAnimationFactory(
+          this.scene,
+          this.animator,
+          movement,
+          this.getCapturedPieceData(movement),
+          null);
+        console.log(cordToArrayIdx(this.gameState, getCapturePosition(movement)));
+        return [
+          {
+            idx: mainAnimationIndex,
+            animation: captureAnimation.capturerAnimation,
+            pieceType: mainPieceType
+          },
+          {
+            idx: cordToArrayIdx(this.gameState, getCapturePosition(movement)),
+            animation: captureAnimation.capturedAnimation,
+            pieceType: getPiece(this.gameState, getCapturePosition(movement)),
+          },
+      ]},
+      [MoveType.MoveAndUpgrade]: () => {
+        return [
+          {
+            idx: mainAnimationIndex,
+            animation: new MyComposedAnimation(
+              MyLinearAnimation.moveAnimationFactory(this.scene, movement),
+              upgradeCallbackFactory(this.scene, this.animator, movement, mainAnimationIndex, mainPieceType, null)
+            ),
+            pieceType: mainPieceType,
+          }
+        ]
+      },
+      [MoveType.CaptureAndUpgrade]: () => {
+        const capturedPiecePosition = getCapturePosition(movement);
+        const captureAnimation = MyComposedAnimation.captureAnimationFactory(
+          this.scene,
+          this.animator,
+          movement,
+          this.getCapturedPieceData(movement),
+          upgradeCallbackFactory(this.scene, this.animator, movement, mainAnimationIndex, mainPieceType, null)
+        );
+        console.log(captureAnimation);
+        return [
+          {
+            idx: mainAnimationIndex,
+            animation: captureAnimation.capturerAnimation,
+            pieceType: mainPieceType
+          },
+          {
+            idx: cordToArrayIdx(this.gameState, capturedPiecePosition),
+            animation: captureAnimation.capturedAnimation,
+            pieceType: getPiece(this.gameState, capturedPiecePosition),
+          },
+        ]
+      }
+    }
+
+    console.log(movement.moveType);
+    for (const anim of animationObj[movement.moveType]()) {
+      this.animator.addBoardAnimation(anim.idx, anim.animation, anim.pieceType);
+    }
   }
 
-  setupCaptureAnimation(movement, movingPieceType, capturedPieceType) {
-    this.setupAnimation(movement, movingPieceType);
-    const capturePosition = getCapturePosition(movement);
-    const capturedPieceIdx = cordToArrayIdx(this.gameState, capturePosition);
-    this.interactionHaltingAnimationQueue.set(capturedPieceIdx, {
-      animation: new MyCaptureAnimation(
-        this.scene,
-        100,
-        MyGameView.positionToCord(capturePosition),
-          vec3.fromValues(-2, -4, 0),
-        3000
-      ),
-      pieceType: capturedPieceType
-    });
-  }
 
   /**
    * Displays the checkers board and its components
@@ -201,31 +249,40 @@ export class MyGameView {
 
         // Pieces
         const pieceIdx = cordToArrayIdx(this.gameState, {row, col});
-        const piece = this.interactionHaltingAnimationQueue.has(pieceIdx) ?
-          this.interactionHaltingAnimationQueue.get(pieceIdx).pieceType :
-          getPiece(this.gameState, {row, col});
+        if (this.animator.getBoardAnimationDetails(pieceIdx).length !== 0) {
+          this.displayAnimatedIndex(pieceIdx);
+          continue;
+        }
+
+        const piece = getPiece(this.gameState, {row, col});
 
         if (piece === PieceType.Empty) continue;
         if (row * this.cells.length + col === this.pickedCell) { // Selected piece different material
           this.materialSelectedPawns.apply();
         } else {
-          this.pawn.retrieveMaterials(piece).apply();
+          this.pieceModel[piece].retrieveMaterials(piece).apply();
         }
 
         this.scene.pushMatrix();
-        if (this.interactionHaltingAnimationQueue.has(pieceIdx)) {
-          const animatedComponent = this.interactionHaltingAnimationQueue.get(pieceIdx);
-          animatedComponent.animation.apply();
-        } else {
-          const cords = MyGameView.positionToCord({row, col});
-          this.scene.translate(cords[0], cords[1], cords[2]);
-        }
-        this.pawn.display();
+        const cords = MyGameView.positionToCord({row, col});
+        this.scene.translate(cords[0], cords[1], cords[2]);
+        this.pieceModel[piece].display();
         this.scene.popMatrix();
       }
     }
     this.frame.display();
     this.pieceContainer.display();
     this.scoreBoard.display(this.gameState.score);
+  }
+
+  displayAnimatedIndex(idx) {
+    const animations = this.animator.getBoardAnimationDetails(idx);
+    animations.forEach((animationDetails) => {
+      this.pieceModel[animationDetails.pieceType].retrieveMaterials(animationDetails.pieceType).apply();
+      this.scene.pushMatrix();
+      animationDetails.animation.apply();
+      this.pieceModel[animationDetails.pieceType].display();
+      this.scene.popMatrix();
+    })
   }
 }

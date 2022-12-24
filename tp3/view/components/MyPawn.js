@@ -8,6 +8,8 @@ import {PieceType} from "../../checkers/CheckerState.js";
  * @typedef {import('../checkers/CheckerState.js').PieceType} PieceType
  */
 
+export const DEFAULT_PAWN_RADIUS = 0.3;
+export const DEFAULT_PAWN_HEIGHT = 0.2;
 
 export class MyPawn {
 
@@ -19,10 +21,10 @@ export class MyPawn {
 
   build(pawnRadius, pawnHeight) {
     if (!pawnHeight) {
-      pawnHeight = 0.2
+      pawnHeight = DEFAULT_PAWN_HEIGHT;
     }
     if (!pawnRadius) {
-      pawnRadius = 0.3
+      pawnRadius = DEFAULT_PAWN_RADIUS;
     }
     this.pawnOutsideBody = new MyCylinder(this.scene, pawnRadius, pawnRadius, pawnHeight, 15, 15);
     this.pawnTop = new MyPatch(this.scene, 1, 15, 3, 15, [

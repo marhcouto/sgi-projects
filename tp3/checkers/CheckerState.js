@@ -147,7 +147,6 @@ export function movePiece(gameState, orig, dest) {
     }
   }
 
-  console.log(gameState)
   if (orig > gameState.numberOfCells) {
     return {
       success: false,
@@ -177,9 +176,13 @@ export function movePiece(gameState, orig, dest) {
   }
 
   replacePiece(newGameState, origPos, PieceType.Empty);
-  replacePiece(newGameState, destPos, getPiece(gameState, movement.initPos));
+  if (movement.moveType === MoveType.MoveAndUpgrade || movement.moveType === MoveType.CaptureAndUpgrade) {
+    replacePiece(newGameState, destPos, upgradedPiece(getPiece(gameState, movement.initPos)));
+  } else {
+    replacePiece(newGameState, destPos, getPiece(gameState, movement.initPos));
+  }
 
-  if (movement.moveType === MoveType.Capture) {
+  if (movement.moveType === MoveType.Capture || movement.moveType === MoveType.CaptureAndUpgrade) {
     gameState.turn === PlayerTurn.Black ? newGameState.score.blacksScore++ : newGameState.score.whitesScore++;
     const capturePosition = getCapturePosition(movement);
     replacePiece(newGameState, capturePosition, PieceType.Empty);
@@ -190,6 +193,8 @@ export function movePiece(gameState, orig, dest) {
   const validMoves = generateValidMoves(newGameState);
   newGameState.validMoves = validMoves.validMoves;
   newGameState.nCaptures = validMoves.nFoundCaptures;
+
+  console.log(newGameState);
 
   return {
     success: true,
@@ -290,7 +295,7 @@ function generateValidMoves(gameState) {
   for (const [orig, validMovesForOrig] of validMoves.entries()) {
     filteredMovesByCapture.set(
         orig,
-        validMovesForOrig.filter((move) => move.moveType === MoveType.Capture)
+        validMovesForOrig.filter((move) => move.moveType === MoveType.Capture || move.moveType === MoveType.CaptureAndUpgrade)
     )
   }
 
@@ -359,7 +364,7 @@ function findMovementEvent(gameState, origPos, finalPos) {
  *
  * @param {GameState} gameState
  */
-function lastRowForPlayer(gameState) {
+export function lastRowForPlayer(gameState) {
   if (gameState.turn === PlayerTurn.Black) {
     return gameState.size - 1;
   }
@@ -373,6 +378,9 @@ function lastRowForPlayer(gameState) {
  * @param {PieceType} piece
  */
 function replacePiece(gameState, position, piece) {
+  if (piece === null) {
+    throw new Error("Tried to replace piece for null");
+  }
   const cell = gameState.board[position.row][position.col];
   cell.piece = piece;
 }
@@ -415,4 +423,21 @@ export function isFromTurn(gameState, pos) {
   const piece = getPiece(gameState, posObj);
   const validPiecesForTurn = turnPieceColor(gameState);
   return validPiecesForTurn.includes(piece);
+}
+
+/**
+ *
+ * @param {PieceType} piece
+ * @return {PieceType}
+ */
+export function upgradedPiece(piece) {
+  const upgradedEquivalents = {
+    [PieceType.KingWhite]: PieceType.KingWhite,
+    [PieceType.KingBlack]: PieceType.KingBlack,
+    [PieceType.White]: PieceType.KingWhite,
+    [PieceType.Black]: PieceType.KingBlack,
+    [PieceType.Empty]: PieceType.Empty
+  };
+
+  return upgradedEquivalents[piece];
 }
