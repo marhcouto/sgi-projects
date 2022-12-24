@@ -3,6 +3,7 @@ import {CGFappearance} from "../../../lib/CGF.js";
 import {MyPawn} from "./MyPawn.js";
 import {PieceType} from "../../checkers/CheckerState.js";
 
+export const PIECE_CONTAINER_POSITION = vec3.fromValues(-2, -4, 0);
 
 /**
  * @typedef {import('../checkers/CheckerState.js').PieceType} PieceType

@@ -54,6 +54,8 @@ export function vectorToAxis(axisVec) {
     throw 'Invalid axis';
 }
 
-export function millisecondsToUpdates(updateCadence, milliseconds) {
-  return Math.floor(milliseconds / updateCadence);
+export function coplanarCylindersColliding(center1, center2, radius) {
+  let diff = vec3.fromValues(0, 0, 0);
+  vec3.sub(diff, center2, center1);
+  return vec3.length(diff) <= 2 * radius;
 }

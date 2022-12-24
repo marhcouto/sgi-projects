@@ -1,4 +1,4 @@
-import { PieceType, enemyPieceColor, getPiece } from "./CheckerState.js";
+import { PieceType, enemyPieceColor, getPiece, lastRowForPlayer } from "./CheckerState.js";
 
 /**
  * @typedef {import('./CheckerState.js').GameState} GameState
@@ -21,8 +21,10 @@ import { PieceType, enemyPieceColor, getPiece } from "./CheckerState.js";
  * @enum {Symbol<string>}
  */
 export const MoveType = Object.freeze({
-  Move: Symbol("Move"),
-  Capture: Symbol("Capture"),
+  Move: Symbol("MoveTypeMove"),
+  Capture: Symbol("MoveTypeCapture"),
+  MoveAndUpgrade: Symbol("MoveTypeMoveAndUpgrade"),
+  CaptureAndUpgrade: Symbol("MoveTypeCaptureAndCapture"),
 });
 Object.freeze(MoveType);
 
@@ -94,6 +96,17 @@ export function generateValidMoves(gameState, piecePos, piece) {
   }
 }
 
+function moveResultedInUpgrade(gameState, initialPos, finalPos) {
+  const piece = getPiece(gameState, initialPos);
+  if (piece === PieceType.KingWhite || piece === PieceType.KingBlack) {
+    return false;
+  }
+
+  return (
+    finalPos.row === lastRowForPlayer(gameState)
+  );
+}
+
 /**
  *
  * @param {GameState} gameState
@@ -115,7 +128,9 @@ function generateValidMovesInDirection(gameState, piecePos, direction) {
       validMoves.push({
         initPos: piecePos,
         finalPos: directionMove.value,
-        moveType: MoveType.Move
+        moveType: moveResultedInUpgrade(gameState, piecePos, directionMove.value) ?
+          MoveType.MoveAndUpgrade :
+          MoveType.Move
       });
     } else if(enemyPieces.includes(piece)) {
       const captureMove = movGen.next();
@@ -124,7 +139,9 @@ function generateValidMovesInDirection(gameState, piecePos, direction) {
         validMoves.push({
           initPos: piecePos,
           finalPos: captureMove.value,
-          moveType: MoveType.Capture
+          moveType: moveResultedInUpgrade(gameState, piecePos, directionMove.value) ?
+            MoveType.CaptureAndUpgrade :
+            MoveType.Capture
         })
       }
     }
@@ -149,6 +166,10 @@ function generateValidMovesForDirections(gameState, piecePos, directionList) {
         generateValidMovesInDirection(gameState, piecePos, direction);
     validMoves.push(...validMovesForDirection.validMoves);
     nFoundCaptures += validMovesForDirection.nFoundCaptures;
+  }
+
+  if (piecePos.row === 3 && piecePos.col === 4) {
+    console.log(validMoves);
   }
 
   return {validMoves, nFoundCaptures};
