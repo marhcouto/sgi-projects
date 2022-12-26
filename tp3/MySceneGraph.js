@@ -351,7 +351,12 @@ export class MySceneGraph {
                     return `missing to in view with id: ${viewId}`;
                 }
 
-                this.views[viewId] = new CGFcamera(degreeToRad(angle), near, far, from, to);
+                this.views[viewId] = () => {
+                  return {
+                    camera: new CGFcamera(degreeToRad(angle), near, far, from, to),
+                    allowInteraction: true,
+                  };
+                }
             }
 
             if (curNode.nodeName === 'ortho') {
@@ -453,11 +458,14 @@ export class MySceneGraph {
                     return `missing to in view with id: ${viewId}`;
                 }
 
-                this.views[viewId] = new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, up);
+                this.views[viewId] = () => {
+                  return {
+                    camera: new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, up),
+                    allowInteraction: true,
+                  };
+                }
+              }
             }
-        }
-
-        return null;
     }
 
     /**

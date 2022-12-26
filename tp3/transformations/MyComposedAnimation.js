@@ -28,15 +28,17 @@ export const captureAnimationCallbackFactory = (
   const captureCb = (_, curAnim) => {
     if (coplanarCylindersColliding(curAnim.currentPosition(), capturedPieceData.coords, DEFAULT_PAWN_RADIUS)) {
       animator.clearAnimations(capturedPieceData.idx);
-      animator.addBoardAnimation(
+      animator.addAnimation(
         capturedPieceData.idx,
-        new MyParabolicAnimation(
-          scene,
-          vec3.add(vec3.create(), capturedPieceData.coords, vec3.fromValues(0, 0, DEFAULT_PAWN_HEIGHT)),
-          PIECE_CONTAINER_POSITION,
-          3000,
-        ),
-        capturedPieceData.type
+        {
+          animation: new MyParabolicAnimation(
+            scene,
+            vec3.add(vec3.create(), capturedPieceData.coords, vec3.fromValues(0, 0, DEFAULT_PAWN_HEIGHT)),
+            PIECE_CONTAINER_POSITION,
+            3000,
+          ),
+          pieceType: capturedPieceData.type
+        },
       )
       return afterCollisionCb;
     }
@@ -50,24 +52,28 @@ export const upgradeCallbackFactory = (scene, animator, movement, mainAnimationI
   const upgradeCb = (_, currentAnimation) => {
     if (currentAnimation.done()) {
       animator.clearAnimations(mainAnimationIndex);
-      animator.addBoardAnimation(
+      animator.addAnimation(
         mainAnimationIndex,
-        new MyParabolicAnimation(
-          scene,
-          PIECE_CONTAINER_POSITION,
-          vec3.add(vec3.create(), MyGameView.positionToCord(movement.finalPos), vec3.fromValues(0, 0, DEFAULT_PAWN_HEIGHT)),
-          3000
-        ),
-        mainPieceType
+        {
+          animation: new MyParabolicAnimation(
+            scene,
+            PIECE_CONTAINER_POSITION,
+            vec3.add(vec3.create(), MyGameView.positionToCord(movement.finalPos), vec3.fromValues(0, 0, DEFAULT_PAWN_HEIGHT)),
+            3000
+          ),
+          pieceType: mainPieceType,
+        },
       );
-      animator.addBoardAnimation(
+      animator.addAnimation(
         mainAnimationIndex,
-        new MyConstantAnimation(
-          scene,
-          MyGameView.positionToCord(movement.finalPos),
-          3000
-        ),
-        mainPieceType
+        {
+          animation: new MyConstantAnimation(
+            scene,
+            MyGameView.positionToCord(movement.finalPos),
+            3000
+          ),
+          pieceType: mainPieceType
+        }
       );
       return afterUpgradeCb;
     }

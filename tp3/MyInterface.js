@@ -1,5 +1,4 @@
 import { CGFinterface, CGFapplication, dat } from '../lib/CGF.js';
-import { cloneCamera } from './utils.js';
 
 /**
 * MyInterface class, creating a GUI interface.
@@ -53,13 +52,17 @@ export class MyInterface extends CGFinterface {
 
     initCameras(cameras, defaultCamera, callback) {
         this.activatedCamera = defaultCamera;
-        let clonedCamera = cloneCamera(cameras[this.activatedCamera]);
-        this.setActiveCamera(clonedCamera);
-        callback(clonedCamera)
+        const cameraData = cameras[this.activatedCamera]();
+        if (cameraData.allowInteraction) {
+          this.setActiveCamera(cameraData.camera);
+        }
+        callback(cameraData.camera)
         this.gui.add(this, 'activatedCamera', Object.keys(cameras)).name('Selected Camera: ').onChange((activeCamera) => {
-            let clonedCamera = cloneCamera(cameras[activeCamera]);
-            this.setActiveCamera(clonedCamera);
-            callback(clonedCamera);
+            const cameraData = cameras[activeCamera]();
+            if (cameraData.allowInteraction) {
+              this.setActiveCamera(cameraData.camera);
+            }
+            callback(cameraData.camera);
         });
     }
 

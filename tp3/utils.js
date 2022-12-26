@@ -5,31 +5,6 @@ export function degreeToRad(deg) {
     return deg * DEGREE_TO_RAD; 
 }
 
-export function cloneCamera(camera) {
-    if (camera instanceof CGFcamera) {
-        return new CGFcamera(
-            camera.fov,
-            camera.near,
-            camera.far,
-            camera.position,
-            camera.target
-        );
-    }
-    if (camera instanceof CGFcameraOrtho) {
-        return new CGFcameraOrtho (
-            camera.left,
-            camera.right,
-            camera.bottom,
-            camera.top,
-            camera.near,
-            camera.far,
-            camera.position,
-            camera.target,
-            camera._up
-        );
-    }
-}
-
 export function axisToVector(axisStr, messageError) {
     switch (axisStr) {
         case 'x': return vec3.fromValues(1, 0, 0);

@@ -1,6 +1,6 @@
 import { CGFscene } from '../lib/CGF.js';
 import { CGFaxis, CGFcamera, CGFshader } from '../lib/CGF.js';
-import {MyRectangle} from "./primitives/MyRectangle.js";
+import {degreeToRad} from "./utils.js";
 
 export const UPDATE_FREQ = 100;
 
@@ -154,7 +154,16 @@ export class XMLscene extends CGFscene {
 
     this.setGlobalAmbientLight(this.graph.ambient[0], this.graph.ambient[1], this.graph.ambient[2], this.graph.ambient[3]);
 
-    this.interface.initCameras(this.graph.views, this.graph.defaultView, (camera) => this.camera = camera);
+    const views = { ...this.graph.views };
+    views['playerView'] = () => {
+      return {
+        camera: this.gameView.playerCamera,
+        allowInteraction: false
+      }
+    };
+    this.interface.initCameras(views, this.graph.defaultView, (camera) => this.camera = camera);
+
+    setTimeout(() => this.gameView.playerCamera.changeSide(), 3000);
 
     this.interface.initLightFolder();
 
@@ -213,7 +222,6 @@ export class XMLscene extends CGFscene {
       // Displays the scene (MySceneGraph function).
       this.graph.displayScene();
 
-      // Displays board
       this.gameView.displayBoard();
     }
 

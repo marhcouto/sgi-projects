@@ -19,6 +19,8 @@ import {
   upgradeCallbackFactory
 } from "../transformations/MyComposedAnimation.js";
 import {Animator} from "./Animator.js";
+import {degreeToRad} from "../utils.js";
+import {MyPlayerCamera} from "../transformations/MyPlayerCamera.js";
 
 /**
  * @typedef {import('./CheckerState.js').PieceType} PieceType
@@ -42,7 +44,10 @@ export class MyGameView {
     this.scene = scene;
     this.gameState = gameState;
     scene.gameView = this;
-    this.animator = new Animator();
+    this.boardAnimator = new Animator(true);
+    this.nonBlockingAnimations = new Animator();
+    this.playerCamera = new MyPlayerCamera(this.scene, degreeToRad(85), 0.1, 500, vec3.create(), 5, 5);
+    this.nonBlockingAnimations.addAnimation('playerCamera', {animation: this.playerCamera});
     this.scene.registerForUpdate('GameView', this.update.bind(this));
     this.build();
   }
@@ -52,7 +57,8 @@ export class MyGameView {
   }
 
   update(t) {
-    this.animator.update(t);
+    this.boardAnimator.update(t);
+    this.nonBlockingAnimations.update(t);
   }
 
   build() {
@@ -125,7 +131,7 @@ export class MyGameView {
       if (!obj) continue;
       let customId = this.scene.pickResults[i][1];
       if (!this.pickedCell) {
-        if (this.animator.hasBoardAnimations()) return;
+        if (this.boardAnimator.hasAnimations()) return;
         this.pickedCell = isFromTurn(this.gameState, customId) ? customId : null;
       } else {
         let result = movePiece(this.gameState, this.pickedCell, customId);
@@ -165,7 +171,7 @@ export class MyGameView {
       [MoveType.Capture]: () => {
         const captureAnimation = MyComposedAnimation.captureAnimationFactory(
           this.scene,
-          this.animator,
+          this.boardAnimator,
           movement,
           this.getCapturedPieceData(movement),
           null);
@@ -188,7 +194,7 @@ export class MyGameView {
             idx: mainAnimationIndex,
             animation: new MyComposedAnimation(
               MyLinearAnimation.moveAnimationFactory(this.scene, movement),
-              upgradeCallbackFactory(this.scene, this.animator, movement, mainAnimationIndex, mainPieceType, null)
+              upgradeCallbackFactory(this.scene, this.boardAnimator, movement, mainAnimationIndex, mainPieceType, null)
             ),
             pieceType: mainPieceType,
           }
@@ -198,10 +204,10 @@ export class MyGameView {
         const capturedPiecePosition = getCapturePosition(movement);
         const captureAnimation = MyComposedAnimation.captureAnimationFactory(
           this.scene,
-          this.animator,
+          this.boardAnimator,
           movement,
           this.getCapturedPieceData(movement),
-          upgradeCallbackFactory(this.scene, this.animator, movement, mainAnimationIndex, mainPieceType, null)
+          upgradeCallbackFactory(this.scene, this.boardAnimator, movement, mainAnimationIndex, mainPieceType, null)
         );
         console.log(captureAnimation);
         return [
@@ -219,17 +225,18 @@ export class MyGameView {
       }
     }
 
-    console.log(movement.moveType);
     for (const anim of animationObj[movement.moveType]()) {
-      this.animator.addBoardAnimation(anim.idx, anim.animation, anim.pieceType);
+      this.boardAnimator.addAnimation(anim.idx, {animation: anim.animation, pieceType: anim.pieceType});
     }
   }
-
 
   /**
    * Displays the checkers board and its components
    */
   displayBoard() {
+    this.scene.pushMatrix();
+    this.scene.translate(-4, 0, -4);
+    this.scene.rotate(degreeToRad(-90), 1, 0, 0);
     this.scene.clearPickRegistration();
     this.checkPick();
     let whiteIndices = [0, 2, 4, 6, 9, 11, 13, 15, 16, 18, 20, 22, 25, 27, 29, 31, 32, 34, 36,
@@ -249,7 +256,7 @@ export class MyGameView {
 
         // Pieces
         const pieceIdx = cordToArrayIdx(this.gameState, {row, col});
-        if (this.animator.getBoardAnimationDetails(pieceIdx).length !== 0) {
+        if (this.boardAnimator.getAnimationDetails(pieceIdx).length !== 0) {
           this.displayAnimatedIndex(pieceIdx);
           continue;
         }
@@ -273,10 +280,11 @@ export class MyGameView {
     this.frame.display();
     this.pieceContainer.display();
     this.scoreBoard.display(this.gameState.score);
+    this.scene.popMatrix();
   }
 
   displayAnimatedIndex(idx) {
-    const animations = this.animator.getBoardAnimationDetails(idx);
+    const animations = this.boardAnimator.getAnimationDetails(idx);
     animations.forEach((animationDetails) => {
       this.pieceModel[animationDetails.pieceType].retrieveMaterials(animationDetails.pieceType).apply();
       this.scene.pushMatrix();
