@@ -1,8 +1,8 @@
-import { MyAnimation } from "./MyAnimation.js";
 import { linearMovement } from "./movements/LinearMovement.js";
 import { parabolicMovement } from "./movements/ParabolicMovement.js";
+import { MyAbsoluteAnimation } from "./MyAbsoluteAnimation.js";
 
-export class MyParabolicAnimation extends MyAnimation {
+export class MyParabolicAnimation extends MyAbsoluteAnimation {
   constructor(scene, initialCoordinates, finalCoordinates, animationDuration) {
     super(scene, animationDuration);
 

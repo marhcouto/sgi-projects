@@ -1,6 +1,6 @@
-import { MyAnimation } from "./MyAnimation.js";
+import {MyAbsoluteAnimation} from "./MyAbsoluteAnimation.js";
 
-export class MyConstantAnimation extends MyAnimation {
+export class MyConstantAnimation extends MyAbsoluteAnimation {
   constructor(scene, initialPosition, duration) {
     super(scene, duration ? duration : Number.MAX_SAFE_INTEGER);
     this.getX = (() => initialPosition[0]).bind(this);
