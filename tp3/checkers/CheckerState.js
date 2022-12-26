@@ -441,3 +441,24 @@ export function upgradedPiece(piece) {
 
   return upgradedEquivalents[piece];
 }
+
+/**
+ *
+ * @param {GameState} gameState
+ * @return {GameState}
+ */
+export function undo(gameState) {
+  if (gameState.moves.length === 0) {
+    return gameState;
+  }
+
+  let newGameState = generateGameState(gameState.size);
+  const moves = gameState.moves.slice(0, gameState.moves.length - 1);
+  moves.forEach((move) => {
+    const orig = cordToArrayIdx(newGameState, move.initPos);
+    const dest = cordToArrayIdx(newGameState, move.finalPos);
+    const newState = movePiece(gameState, orig, dest);
+    newGameState = newState.gameState;
+  })
+  return newGameState;
+}

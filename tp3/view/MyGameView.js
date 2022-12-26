@@ -6,9 +6,9 @@ import {
   isFromTurn,
   lastMove,
   movePiece,
-  PieceType
+  PieceType, undo
 } from "../checkers/CheckerState.js";
-import { MyLinearAnimation } from "../transformations/MyLinearAnimation.js";
+import {MOVE_ANIMATION_DURATION, MyLinearAnimation} from "../transformations/MyLinearAnimation.js";
 import { MyBoardFrame } from "./components/MyBoardFrame.js";
 import { DEFAULT_PAWN_HEIGHT, DEFAULT_PAWN_RADIUS, MyPawn } from "./components/MyPawn.js";
 import { MoveType } from "../checkers/CheckerPiece.js";
@@ -34,6 +34,8 @@ import {MyButton} from "./components/MyButton.js";
  * @property {MyAnimation} animation
  */
 
+const SPOTLIGHT_CALLBACK_ID = 'SPOTLIGHT_CB';
+
 export class MyGameView {
   /**
    * @constructor
@@ -50,8 +52,22 @@ export class MyGameView {
     this.buttons = [];
     this.playerCamera = new MyPlayerCamera(this.scene, degreeToRad(75), 0.1, 500, vec3.create(), 5, 5);
     this.nonBlockingAnimations.addAnimation('playerCamera', {animation: this.playerCamera});
+    this.runningFunctions = new Map();
     this.scene.registerForUpdate('GameView', this.update.bind(this));
     this.build();
+    this.setupLightsAndTransformation();
+  }
+
+  setupLightsAndTransformation() {
+    this.scene.lights[7].setAmbient(0.3, 0.3, 0.3, 1.0);
+    this.scene.lights[7].setDiffuse(0.7, 0.7, 0.7, 1.0);
+    this.scene.lights[7].setSpecular(1.0, 1.0, 1.0, 1.0);
+    this.scene.lights[7].setSpotCutOff(0.5);
+    this.scene.lights[7].setSpotExponent(0.1);
+
+    this.boardTransformation = mat4.create();
+    mat4.translate(this.boardTransformation, this.boardTransformation, vec3.fromValues(-4, 0, -4));
+    mat4.rotateX(this.boardTransformation, this.boardTransformation, degreeToRad(-90));
   }
 
   static positionToCord(pos) {
@@ -61,6 +77,9 @@ export class MyGameView {
   update(t) {
     this.boardAnimator.update(t);
     this.nonBlockingAnimations.update(t);
+    for (const [_, cb] of this.runningFunctions) {
+      cb(t);
+    }
   }
 
   build() {
@@ -121,6 +140,12 @@ export class MyGameView {
       changePlayerCameraSidePosition,
       vec3.fromValues(0, 5, 0),
     )
+    const undoButtonPosition = mat4.create();
+    mat4.translate(
+      changePlayerCameraSidePosition,
+      changePlayerCameraSidePosition,
+      vec3.fromValues(0, 5, 0),
+    )
 
     //Buttons
     this.buttons.push(
@@ -132,6 +157,15 @@ export class MyGameView {
           "./images/teste.png",
         ),
         position: changePlayerCameraSidePosition,
+      },
+      {
+        component: new MyButton(
+          this.scene,
+          () => this.gameState = undo(this.gameState),
+          this.materialWhiteCells,
+          ''
+        ),
+        position: undoButtonPosition,
       }
     );
   }
@@ -194,10 +228,20 @@ export class MyGameView {
    * @param {CheckerMove} movement
    */
   setupAnimation(movement) {
+    let moveAnimation;
     const mainAnimationIndex = cordToArrayIdx(this.gameState, movement.finalPos);
     const mainPieceType = getPiece(this.gameState, movement.initPos);
     const animationObj = {
-      [MoveType.Move]: () => [{ idx: mainAnimationIndex, animation: MyLinearAnimation.moveAnimationFactory(this.scene, movement), pieceType: mainPieceType }],
+      [MoveType.Move]: () => {
+        moveAnimation = MyLinearAnimation.moveAnimationFactory(this.scene, movement);
+        return [
+          {
+            idx: mainAnimationIndex,
+            animation: moveAnimation,
+            pieceType: mainPieceType
+          }
+        ]
+      },
       [MoveType.Capture]: () => {
         const captureAnimation = MyComposedAnimation.captureAnimationFactory(
           this.scene,
@@ -205,11 +249,11 @@ export class MyGameView {
           movement,
           this.getCapturedPieceData(movement),
           null);
-        console.log(cordToArrayIdx(this.gameState, getCapturePosition(movement)));
+        moveAnimation = captureAnimation.capturerAnimation;
         return [
           {
             idx: mainAnimationIndex,
-            animation: captureAnimation.capturerAnimation,
+            animation: moveAnimation,
             pieceType: mainPieceType
           },
           {
@@ -219,11 +263,12 @@ export class MyGameView {
           },
       ]},
       [MoveType.MoveAndUpgrade]: () => {
+        moveAnimation = MyLinearAnimation.moveAnimationFactory(this.scene, movement);
         return [
           {
             idx: mainAnimationIndex,
             animation: new MyComposedAnimation(
-              MyLinearAnimation.moveAnimationFactory(this.scene, movement),
+              moveAnimation,
               upgradeCallbackFactory(this.scene, this.boardAnimator, movement, mainAnimationIndex, mainPieceType, null)
             ),
             pieceType: mainPieceType,
@@ -239,11 +284,11 @@ export class MyGameView {
           this.getCapturedPieceData(movement),
           upgradeCallbackFactory(this.scene, this.boardAnimator, movement, mainAnimationIndex, mainPieceType, null)
         );
-        console.log(captureAnimation);
+        moveAnimation = captureAnimation.capturerAnimation;
         return [
           {
             idx: mainAnimationIndex,
-            animation: captureAnimation.capturerAnimation,
+            animation: moveAnimation,
             pieceType: mainPieceType
           },
           {
@@ -258,6 +303,20 @@ export class MyGameView {
     for (const anim of animationObj[movement.moveType]()) {
       this.boardAnimator.addAnimation(anim.idx, {animation: anim.animation, pieceType: anim.pieceType});
     }
+
+    this.runningFunctions.set(SPOTLIGHT_CALLBACK_ID, (_) => {
+      const position = moveAnimation.currentPosition();
+      vec3.transformMat4(position, position, this.boardTransformation);
+
+      this.scene.lights[7].setPosition(position[0], position[1] + 2, position[2]);
+      this.scene.lights[7].setSpotDirection(position[0], 0, position[2]);
+      this.scene.lights[7].setVisible(true);
+      this.scene.lights[7].enable();
+    });
+    setTimeout(() => {
+      this.scene.lights[7].disable();
+      this.runningFunctions.delete(SPOTLIGHT_CALLBACK_ID);
+    }, MOVE_ANIMATION_DURATION);
   }
 
   /**
@@ -265,8 +324,7 @@ export class MyGameView {
    */
   displayBoard() {
     this.scene.pushMatrix();
-    this.scene.translate(-4, 0, -4);
-    this.scene.rotate(degreeToRad(-90), 1, 0, 0);
+    this.scene.multMatrix(this.boardTransformation);
     this.scene.clearPickRegistration();
     this.checkPick();
     let whiteIndices = [0, 2, 4, 6, 9, 11, 13, 15, 16, 18, 20, 22, 25, 27, 29, 31, 32, 34, 36,

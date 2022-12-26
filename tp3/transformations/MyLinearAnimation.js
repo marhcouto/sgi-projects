@@ -2,6 +2,8 @@ import {linearMovement} from "./movements/LinearMovement.js";
 import { MyGameView } from "../view/MyGameView.js";
 import {MyAbsoluteAnimation} from "./MyAbsoluteAnimation.js";
 
+export const MOVE_ANIMATION_DURATION = 1000;
+
 export class MyLinearAnimation extends MyAbsoluteAnimation {
   constructor(scene, initialCoordinates, finalCoordinates, animationDuration) {
     super(scene, animationDuration);
@@ -15,7 +17,7 @@ export class MyLinearAnimation extends MyAbsoluteAnimation {
       scene,
       MyGameView.positionToCord(movement.initPos),
       MyGameView.positionToCord(movement.finalPos),
-      1000,
+      MOVE_ANIMATION_DURATION,
     );
   }
 }
