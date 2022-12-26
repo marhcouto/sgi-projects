@@ -21,6 +21,7 @@ import {
 import {Animator} from "./Animator.js";
 import {degreeToRad} from "../utils.js";
 import {MyPlayerCamera} from "../transformations/MyPlayerCamera.js";
+import {MyButton} from "./components/MyButton.js";
 
 /**
  * @typedef {import('./CheckerState.js').PieceType} PieceType
@@ -32,8 +33,6 @@ import {MyPlayerCamera} from "../transformations/MyPlayerCamera.js";
  * @property component
  * @property {MyAnimation} animation
  */
-
-const CAMERA_BUTTON_ID = 1000;
 
 export class MyGameView {
   /**
@@ -48,7 +47,7 @@ export class MyGameView {
     scene.gameView = this;
     this.boardAnimator = new Animator(true);
     this.nonBlockingAnimations = new Animator();
-    this.buttons = new Map();
+    this.buttons = [];
     this.playerCamera = new MyPlayerCamera(this.scene, degreeToRad(75), 0.1, 500, vec3.create(), 5, 5);
     this.nonBlockingAnimations.addAnimation('playerCamera', {animation: this.playerCamera});
     this.scene.registerForUpdate('GameView', this.update.bind(this));
@@ -115,6 +114,26 @@ export class MyGameView {
     this.materialSelectedPawns.setDiffuse(0.15, 0.8, 0.55, 1);
     this.materialSelectedPawns.setSpecular(0.15, 0.8, 0.55, 1);
     this.materialSelectedPawns.setShininess(120);
+
+    const changePlayerCameraSidePosition = mat4.create();
+    mat4.translate(
+      changePlayerCameraSidePosition,
+      changePlayerCameraSidePosition,
+      vec3.fromValues(0, 5, 0),
+    )
+
+    //Buttons
+    this.buttons.push(
+      {
+        component: new MyButton(
+          this.scene,
+          () => this.playerCamera.changeSide(),
+          this.materialWhiteCells,
+          "./images/teste.png",
+        ),
+        position: changePlayerCameraSidePosition,
+      }
+    );
   }
 
   /**
@@ -133,8 +152,12 @@ export class MyGameView {
       const obj = this.scene.pickResults[i][0];
       if (!obj) continue;
       let customId = this.scene.pickResults[i][1];
-      if (customId === CAMERA_BUTTON_ID) {
-        this.playerCamera.changeSide();
+      const buttonIndex = customId - 1000;
+      if (buttonIndex >= 0) {
+        console.log("Did click: ", buttonIndex);
+        this.buttons[buttonIndex].component.callback();
+        this.scene.pickResults.splice(0,this.scene.pickResults.length);
+        return;
       }
 
       if (!this.pickedCell) {
@@ -249,9 +272,13 @@ export class MyGameView {
     let whiteIndices = [0, 2, 4, 6, 9, 11, 13, 15, 16, 18, 20, 22, 25, 27, 29, 31, 32, 34, 36,
       38, 41, 43, 45, 47, 48, 50, 52, 54, 57, 59, 61, 63];
 
-    this.scene.registerForPick(CAMERA_BUTTON_ID, {});
-    this.buttons.set(CAMERA_BUTTON_ID, new MyRectangle(this.scene, 5, 7, 5, 7));
-    this.buttons.get(CAMERA_BUTTON_ID).display();
+    for (let i = 0; i < this.buttons.length; i++) {
+      this.scene.registerForPick(i + 1000, this.buttons[i]);
+      this.scene.pushMatrix();
+      this.scene.multMatrix(this.buttons[i].position);
+      this.buttons[i].component.display();
+      this.scene.popMatrix();
+    }
 
     for (let row = 0; row < this.cells.length; row++) {
       for (let col = 0; col < this.cells[row].length; col++) {
@@ -288,6 +315,7 @@ export class MyGameView {
         this.scene.popMatrix();
       }
     }
+
     this.frame.display();
     this.pieceContainer.display();
     this.scoreBoard.display(this.gameState.score);
