@@ -61,7 +61,6 @@
             </materials>
             <texture id="none"/>
             <children>
-                <primitiveref id="square" />
             </children>
         </component>
     </components>

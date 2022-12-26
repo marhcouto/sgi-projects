@@ -9,8 +9,9 @@
  */
 
 export class Animator {
-  constructor() {
-    this.boardAnimationQueue = new Map()
+  constructor(automaticCleaning) {
+    this.animationQueue = new Map();
+    this.automaticCleaning = !!automaticCleaning;
   }
 
   /**
@@ -20,30 +21,41 @@ export class Animator {
    * @param {PieceType} pieceType
    * @return {Map<any, any>|*}
    */
-  addBoardAnimation(id, animation, pieceType) {
-    if (this.boardAnimationQueue.has(id)) {
-      return this.boardAnimationQueue.get(id).push({ animation, pieceType });
+  addAnimation(id, animationData) {
+    if (this.animationQueue.has(id)) {
+      return this.animationQueue.get(id).push(animationData);
     }
-    return this.boardAnimationQueue.set(id, [{ animation, pieceType }]);
+    return this.animationQueue.set(id, [animationData]);
   }
 
   update(t) {
+    for (const [_, animationsForId] of this.animationQueue.entries()) {
+      for (const [_, animationDetails] of animationsForId.entries()) {
+        animationDetails.animation.update(t);
+      }
+    }
+
+    if (this.automaticCleaning) {
+      this.cleanDoneAnimations();
+    }
+  }
+
+  cleanDoneAnimations() {
     const animationsDone = new Map();
-    for (const [id, animationsForId] of this.boardAnimationQueue.entries()) {
+    for (const [id, animationsForId] of this.animationQueue.entries()) {
       for (const [animIdx, animationDetails] of animationsForId.entries()) {
         if (animationDetails.animation.done()) {
           if (animationsDone.has(id)) {
             animationsDone.get(id).push(animIdx);
           } else {
-            animationsDone.set(id, [ animIdx ]);
+            animationsDone.set(id, [animIdx]);
           }
         }
-        animationDetails.animation.update(t);
       }
     }
 
     for (const [animationId, doneAnimationsForId] of animationsDone.entries()) {
-      const allAnimations = this.boardAnimationQueue.get(animationId);
+      const allAnimations = this.animationQueue.get(animationId);
       const runningAnimations = [];
       for (let i = 0; i < allAnimations.length; i++) {
         if (!doneAnimationsForId.includes(i)) {
@@ -51,9 +63,9 @@ export class Animator {
         }
       }
       if (runningAnimations.length === 0) {
-        this.boardAnimationQueue.delete(animationId);
+        this.animationQueue.delete(animationId);
       } else {
-        this.boardAnimationQueue.set(animationId, runningAnimations);
+        this.animationQueue.set(animationId, runningAnimations);
       }
     }
   }
@@ -63,11 +75,11 @@ export class Animator {
    * @param {string} id
    * @return {BoardAnimationDetails[]}
    */
-  getBoardAnimationDetails(id) {
-    if (!this.boardAnimationQueue.has(id)) {
+  getAnimationDetails(id) {
+    if (!this.animationQueue.has(id)) {
       return [];
     }
-    return this.boardAnimationQueue.get(id);
+    return this.animationQueue.get(id);
   }
 
   /**
@@ -75,9 +87,9 @@ export class Animator {
    * @param {string} id
    */
   clearAnimations(id) {
-    this.boardAnimationQueue.delete(id);
+    this.animationQueue.delete(id);
   }
-  hasBoardAnimations() {
-    return this.boardAnimationQueue.size !== 0;
+  hasAnimations() {
+    return this.animationQueue.size !== 0;
   }
 }
