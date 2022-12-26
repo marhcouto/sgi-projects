@@ -85,9 +85,13 @@ export const upgradeCallbackFactory = (scene, animator, movement, mainAnimationI
 
 export class MyComposedAnimation extends MyAbsoluteAnimation {
   constructor(animation, composeCb) {
-    super();;
+    super();
     this.animation = animation;
     this.composeCb = composeCb;
+  }
+
+  currentPosition() {
+    return this.animation.currentPosition();
   }
 
   update(t) {
