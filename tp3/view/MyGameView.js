@@ -6,7 +6,7 @@ import {
   isFromTurn,
   lastMove,
   movePiece,
-  PieceType
+  PieceType, undo
 } from "../checkers/CheckerState.js";
 import {MOVE_ANIMATION_DURATION, MyLinearAnimation} from "../transformations/MyLinearAnimation.js";
 import { MyBoardFrame } from "./components/MyBoardFrame.js";
@@ -140,6 +140,12 @@ export class MyGameView {
       changePlayerCameraSidePosition,
       vec3.fromValues(0, 5, 0),
     )
+    const undoButtonPosition = mat4.create();
+    mat4.translate(
+      changePlayerCameraSidePosition,
+      changePlayerCameraSidePosition,
+      vec3.fromValues(0, 5, 0),
+    )
 
     //Buttons
     this.buttons.push(
@@ -151,6 +157,15 @@ export class MyGameView {
           "./images/teste.png",
         ),
         position: changePlayerCameraSidePosition,
+      },
+      {
+        component: new MyButton(
+          this.scene,
+          () => this.gameState = undo(this.gameState),
+          this.materialWhiteCells,
+          ''
+        ),
+        position: undoButtonPosition,
       }
     );
   }
