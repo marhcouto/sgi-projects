@@ -33,6 +33,8 @@ import {MyPlayerCamera} from "../transformations/MyPlayerCamera.js";
  * @property {MyAnimation} animation
  */
 
+const CAMERA_BUTTON_ID = 1000;
+
 export class MyGameView {
   /**
    * @constructor
@@ -46,7 +48,8 @@ export class MyGameView {
     scene.gameView = this;
     this.boardAnimator = new Animator(true);
     this.nonBlockingAnimations = new Animator();
-    this.playerCamera = new MyPlayerCamera(this.scene, degreeToRad(85), 0.1, 500, vec3.create(), 5, 5);
+    this.buttons = new Map();
+    this.playerCamera = new MyPlayerCamera(this.scene, degreeToRad(75), 0.1, 500, vec3.create(), 5, 5);
     this.nonBlockingAnimations.addAnimation('playerCamera', {animation: this.playerCamera});
     this.scene.registerForUpdate('GameView', this.update.bind(this));
     this.build();
@@ -127,9 +130,13 @@ export class MyGameView {
     }
 
     for (let i = 0; i< this.scene.pickResults.length; i++) {
-      let obj = this.scene.pickResults[i][0];
+      const obj = this.scene.pickResults[i][0];
       if (!obj) continue;
       let customId = this.scene.pickResults[i][1];
+      if (customId === CAMERA_BUTTON_ID) {
+        this.playerCamera.changeSide();
+      }
+
       if (!this.pickedCell) {
         if (this.boardAnimator.hasAnimations()) return;
         this.pickedCell = isFromTurn(this.gameState, customId) ? customId : null;
@@ -240,7 +247,11 @@ export class MyGameView {
     this.scene.clearPickRegistration();
     this.checkPick();
     let whiteIndices = [0, 2, 4, 6, 9, 11, 13, 15, 16, 18, 20, 22, 25, 27, 29, 31, 32, 34, 36,
-      38, 41, 43, 45, 47, 48, 50, 52, 54, 57, 59, 61, 63, 64, 66, 68, 70, 73, 75, 77, 79];
+      38, 41, 43, 45, 47, 48, 50, 52, 54, 57, 59, 61, 63];
+
+    this.scene.registerForPick(CAMERA_BUTTON_ID, {});
+    this.buttons.set(CAMERA_BUTTON_ID, new MyRectangle(this.scene, 5, 7, 5, 7));
+    this.buttons.get(CAMERA_BUTTON_ID).display();
 
     for (let row = 0; row < this.cells.length; row++) {
       for (let col = 0; col < this.cells[row].length; col++) {
