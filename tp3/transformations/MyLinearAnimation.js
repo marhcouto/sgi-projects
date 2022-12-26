@@ -1,8 +1,8 @@
-import { MyAnimation } from "./MyAnimation.js";
 import {linearMovement} from "./movements/LinearMovement.js";
 import { MyGameView } from "../view/MyGameView.js";
+import {MyAbsoluteAnimation} from "./MyAbsoluteAnimation.js";
 
-export class MyLinearAnimation extends MyAnimation {
+export class MyLinearAnimation extends MyAbsoluteAnimation {
   constructor(scene, initialCoordinates, finalCoordinates, animationDuration) {
     super(scene, animationDuration);
     this.getX = linearMovement(initialCoordinates[0], finalCoordinates[0], animationDuration).bind(this);

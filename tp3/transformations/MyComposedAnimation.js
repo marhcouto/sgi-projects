@@ -6,6 +6,7 @@ import { MyGameView} from "../view/MyGameView.js";
 import { PIECE_CONTAINER_POSITION } from "../view/components/MyPieceContainer.js";
 import {MyLinearAnimation} from "./MyLinearAnimation.js";
 import {MyConstantAnimation} from "./MyConstantAnimation.js";
+import {MyAbsoluteAnimation} from "./MyAbsoluteAnimation.js";
 
 /**
  * @typedef {import('../checkers/CheckerState.js').PieceType} PieceType
@@ -82,7 +83,7 @@ export const upgradeCallbackFactory = (scene, animator, movement, mainAnimationI
   return upgradeCb;
 }
 
-export class MyComposedAnimation extends MyAnimation {
+export class MyComposedAnimation extends MyAbsoluteAnimation {
   constructor(animation, composeCb) {
     super();;
     this.animation = animation;

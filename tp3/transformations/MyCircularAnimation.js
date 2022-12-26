@@ -1,6 +1,6 @@
-import {MyAnimation} from "./MyAnimation.js";
+import {MyAbsoluteAnimation} from "./MyAbsoluteAnimation.js";
 
-export class MyCircularAnimation extends MyAnimation {
+export class MyCircularAnimation extends MyAbsoluteAnimation {
   constructor(scene, animationDuration, initialAng, finalAng, radius, height) {
     super(scene, animationDuration, radius);
     this.radius = radius;
