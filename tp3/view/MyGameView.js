@@ -22,6 +22,7 @@ import {Animator} from "./Animator.js";
 import {degreeToRad} from "../utils.js";
 import {MyPlayerCamera} from "../transformations/MyPlayerCamera.js";
 import {MyButton} from "./components/MyButton.js";
+import {MyTimer} from "./components/MyTimer.js";
 
 /**
  * @typedef {import('./CheckerState.js').PieceType} PieceType
@@ -53,6 +54,7 @@ export class MyGameView {
     this.playerCamera = new MyPlayerCamera(this.scene, degreeToRad(75), 0.1, 500, vec3.create(), 5, 5);
     this.nonBlockingAnimations.addAnimation('playerCamera', {animation: this.playerCamera});
     this.runningFunctions = new Map();
+    this.gameTimer = new MyTimer(this.scene);
     this.scene.registerForUpdate('GameView', this.update.bind(this));
     this.build();
     this.setupLightsAndTransformation();
@@ -75,6 +77,7 @@ export class MyGameView {
   }
 
   update(t) {
+    this.gameTimer.update(t);
     this.boardAnimator.update(t);
     this.nonBlockingAnimations.update(t);
     for (const [_, cb] of this.runningFunctions) {
