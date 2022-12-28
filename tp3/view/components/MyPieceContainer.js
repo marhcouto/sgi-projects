@@ -49,13 +49,6 @@ export class MyPieceContainer {
      * @param {vec3} center
      */
     build(center) {
-
-        this.material = new CGFappearance(this.scene);
-        this.material.setAmbient(0.25, 0.1, 0.05, 1);
-        this.material.setDiffuse(0.25, 0.1, 0.05, 1);
-        this.material.setSpecular(0.25, 0.1, 0.05, 1);
-        this.material.setShininess(120);
-
         this.pawn = new MyPawn(this.scene);
 
         if (!center) {
@@ -81,8 +74,6 @@ export class MyPieceContainer {
      * Displays the piece container
      */
     display() {
-        this.material.apply();
-
         this.scene.pushMatrix();
         this.scene.translate(this.center[0], this.center[1], this.center[2]);
 

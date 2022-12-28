@@ -208,7 +208,10 @@ export class XMLscene extends CGFscene {
       this.graph.displayScene();
 
       // Displays game board
+      this.pushMatrix();
+      this.scale(0.5, 0.5, 0.5);
       this.gameView.displayBoard();
+      this.popMatrix();
     }
 
     this.popMatrix();

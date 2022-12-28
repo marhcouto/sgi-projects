@@ -35,7 +35,7 @@ function main() {
 
     // create and load graph, and associate it to scene.
 	  // Check console for loading errors
-    loadScene(myScene, myInterface, scenes.glitchedBakery);
+    loadScene(myScene, myInterface, scenes.testScene);
     new MyGameView(myScene, gameState);
 
     // start

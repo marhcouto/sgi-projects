@@ -2479,6 +2479,7 @@
         <component id="sceneRoot">
             <transformation>
                 <scale x="1.0" y="1.0" z="1.0" />
+                <translate x="3" y="0.0" z="-2.0" />
             </transformation>
             <materials>
                 <material id="wallMaterial" />

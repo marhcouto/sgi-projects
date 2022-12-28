@@ -1,7 +1,7 @@
 import { MyCylinder } from "../../primitives/MyCylinder.js";
 import { MyPatch } from "../../primitives/MyPatch.js";
 import { degreeToRad } from "../../utils.js";
-import {CGFappearance} from "../../../lib/CGF.js";
+import {CGFappearance, CGFtexture} from "../../../lib/CGF.js";
 import {PieceType} from "../../checkers/CheckerState.js";
 
 /**
@@ -26,7 +26,7 @@ export class MyPawn {
     if (!pawnRadius) {
       pawnRadius = DEFAULT_PAWN_RADIUS;
     }
-    this.pawnOutsideBody = new MyCylinder(this.scene, pawnRadius, pawnRadius, pawnHeight, 15, 15);
+    this.pawnOutsideBody = new MyCylinder(this.scene, pawnRadius, pawnRadius, pawnHeight, 40, 5);
     this.pawnTop = new MyPatch(this.scene, 1, 15, 3, 15, [
       [[-pawnRadius, 0, pawnHeight, 1],
         [-pawnRadius, (4/3) * pawnRadius, pawnHeight, 1],
@@ -41,16 +41,22 @@ export class MyPawn {
 
 
     const materialWhitePawns = new CGFappearance(this.scene);
-    materialWhitePawns.setAmbient(0.8, 0.75, 0.6, 1);
+    materialWhitePawns.setAmbient(0.5, 0.5, 0.5, 1);
     materialWhitePawns.setDiffuse(0.8, 0.75, 0.6, 1);
     materialWhitePawns.setSpecular(0.8, 0.75, 0.6, 1);
-    materialWhitePawns.setShininess(120);
+    materialWhitePawns.setShininess(70);
+    materialWhitePawns.setTexture(
+      new CGFtexture(this.scene, './images/ivory.jpg')
+    );
 
     const materialBlackPawns = new CGFappearance(this.scene);
-    materialBlackPawns.setAmbient(0.15, 0.1, 0.05, 1);
-    materialBlackPawns.setDiffuse(0.15, 0.1, 0.05, 1);
-    materialBlackPawns.setSpecular(0.15, 0.1, 0.05, 1);
-    materialBlackPawns.setShininess(120);
+    materialBlackPawns.setAmbient(0.5, 0.3, 0.3, 1);
+    materialBlackPawns.setDiffuse(0.612, 0.269, 0.193, 1);
+    materialBlackPawns.setSpecular(0.773, 0.531, 0.477, 1);
+    materialBlackPawns.setShininess(70);
+    materialBlackPawns.setTexture(
+      new CGFtexture(this.scene, './images/piece-wood.jpg')
+    );
 
     this.pieceMaterials = {
       [PieceType.Black]: materialBlackPawns,
