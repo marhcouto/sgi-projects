@@ -9,6 +9,13 @@ export class MyTimer {
     this.gameTime = 0;
     this.counterView = new MySpriteRectangle(this.scene, -0.5, 0.5, -1, 1, 10);
     this.dots = new MyRectangle(this.scene, -0.25, 0.25, -1, 1);
+    this.frame = new MyRectangle(this.scene, -2.5, 2.5, -1.25, 1.25);
+
+    this.frameMaterial = new CGFappearance(this.scene);
+    this.frameMaterial.setAmbient(0.9, 0.9, 0.9, 1);
+    this.frameMaterial.setDiffuse(0.9, 0.9, 0.9, 1);
+    this.frameMaterial.setSpecular(0.9, 0.9, 0.9, 1);
+    this.frameMaterial.setShininess(120);
 
     this.numbersTexture = new CGFtexture(scene, './images/numbers.png');
     this.dotsTexture = new CGFtexture(scene, './images/dots.png');
@@ -69,5 +76,11 @@ export class MyTimer {
     this.material.setTexture(this.dotsTexture);
     this.material.apply();
     this.dots.display();
+
+    this.scene.pushMatrix();
+    this.frameMaterial.apply();
+    this.scene.translate(0, 0, -0.01);
+    this.frame.display();
+    this.scene.popMatrix();
   }
 }

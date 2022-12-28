@@ -445,6 +445,7 @@ export function upgradedPiece(piece) {
  * @return {GameState}
  */
 export function undo(gameState) {
+  console.log(gameState);
   if (gameState.moves.length === 0) {
     return gameState;
   }
@@ -454,7 +455,7 @@ export function undo(gameState) {
   moves.forEach((move) => {
     const orig = cordToArrayIdx(newGameState, move.initPos);
     const dest = cordToArrayIdx(newGameState, move.finalPos);
-    const newState = movePiece(gameState, orig, dest);
+    const newState = movePiece(newGameState, orig, dest);
     newGameState = newState.gameState;
   })
   return newGameState;

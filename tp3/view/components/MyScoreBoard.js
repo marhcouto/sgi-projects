@@ -34,7 +34,7 @@ export class MyScoreBoard {
 
         this.scoreTexture = new CGFtexture(this.scene, './images/scores.png');
 
-        this.rectangeFront = new MyRectangle(this.scene, -2, 2, -1, 1);
+        this.rectangeFront = new MyRectangle(this.scene, -1.75, 1.75, -0.85, 0.85);
         this.smallSquare = new MySpriteRectangle(this.scene, -0.75, 0.75, -0.75, 0.75, 13);
 
         if (!center) {
@@ -49,13 +49,6 @@ export class MyScoreBoard {
      * @param {Score} score
      */
     display(score) {
-
-        this.scene.pushMatrix();
-        this.scene.translate(this.center[0], this.center[1], this.center[2]);
-        let angle = -Math.PI / 7 * 2;
-        this.scene.translate(0, 0, Math.abs( Math.sin(angle)));
-        this.scene.rotate(-Math.PI / 7 * 2, 0, 1, 0);
-
         // Big Rectangle
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI / 2, 0, 0, 1);
@@ -70,19 +63,17 @@ export class MyScoreBoard {
         this.scene.translate(0, 0, 0.01);
         this.scene.rotate(- Math.PI / 2, 0, 0, 1);
         this.scene.pushMatrix();
-        this.scene.translate(-1, 0, 0);
+        this.scene.translate(-0.85, 0, 0);
         this.smallSquare.updateSprite(score.blacksScore);
         this.smallSquare.display();
         this.scene.popMatrix();
         this.scene.pushMatrix();
-        this.scene.translate(1, 0, 0);
+        this.scene.translate(0.85, 0, 0);
         this.smallSquare.updateSprite(score.whitesScore);
         this.smallSquare.display();
         this.scene.popMatrix();
         this.scene.popMatrix();
 
         this.smallSquareMaterial.setTexture(null);
-
-        this.scene.popMatrix();
     }
 }

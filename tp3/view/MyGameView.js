@@ -51,15 +51,7 @@ export class MyGameView {
     this.scene = scene;
     this.gameState = gameState;
     scene.gameView = this;
-    this.boardAnimator = new Animator(true);
-    this.nonBlockingAnimations = new Animator();
-    this.buttons = [];
-    this.playerCamera = new MyPlayerCamera(this.scene, degreeToRad(75), 0.1, 500, vec3.create(), 5, 5);
-    this.nonBlockingAnimations.addAnimation('playerCamera', {animation: this.playerCamera});
-    this.runningFunctions = new Map();
-    this.scene.registerForUpdate('GameView', this.update.bind(this));
     this.build();
-    this.setupLightsAndTransformation();
   }
 
   setupLightsAndTransformation() {
@@ -92,6 +84,14 @@ export class MyGameView {
   }
 
   build() {
+    this.boardAnimator = new Animator(true);
+    this.nonBlockingAnimations = new Animator();
+    this.buttons = [];
+    this.playerCamera = new MyPlayerCamera(this.scene, degreeToRad(75), 0.1, 500, vec3.create(), 5, 5);
+    this.nonBlockingAnimations.addAnimation('playerCamera', {animation: this.playerCamera});
+    this.runningFunctions = new Map();
+    this.scene.registerForUpdate('GameView', this.update.bind(this));
+
     this.pickedCell = null;
     this.cells = [];
 
@@ -150,27 +150,63 @@ export class MyGameView {
     this.materialSelectedPawns.setSpecular(0.15, 0.8, 0.55, 1);
     this.materialSelectedPawns.setShininess(120);
 
+    //Game controls
+    this.controllsBack = new MyRectangle(this.scene, -0.75, 2, -4, 4);
+
+    this.controllsBaseTransformations = mat4.create();
+    mat4.translate(
+      this.controllsBaseTransformations,
+      this.controllsBaseTransformations,
+      vec3.fromValues(0, 0, 0.125),
+    )
+    mat4.scale(
+      this.controllsBaseTransformations,
+      this.controllsBaseTransformations,
+      vec3.fromValues(0.80, 0.80, 0.5),
+    )
+    mat4.rotateZ(
+      this.controllsBaseTransformations,
+      this.controllsBaseTransformations,
+      degreeToRad(-90),
+    )
+
     const changePlayerCameraSidePosition = mat4.create();
     mat4.translate(
       changePlayerCameraSidePosition,
       changePlayerCameraSidePosition,
-      vec3.fromValues(0, 5, 0),
-    )
+      vec3.fromValues(1.25, 2.75, 0),
+    );
+
+
     const undoButtonPosition = mat4.create();
     mat4.translate(
-      changePlayerCameraSidePosition,
-      changePlayerCameraSidePosition,
-      vec3.fromValues(0, 5, 0),
+      undoButtonPosition,
+      undoButtonPosition,
+      vec3.fromValues(0, 2.75, 0),
+    );
+
+    const replayButtonPosition = mat4.create();
+    mat4.translate(
+      replayButtonPosition,
+      replayButtonPosition,
+      vec3.fromValues(1.25, -2.75, 0),
+    )
+
+    const resetButton = mat4.create();
+    mat4.translate(
+      resetButton,
+      resetButton,
+      vec3.fromValues(0, -2.75, 0),
     )
 
     //Buttons
     this.buttons.push(
-      /*{
+      {
         component: new MyButton(
           this.scene,
           () => this.playerCamera.changeSide(),
           this.materialWhiteCells,
-          "./images/teste.png",
+          "./images/turn-camera.png",
         ),
         position: changePlayerCameraSidePosition,
       },
@@ -179,20 +215,34 @@ export class MyGameView {
           this.scene,
           () => this.gameState = undo(this.gameState),
           this.materialWhiteCells,
-          ''
+          './images/undo.png'
         ),
         position: undoButtonPosition,
-      }*/
+      },
       {
         component: new MyButton(
           this.scene,
           () => this.setupGameMovie(),
           this.materialWhiteCells,
-          ''
+          './images/replay.png'
         ),
-        position: changePlayerCameraSidePosition,
-      }
+        position: replayButtonPosition,
+      },
+      {
+        component: new MyButton(
+          this.scene,
+          () => {
+            this.gameState = generateGameState(this.gameState.size);
+            this.build();
+          },
+          this.materialWhiteCells,
+          './images/replay.png'
+        ),
+        position: resetButton,
+      },
     );
+
+    this.setupLightsAndTransformation();
   }
 
   setupGameMovie() {
@@ -377,14 +427,6 @@ export class MyGameView {
     let whiteIndices = [0, 2, 4, 6, 9, 11, 13, 15, 16, 18, 20, 22, 25, 27, 29, 31, 32, 34, 36,
       38, 41, 43, 45, 47, 48, 50, 52, 54, 57, 59, 61, 63];
 
-    for (let i = 0; i < this.buttons.length; i++) {
-      this.scene.registerForPick(i + 1000, this.buttons[i]);
-      this.scene.pushMatrix();
-      this.scene.multMatrix(this.buttons[i].position);
-      this.buttons[i].component.display();
-      this.scene.popMatrix();
-    }
-
     for (let row = 0; row < this.cells.length; row++) {
       for (let col = 0; col < this.cells[row].length; col++) {
 
@@ -423,8 +465,38 @@ export class MyGameView {
 
     this.frame.display();
     this.pieceContainer.display();
+
+    this.scene.pushMatrix();
+    this.scene.translate(9.5, -4.0, 0.5);
+    this.scene.rotate(degreeToRad(-45), 0, 1, 0);
+
+    this.scene.pushMatrix();
+    this.scene.translate(0, 0, -0.02);
+    this.controllsBack.display();
+    this.scene.popMatrix();
+
+    for (let i = 0; i < this.buttons.length; i++) {
+      this.scene.registerForPick(i + 1000, this.buttons[i]);
+      this.scene.pushMatrix();
+      this.scene.multMatrix(this.buttons[i].position);
+      this.scene.multMatrix(this.controllsBaseTransformations);
+      this.buttons[i].component.display();
+      this.scene.popMatrix();
+    }
+
+    this.scene.pushMatrix();
+    this.scene.translate(1, 0, 0);
+    this.scene.scale(0.35, 0.35, 1);
+    this.scene.rotate(degreeToRad(-90), 0, 0, 1);
     this.gameTimer.display();
+    this.scene.popMatrix();
+
+    this.scene.pushMatrix();
+    this.scene.scale(0.75, 0.75, 1);
     this.scoreBoard.display(this.gameState.score);
+    this.scene.popMatrix();
+
+    this.scene.popMatrix();
     this.scene.popMatrix();
   }
 

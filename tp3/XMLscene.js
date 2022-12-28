@@ -2,7 +2,7 @@ import { CGFscene } from '../lib/CGF.js';
 import { CGFaxis, CGFcamera, CGFshader } from '../lib/CGF.js';
 import {degreeToRad} from "./utils.js";
 
-export const UPDATE_FREQ = 100;
+export const UPDATE_FREQ = 50;
 
 /**
  * XMLscene class, representing the scene that is to be rendered.
