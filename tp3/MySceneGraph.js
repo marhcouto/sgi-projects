@@ -1793,25 +1793,6 @@ export class MySceneGraph {
       this.graphTraversal(this.components[childId], material, component.texture);
     }
 
-    // Highlight
-    if (component.highlighted && component.highlighted.active && component.children.primitives.length !== 0) {
-      let scaleFactor;
-      if (component.highlighted.scaleH > 0) {
-        scaleFactor = this.scene.globalPulse * (component.highlighted.scaleH - 1);
-      } else {
-        scaleFactor = this.scene.globalPulse * (component.highlighted.scaleH + 1);
-      }
-
-      this.scene.shader.setUniformsValues({
-        scaleFactor: scaleFactor,
-        pulseStage: this.scene.globalPulse,
-        highlightColor: vec4.fromValues(...component.highlighted.color, 1.0),
-        materialColor: material.diffuse,
-        hasTexture: hasTexture
-      })
-      this.scene.setActiveShader(this.scene.shader);
-    }
-
     // Primitives
     for (let childId of component.children.primitives) {
       this.primitives[childId].updateTexCoords(lenS, lenT);

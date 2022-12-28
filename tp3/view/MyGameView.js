@@ -463,6 +463,7 @@ export class MyGameView {
       }
     }
 
+    this.scene.registerForPick(-1, null);
     this.frame.display();
     this.pieceContainer.display();
 
@@ -483,6 +484,7 @@ export class MyGameView {
       this.buttons[i].component.display();
       this.scene.popMatrix();
     }
+    this.scene.registerForPick(-1, null);
 
     this.scene.pushMatrix();
     this.scene.translate(1, 0, 0);

@@ -36,14 +36,10 @@ export class XMLscene extends CGFscene {
     super.init(application);
 
     this.sceneInited = false;
-    this.globalPulse = 0;
 
     this.initCameras();
 
     this.enableTextures(true);
-
-    this.globalPulse = 0
-    this.shader = new CGFshader(this.gl, 'scenes/shaders/SGI_TP1_XML_T03_G11/shader.vert', 'scenes/shaders/SGI_TP1_XML_T03_G11/shader.frag');
 
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
@@ -54,19 +50,6 @@ export class XMLscene extends CGFscene {
     this.setUpdatePeriod(UPDATE_FREQ);
     this.setPickEnabled(true);
   }
-
-
-  initHiglightedList() {
-
-    let switchHighlight = (id) => {
-      return (enabled) => this.updateObjectHighlighting(id, enabled);
-    }
-
-    for (let entry of this.graph.highlightedComponentsData) {
-      this.interface.createHighlightedEntry(entry.id, entry.active, switchHighlight(entry.id));
-    }
-  }
-
 
   /**
    * Initializes the scene cameras.
@@ -167,10 +150,6 @@ export class XMLscene extends CGFscene {
 
     this.interface.initLightFolder();
 
-    this.interface.initHighlightedFolder();
-
-    this.initHiglightedList();
-
     this.initLights();
 
     this.interface.subscribeKeyDownEvent(this.graph.onKeyPress.bind(this.graph))
@@ -222,6 +201,7 @@ export class XMLscene extends CGFscene {
       // Displays the scene (MySceneGraph function).
       this.graph.displayScene();
 
+      // Displays game board
       this.gameView.displayBoard();
     }
 

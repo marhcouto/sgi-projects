@@ -45,11 +45,6 @@ export class MyInterface extends CGFinterface {
         this.lights = {}
     }
 
-    initHighlightedFolder() {
-        this.highlightedFolder = this.gui.addFolder('Highlighed Components');
-        this.highlighted = {}
-    }
-
     initCameras(cameras, defaultCamera, callback) {
         this.activatedCamera = defaultCamera;
         const cameraData = cameras[this.activatedCamera]();
@@ -69,11 +64,6 @@ export class MyInterface extends CGFinterface {
     createLightSource(key, initialState, switchCallback) {
         this.lights[key] = initialState;
         this.lightFolder.add(this.lights, key).name(key).onChange(switchCallback)
-    }
-
-    createHighlightedEntry(key, initialState, switchCallback) {
-        this.highlighted[key] = initialState;
-        this.highlightedFolder.add(this.highlighted, key).name(key).onChange(switchCallback);
     }
 
     subscribeKeyDownEvent(callback) {
