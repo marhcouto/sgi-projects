@@ -25,8 +25,9 @@ export class MyInterface extends CGFinterface {
         this.gui = new dat.GUI();
 
         // add a group of controls (and open/expand by defult)
-
         this.initKeys();
+
+        this.sceneFolders = new Map();
 
         return true;
     }
@@ -35,35 +36,56 @@ export class MyInterface extends CGFinterface {
      * initKeys
      */
     initKeys() {
-        this.scene.gui=this;
+        this.scene.gui = this;
         this.processKeyboard=function(){};
         this.activeKeys={};
     }
 
+    clearSceneFolders() {
+      this.gui.destroy();
+      this.sceneFolders = new Map();
+      this.gui = new dat.GUI();
+    }
+
+    initScenes(scenes, activeScene, callBack) {
+      this.activeScene = activeScene;
+      this.gui.add(this, 'activeScene', scenes).name("Selected Scene: ").onChange((activeScene) => {
+        this.clearSceneFolders()
+        callBack(activeScene);
+      });
+    }
+
     initLightFolder() {
-        this.lightFolder = this.gui.addFolder('Lights');
+        this.sceneFolders.set(
+          "lights",
+          this.gui.addFolder('Lights')
+        )
         this.lights = {}
     }
 
     initCameras(cameras, defaultCamera, callback) {
-        this.activatedCamera = defaultCamera;
-        const cameraData = cameras[this.activatedCamera]();
-        if (cameraData.allowInteraction) {
-          this.setActiveCamera(cameraData.camera);
-        }
-        callback(cameraData.camera)
+      this.activatedCamera = defaultCamera;
+      const cameraData = cameras[this.activatedCamera]();
+      if (cameraData.allowInteraction) {
+        this.setActiveCamera(cameraData.camera);
+      }
+      callback(cameraData.camera)
+
+      this.sceneFolders.set(
+        "cameras",
         this.gui.add(this, 'activatedCamera', Object.keys(cameras)).name('Selected Camera: ').onChange((activeCamera) => {
-            const cameraData = cameras[activeCamera]();
-            if (cameraData.allowInteraction) {
-              this.setActiveCamera(cameraData.camera);
-            }
-            callback(cameraData.camera);
-        });
+          const cameraData = cameras[activeCamera]();
+          if (cameraData.allowInteraction) {
+            this.setActiveCamera(cameraData.camera);
+          }
+          callback(cameraData.camera);
+        })
+      )
     }
 
     createLightSource(key, initialState, switchCallback) {
         this.lights[key] = initialState;
-        this.lightFolder.add(this.lights, key).name(key).onChange(switchCallback)
+        this.sceneFolders.get("lights").add(this.lights, key).name(key).onChange(switchCallback)
     }
 
     subscribeKeyDownEvent(callback) {

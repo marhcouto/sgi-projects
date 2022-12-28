@@ -120,6 +120,14 @@ export class XMLscene extends CGFscene {
     }
   }
 
+  resetScene() {
+    this.sceneInited = false;
+    for (let i = 0; i < 8; i++) {
+      this.lights[i].setVisible(false);
+      this.lights[i].disable();
+    }
+  }
+
   setDefaultAppearance() {
     this.setAmbient(0.2, 0.4, 0.8, 1.0);
     this.setDiffuse(0.2, 0.4, 0.8, 1.0);
@@ -145,8 +153,6 @@ export class XMLscene extends CGFscene {
       }
     };
     this.interface.initCameras(views, this.graph.defaultView, (camera) => this.camera = camera);
-
-    setTimeout(() => this.gameView.playerCamera.changeSide(), 3000);
 
     this.interface.initLightFolder();
 

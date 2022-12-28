@@ -5,14 +5,18 @@ import { MySceneGraph } from './MySceneGraph.js';
 import {generateGameState, movePiece} from './checkers/CheckerState.js';
 import { MyGameView } from './view/MyGameView.js';
 
-function getUrlVars() {
-    var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,    
-    function(m,key,value) {
-      vars[decodeURIComponent(key)] = decodeURIComponent(value);
-    });
-    return vars;
-}	 
+const scenes = {
+  glitchedBakery: "glitched_bakery.xml",
+  testScene: "test_scene.xml",
+};
+Object.freeze(scenes);
+
+function loadScene(myScene, myInterface, filename) {
+  myInterface.clearSceneFolders();
+  myInterface.initScenes(scenes, scenes.glitchedBakery, (scene) => loadScene(myScene, myInterface, scene));
+  myScene.resetScene();
+  new MySceneGraph(filename, myScene);
+}
 
 function main() {
     const gameState = generateGameState(8);
@@ -29,15 +33,10 @@ function main() {
 
     myInterface.setActiveCamera(myScene.camera);
 
-	// get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
-	// or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
-
-    const filename = getUrlVars()['file'] || "SGI_TP1_XML_T03_G11_v03.xml";
-
     // create and load graph, and associate it to scene.
-	// Check console for loading errors
-    const myGraph = new MySceneGraph(filename, myScene);
-    const myGameView = new MyGameView(myScene, gameState);
+	  // Check console for loading errors
+    loadScene(myScene, myInterface, scenes.glitchedBakery);
+    new MyGameView(myScene, gameState);
 
     // start
     app.run();
