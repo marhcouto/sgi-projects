@@ -13,7 +13,7 @@ Object.freeze(scenes);
 
 function loadScene(myScene, myInterface, filename) {
   myInterface.clearSceneFolders();
-  myInterface.initScenes(scenes, scenes.glitchedBakery, (scene) => loadScene(myScene, myInterface, scene));
+  myInterface.initScenes(scenes, filename, (scene) => loadScene(myScene, myInterface, scene));
   myScene.resetScene();
   new MySceneGraph(filename, myScene);
 }
