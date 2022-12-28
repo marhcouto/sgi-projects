@@ -168,9 +168,5 @@ function generateValidMovesForDirections(gameState, piecePos, directionList) {
     nFoundCaptures += validMovesForDirection.nFoundCaptures;
   }
 
-  if (piecePos.row === 3 && piecePos.col === 4) {
-    console.log(validMoves);
-  }
-
   return {validMoves, nFoundCaptures};
 }

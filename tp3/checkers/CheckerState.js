@@ -65,7 +65,6 @@ export const PieceType = {
  * @property {Number} col
  */
 
-
 // Main Functions
 
 /**
@@ -129,7 +128,7 @@ export function generateGameState(size) {
  * @param {GameState} gameState
  * @param {Number} orig
  * @param {Number} dest
- * @return {{success: boolean, gameState}}
+ * @return {{success: boolean, gameState: GameState}}
  */
 export function movePiece(gameState, orig, dest) {
   if (!orig || !(typeof orig === 'number')) {
@@ -193,8 +192,6 @@ export function movePiece(gameState, orig, dest) {
   const validMoves = generateValidMoves(newGameState);
   newGameState.validMoves = validMoves.validMoves;
   newGameState.nCaptures = validMoves.nFoundCaptures;
-
-  console.log(newGameState);
 
   return {
     success: true,

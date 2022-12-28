@@ -1,14 +1,17 @@
 import { MyRectangle } from "../primitives/MyRectangle.js";
 import { CGFappearance } from "../../lib/CGF.js";
 import {
-  cordToArrayIdx,
+  cordToArrayIdx, generateGameState,
   getCapturePosition, getPiece,
   isFromTurn,
   lastMove,
   movePiece,
   PieceType, undo
 } from "../checkers/CheckerState.js";
-import {MOVE_ANIMATION_DURATION, MyLinearAnimation} from "../transformations/MyLinearAnimation.js";
+import {
+  MOVE_ANIMATION_DURATION,
+  MyLinearAnimation
+} from "../transformations/MyLinearAnimation.js";
 import { MyBoardFrame } from "./components/MyBoardFrame.js";
 import { DEFAULT_PAWN_HEIGHT, DEFAULT_PAWN_RADIUS, MyPawn } from "./components/MyPawn.js";
 import { MoveType } from "../checkers/CheckerPiece.js";
@@ -18,11 +21,11 @@ import {
   MyComposedAnimation,
   upgradeCallbackFactory
 } from "../transformations/MyComposedAnimation.js";
-import {Animator} from "./Animator.js";
-import {degreeToRad} from "../utils.js";
-import {MyPlayerCamera} from "../transformations/MyPlayerCamera.js";
-import {MyButton} from "./components/MyButton.js";
-import {MyTimer} from "./components/MyTimer.js";
+import { Animator } from "./Animator.js";
+import { degreeToRad } from "../utils.js";
+import { MyPlayerCamera } from "../transformations/MyPlayerCamera.js";
+import { MyButton } from "./components/MyButton.js";
+import { MyTimer } from "./components/MyTimer.js";
 
 /**
  * @typedef {import('./CheckerState.js').PieceType} PieceType
@@ -54,7 +57,6 @@ export class MyGameView {
     this.playerCamera = new MyPlayerCamera(this.scene, degreeToRad(75), 0.1, 500, vec3.create(), 5, 5);
     this.nonBlockingAnimations.addAnimation('playerCamera', {animation: this.playerCamera});
     this.runningFunctions = new Map();
-    this.gameTimer = new MyTimer(this.scene);
     this.scene.registerForUpdate('GameView', this.update.bind(this));
     this.build();
     this.setupLightsAndTransformation();
@@ -79,6 +81,10 @@ export class MyGameView {
   update(t) {
     this.gameTimer.update(t);
     this.boardAnimator.update(t);
+    if (!this.boardAnimator.hasAnimations() && this.onUnlockCallback) {
+      this.onUnlockCallback();
+    }
+
     this.nonBlockingAnimations.update(t);
     for (const [_, cb] of this.runningFunctions) {
       cb(t);
@@ -115,8 +121,15 @@ export class MyGameView {
     // Piece Container
     this.pieceContainer = new MyPieceContainer(this.scene, null);
 
+    const numbersMaterial = new CGFappearance(this.scene);
+    numbersMaterial.setAmbient(1, 1, 1, 1);
+    numbersMaterial.setDiffuse(1, 1, 1, 1);
+    numbersMaterial.setSpecular(1, 1, 1, 1);
+    numbersMaterial.setShininess(120);
+
     // Score Board
-    this.scoreBoard = new MyScoreBoard(this.scene, null);
+    this.scoreBoard = new MyScoreBoard(this.scene, null, numbersMaterial);
+    this.gameTimer = new MyTimer(this.scene, numbersMaterial);
 
     // Materials
     this.materialWhiteCells = new CGFappearance(this.scene);
@@ -152,7 +165,7 @@ export class MyGameView {
 
     //Buttons
     this.buttons.push(
-      {
+      /*{
         component: new MyButton(
           this.scene,
           () => this.playerCamera.changeSide(),
@@ -169,8 +182,34 @@ export class MyGameView {
           ''
         ),
         position: undoButtonPosition,
+      }*/
+      {
+        component: new MyButton(
+          this.scene,
+          () => this.setupGameMovie(),
+          this.materialWhiteCells,
+          ''
+        ),
+        position: changePlayerCameraSidePosition,
       }
     );
+  }
+
+  setupGameMovie() {
+    const moveSequence = this.gameState.moves;
+    moveSequence.reverse();
+    this.gameState = generateGameState(this.gameState.size);
+
+    this.onUnlockCallback = () => {
+      if (moveSequence.length === 0) {
+        this.onUnlockCallback = null;
+        return;
+      }
+      const curMove = moveSequence.pop();
+      const origIdx = cordToArrayIdx(this.gameState, curMove.initPos);
+      const destIdx = cordToArrayIdx(this.gameState, curMove.finalPos);
+      this.executeMovementOrder(origIdx, destIdx);
+    }
   }
 
   /**
@@ -201,18 +240,23 @@ export class MyGameView {
         if (this.boardAnimator.hasAnimations()) return;
         this.pickedCell = isFromTurn(this.gameState, customId) ? customId : null;
       } else {
-        let result = movePiece(this.gameState, this.pickedCell, customId);
-        console.log("Result:", result.success);
-        if (result.success) {
-          const lastPieceMove = lastMove(result.gameState);
-          this.setupAnimation(lastPieceMove);
-        }
-        this.gameState = result.gameState;
+        this.executeMovementOrder(this.pickedCell, customId);
         this.pickedCell = null;
       }
       console.log("Picked object: " + obj + ", with pick id " + customId);
     }
     this.scene.pickResults.splice(0,this.scene.pickResults.length);
+  }
+
+  executeMovementOrder(origIdx, destIdx) {
+    let result = movePiece(this.gameState, origIdx, destIdx);
+    if (result.success) {
+      const lastPieceMove = lastMove(result.gameState);
+      this.setupAnimation(lastPieceMove);
+    }
+    this.gameState = result.gameState;
+
+    return result.success;
   }
 
   getCapturedPieceData(movement) {
@@ -379,6 +423,7 @@ export class MyGameView {
 
     this.frame.display();
     this.pieceContainer.display();
+    this.gameTimer.display();
     this.scoreBoard.display(this.gameState.score);
     this.scene.popMatrix();
   }

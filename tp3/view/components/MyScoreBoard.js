@@ -13,9 +13,10 @@ export class MyScoreBoard {
      * @param {XMLscene} scene
      * @param {vec3} center
      */
-    constructor(scene, center) {
+    constructor(scene, center, numberMaterial) {
 
         this.scene = scene;
+        this.smallSquareMaterial = numberMaterial;
         this.build(center);
     }
 
@@ -31,15 +32,7 @@ export class MyScoreBoard {
         this.material.setSpecular(0.9, 0.9, 0.9, 1);
         this.material.setShininess(120);
 
-        this.scoreSquareMaterials = [];
-
-        this.smallSquareMaterial = new CGFappearance(this.scene);
-        this.smallSquareMaterial.setAmbient(1, 1, 1, 1);
-        this.smallSquareMaterial.setDiffuse(1, 1, 1, 1);
-        this.smallSquareMaterial.setSpecular(1, 1, 1, 1);
-        this.smallSquareMaterial.setShininess(120);
-        const tex = new CGFtexture(this.scene, `./images/numbers.png`);
-        this.smallSquareMaterial.setTexture(tex);
+        this.scoreTexture = new CGFtexture(this.scene, './images/scores.png');
 
         this.rectangeFront = new MyRectangle(this.scene, -2, 2, -1, 1);
         this.smallSquare = new MySpriteRectangle(this.scene, -0.75, 0.75, -0.75, 0.75, 13);
@@ -71,6 +64,7 @@ export class MyScoreBoard {
         this.scene.popMatrix();
 
         // Score Squares
+        this.smallSquareMaterial.setTexture(this.scoreTexture);
         this.smallSquareMaterial.apply();
         this.scene.pushMatrix();
         this.scene.translate(0, 0, 0.01);
@@ -87,8 +81,8 @@ export class MyScoreBoard {
         this.scene.popMatrix();
         this.scene.popMatrix();
 
+        this.smallSquareMaterial.setTexture(null);
 
         this.scene.popMatrix();
-
     }
 }
