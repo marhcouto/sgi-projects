@@ -1790,7 +1790,8 @@ export class MySceneGraph {
       if (!this.components[childId]) {
         return `component with id ${childId} does not exist`;
       }
-      this.graphTraversal(this.components[childId], material, component.texture);
+      const texture = component.texture.type === "inherit" ? parentComponentTexture : component.texture;
+      this.graphTraversal(this.components[childId], material, texture);
     }
 
     // Primitives

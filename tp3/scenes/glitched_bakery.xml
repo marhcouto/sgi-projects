@@ -133,6 +133,8 @@
         <texture id="roofTiles" file="scenes/images/SGI_TP1_XML_T03_G11/roof-tiles.png" />
         <texture id="roofTilesVertical" file="scenes/images/SGI_TP1_XML_T03_G11/roof-tiles-vertical.png" />
         <texture id="outsideWood" file="scenes/images/SGI_TP1_XML_T03_G11/outside-wood.png" />
+        <texture id="tableLeg" file="scenes/images/SGI_TP1_XML_T03_G11/table-leg.png" />
+        <texture id="woolTable" file="scenes/images/SGI_TP1_XML_T03_G11/wool-table.png" />
     </textures>
 
     <materials>
@@ -229,9 +231,9 @@
 
         <material id="explodingBarrel" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="1.0" g="0.256" b="0" a="1.0" />
-            <diffuse r="1.0" g="0.256" b="0" a="1.0" />
-            <specular r="0.5" g="0.5" b="0.5" a="1.0" />
+            <ambient r="0.424" g="0.303" b="0.174" a="1.0" />
+            <diffuse r="0.80" g="0.62" b="0.427" a="1.0" />
+            <specular r="0.911" g="0.787" b="0.654" a="1.0" />
         </material>
 
         <material id="bakeryFloor" shininess="5">
@@ -246,6 +248,13 @@
             <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
             <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />
             <specular r="0.3" g="0.3" b="0.3" a="1.0" />
+        </material>
+
+        <material id="tableLeg" shininess="20">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.493" g="0.323" b="0.159" a="1.0" />
+            <diffuse r="0.275" g="0.176" b="0.082" a="1.0" />
+            <specular r="0.822" g="0.704" b="0.591" a="1.0" />
         </material>
     </materials>
 
@@ -495,133 +504,7 @@
         </primitive>
     </primitives>
 
-    <animations>
-        <keyframeanim id="shipMovement">
-            <keyframe instant="2">
-                <translation x="50" y="50" z="50" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="1" sy="1" sz="1" />
-            </keyframe>
-
-            <keyframe instant="5">
-                <translation x="-16.6" y="20" z="10.6" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="4" sy="4" sz="4" />
-            </keyframe>
-
-            <keyframe instant="10.31">
-                <translation x="-16.6" y="20" z="10.6" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="4" sy="4" sz="4" />
-            </keyframe>
-
-            <keyframe instant="12.31">
-                <translation x="16.6" y="20" z="-10.6" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="4" sy="4" sz="4" />
-            </keyframe>
-
-            <keyframe instant="14">
-                <translation x="16.6" y="45" z="-10.6" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="4" sy="4" sz="4" />
-            </keyframe>
-
-            <keyframe instant="14.01">
-                <translation x="0" y="0" z="0" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="0" sy="0" sz="0" />
-            </keyframe>
-        </keyframeanim>
-
-        <keyframeanim id="abductionBeam">
-            <keyframe instant="5">
-                <translation x="-16.6" y="16" z="10.6" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="1" sy="0" sz="1" />
-            </keyframe>
-
-            <keyframe instant="6">
-                <translation x="-16.6" y="16" z="10.6" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="1" sy="1" sz="1" />
-            </keyframe>
-
-            <keyframe instant="10">
-                <translation x="-16.6" y="16" z="10.6" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="180" />
-                <rotation axis="x" angle="0" />
-                <scale sx="1" sy="1" sz="1" />
-            </keyframe>
-
-            <keyframe instant="10.3">
-                <translation x="-16.6" y="16" z="10.6" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="1" sy="0" sz="1" />
-            </keyframe>
-
-            <keyframe instant="10.31">
-                <translation x="-16.6" y="16" z="10.6" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="0" sy="0" sz="0" />
-            </keyframe>
-        </keyframeanim>
-
-        <keyframeanim id="antAbduction">
-            <keyframe instant="0.01">
-                <translation x="0" y="0" z="0" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="1" sy="1" sz="1" />
-            </keyframe>
-
-            <keyframe instant="6">
-                <translation x="0" y="0" z="0" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="1" sy="1" sz="1" />
-            </keyframe>
-
-            <keyframe instant="10">
-                <translation x="0" y="6" z="0" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="1" sy="1" sz="1" />
-            </keyframe>
-
-            <keyframe instant="10.1">
-                <translation x="0" y="0" z="0" />
-                <rotation axis="z" angle="0" />
-                <rotation axis="y" angle="0" />
-                <rotation axis="x" angle="0" />
-                <scale sx="0" sy="0" sz="0" />
-            </keyframe>
-        </keyframeanim>
-    </animations>
+    <animations/>
 
     <components>
         <!-- Base components -->
@@ -1053,7 +936,6 @@
             <children>
                 <componentref id="ant" />
             </children>
-            <animation id="antAbduction"/>
         </component>
 
         <component id="bigant3">
@@ -2324,94 +2206,6 @@
         <!-- Shelf -->
         <!-- Replicated Scene -->
 
-        <!-- X Factor -->
-        <component id="alienBeam">
-            <transformation>
-                <translate x="0" y="2" z="0" />
-                <rotate axis="x" angle="90" />
-            </transformation>
-            <materials>
-                <material id="alienGreen" />
-            </materials>
-            <texture id="stripesOnTransparentBg" length_s="1" length_t="1" />
-            <children>
-                <primitiveref id="alienBeam" />
-            </children>
-            <highlighted r="0.580" g="0.820" b="0.647" scale_h="1.2" />
-            <animation id="abductionBeam" />
-        </component>
-        
-        <component id="alienShipBasis">
-            <transformation>
-                <scale x="1" y="0.25" z="1" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="alienShip" />
-            </children>
-        </component>
-
-        <component id="alienShipMiddle">
-            <transformation>
-                <translate x="0" y="0.25" z="0" />
-                <scale x="0.75" y="0.25" z="0.75" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="alienShip" />
-            </children>
-        </component>
-
-        <component id="alienShipTop">
-            <transformation>
-                <translate x="0" y="0.70" z="0" />
-                <scale x="0.25" y="0.10" z="0.25" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="alienShip" />
-            </children>
-        </component>
-
-        <component id="alienShipBottom">
-            <transformation>
-                <translate x="0" y="-0.10" z="0" />
-                <scale x="0.75" y="0.25" z="0.75" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="alienShip" />
-            </children>
-        </component>
-
-        <component id="alienShip">
-            <transformation>
-            </transformation>
-            <materials>
-                <material id="abductionGrey" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <componentref id="alienShipBottom" />
-                <componentref id="alienShipMiddle" />
-                <componentref id="alienShipTop" />
-                <componentref id="alienShipBasis" />
-            </children>
-            <animation id="shipMovement" />
-        </component>
-
         <!-- Exploding Barrels -->
 
         <component id="explodingBarrelInternal">
@@ -2473,24 +2267,307 @@
             </children>
         </component>
 
+        <!-- Game Table -->
 
+        <!-- Table-top -->
+        <component id="tableTop">
+            <transformation>
+                <rotate angle="-90" axis="x"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id="rectangleSurface" />
+            </children>
+        </component>
+
+        <component id="tableBottom">
+            <transformation>
+                <translate x="0" y="-0.25" z="0"/>
+                <rotate angle="90" axis="x"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="rectangleSurface" />
+            </children>
+        </component>
+
+        <component id="tableSide">
+            <transformation>
+                <translate x="0" y="-0.125" z="0"/>
+                <scale x="1" y="0.25" z="1" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="rectangleSurface" />
+            </children>
+        </component>
+
+        <component id="tableFrontSide">
+            <transformation>
+                <translate x="0" y="0" z="0.5" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <componentref id="tableSide" />
+            </children>
+        </component>
+
+        <component id="tableRightSide">
+            <transformation>
+                <translate x="0.5" y="0" z="0" />
+                <rotate angle="90" axis="y"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <componentref id="tableSide" />
+            </children>
+        </component>
+
+        <component id="tableLeftSide">
+            <transformation>
+                <translate x="-0.5" y="0" z="0" />
+                <rotate axis="y" angle="-90"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <componentref id="tableSide" />
+            </children>
+        </component>
+
+        <component id="tableBackSide">
+            <transformation>
+                <translate x="0" y="0" z="-0.5" />
+                <rotate axis="y" angle="180"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <componentref id="tableSide" />
+            </children>
+        </component>
+
+        <component id="tableBody">
+            <transformation>
+                <translate x="0" y="-0.1" z="0"/>
+                <scale x="8.5" y="1" z="6.5" />
+            </transformation>
+            <materials>
+                <material id="ceilingWhite" />
+            </materials>
+            <texture id="woolTable" length_s="1" length_t="1"/>
+            <children>
+                <componentref id="tableTop" />
+                <componentref id="tableBottom" />
+                <componentref id="tableFrontSide" />
+                <componentref id="tableRightSide" />
+                <componentref id="tableLeftSide" />
+                <componentref id="tableBackSide" />
+            </children>
+        </component>
+
+        <!-- Table leg -->
+        <component id="tableLegFront">
+            <transformation>
+                <translate x="0" y="0" z="0.35" />
+                <scale x="0.7" y="3" z="1"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="rectangleSurface" />
+            </children>
+        </component>
+
+        <component id="tableLegBack">
+            <transformation>
+                <translate x="0" y="0" z="-0.35" />
+                <rotate angle="180" axis="y" />
+                <scale x="0.7" y="3" z="1"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="rectangleSurface" />
+            </children>
+        </component>
+
+        <component id="tableLegRightSide">
+            <transformation>
+                <translate x="0.35" y="0" z="0" />
+                <rotate axis="y" angle="90" />
+                <scale x="0.7" y="3" z="1"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="rectangleSurface" />
+            </children>
+        </component>
+
+        <component id="tableLegLeftSide">
+            <transformation>
+                <translate x="-0.35" y="0" z="0" />
+                <rotate axis="y" angle="-90" />
+                <scale x="0.7" y="3" z="1"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="rectangleSurface" />
+            </children>
+        </component>
+
+        <component id="tableLeg">
+            <transformation>
+                <translate x="0" y="-1.85" z="0" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <componentref id="tableLegFront" />
+                <componentref id="tableLegRightSide" />
+                <componentref id="tableLegLeftSide" />
+                <componentref id="tableLegBack" />
+            </children>
+        </component>
+
+        <component id="tableFrontRightLeg">
+            <transformation>
+                <translate x="3" y="0" z="2" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <componentref id="tableLeg" />
+            </children>
+        </component>
+
+        <component id="tableFrontLeftLeg">
+            <transformation>
+                <translate x="-3" y="0" z="2" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <componentref id="tableLeg" />
+            </children>
+        </component>
+
+        <component id="tableBackRightLeg">
+            <transformation>
+                <translate x="3" y="0" z="-2" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <componentref id="tableLeg" />
+            </children>
+        </component>
+
+        <component id="tableBackLeftLeg">
+            <transformation>
+                <translate x="-3" y="0" z="-2" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <componentref id="tableLeg" />
+            </children>
+        </component>
+
+        <component id="tableLegs">
+            <transformation>
+                <scale x="1" y="0.8" z="1" />
+            </transformation>
+            <materials>
+                <material id="tableLeg" />
+            </materials>
+            <texture id="tableLeg" length_s="1" length_t="1" />
+            <children>
+                <componentref id="tableFrontRightLeg" />
+                <componentref id="tableFrontLeftLeg" />
+                <componentref id="tableBackRightLeg" />
+                <componentref id="tableBackLeftLeg" />
+            </children>
+        </component>
+
+        <!-- Table -->
+        <component id="table">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="tableLegs" />
+                <componentref id="tableBody" />
+            </children>
+        </component>
 
         <!--Root Component-->
-        <component id="sceneRoot">
+        <component id="environmentRoot">
             <transformation>
-                <scale x="1.0" y="1.0" z="1.0" />
-                <translate x="3" y="0.0" z="-2.0" />
+                <translate x="5.7" y="-2.7" z="-4.0" />
             </transformation>
             <materials>
                 <material id="wallMaterial" />
             </materials>
             <texture id="none"/>
             <children>
-                <componentref id="alienBeam" />
-                <componentref id="alienShip" />
                 <componentref id="shelfAndScene" />
                 <componentref id="bakery" />
                 <componentref id="universe" />
+            </children>
+        </component>
+
+        <component id="sceneRoot">
+            <transformation />
+            <materials>
+                <material id="wallMaterial" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <componentref id="table" />
+                <componentref id="environmentRoot" />
             </children>
         </component>
     </components>
