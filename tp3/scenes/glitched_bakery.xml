@@ -112,29 +112,29 @@
     </lights>
 
     <textures>
-        <texture id="wallTexture" file="scenes/images/SGI_TP1_XML_T03_G11/wall-texture.png" />
-        <texture id="matrixTexture" file="scenes/images/SGI_TP1_XML_T03_G11/matrix.jpg" />
-        <texture id="floorTexture" file="scenes/images/SGI_TP1_XML_T03_G11/floor-texture.png" />
-        <texture id="donutPink" file="scenes/images/SGI_TP1_XML_T03_G11/donut-pink.jpg" />
-        <texture id="donutChoc" file="scenes/images/SGI_TP1_XML_T03_G11/donut-choc.jpg" />
-        <texture id="ceilingTiles" file="scenes/images/SGI_TP1_XML_T03_G11/ceiling-tiles.png" />
-        <texture id="stainlessSteel" file="scenes/images/SGI_TP1_XML_T03_G11/stainless-steel.jpg" />
-        <texture id="aluminiumBlack" file="scenes/images/SGI_TP1_XML_T03_G11/aluminium-black.jpg" />
-        <texture id="brushedAluminium" file="scenes/images/SGI_TP1_XML_T03_G11/brushed-aluminium.jpg" />
-        <texture id="plasticBlack" file="scenes/images/SGI_TP1_XML_T03_G11/plastic-black.jpg" />
-        <texture id="shelfTexture" file="scenes/images/SGI_TP1_XML_T03_G11/wooden-shelf.jpg" />
-        <texture id="pagenotfoundTexture" file="scenes/images/SGI_TP1_XML_T03_G11/pagenotfound.png" />
-        <texture id="chess" file="scenes/images/SGI_TP1_XML_T03_G11/chess.jpg" />
-        <texture id="stripedMetal" file="scenes/images/SGI_TP1_XML_T03_G11/metal_stripes.jpg" />
-        <texture id="stripesOnTransparentBg" file="scenes/images/SGI_TP1_XML_T03_G11/beam_stripes.png" />
-        <texture id="explodingBarrelTexture" file="scenes/images/SGI_TP1_XML_T03_G11/barrel-texture.png" />
-        <texture id="explodingBarrelInternalTexture" file="scenes/images/SGI_TP1_XML_T03_G11/barrel-texture-interior.png" />
-        <texture id="explodingBarrelLidTexture" file="scenes/images/SGI_TP1_XML_T03_G11/barrel-texture-lid.png" />
-        <texture id="roofTiles" file="scenes/images/SGI_TP1_XML_T03_G11/roof-tiles.png" />
-        <texture id="roofTilesVertical" file="scenes/images/SGI_TP1_XML_T03_G11/roof-tiles-vertical.png" />
-        <texture id="outsideWood" file="scenes/images/SGI_TP1_XML_T03_G11/outside-wood.png" />
-        <texture id="tableLeg" file="scenes/images/SGI_TP1_XML_T03_G11/table-leg.png" />
-        <texture id="woolTable" file="scenes/images/SGI_TP1_XML_T03_G11/wool-table.png" />
+        <texture id="wallTexture" file="scenes/images/glitched_bakery/wall-texture.png" />
+        <texture id="matrixTexture" file="scenes/images/glitched_bakery/matrix.jpg" />
+        <texture id="floorTexture" file="scenes/images/glitched_bakery/floor-texture.png" />
+        <texture id="donutPink" file="scenes/images/glitched_bakery/donut-pink.jpg" />
+        <texture id="donutChoc" file="scenes/images/glitched_bakery/donut-choc.jpg" />
+        <texture id="ceilingTiles" file="scenes/images/glitched_bakery/ceiling-tiles.png" />
+        <texture id="stainlessSteel" file="scenes/images/glitched_bakery/stainless-steel.jpg" />
+        <texture id="aluminiumBlack" file="scenes/images/glitched_bakery/aluminium-black.jpg" />
+        <texture id="brushedAluminium" file="scenes/images/glitched_bakery/brushed-aluminium.jpg" />
+        <texture id="plasticBlack" file="scenes/images/glitched_bakery/plastic-black.jpg" />
+        <texture id="shelfTexture" file="scenes/images/glitched_bakery/wooden-shelf.jpg" />
+        <texture id="pagenotfoundTexture" file="scenes/images/glitched_bakery/pagenotfound.png" />
+        <texture id="chess" file="scenes/images/glitched_bakery/chess.jpg" />
+        <texture id="stripedMetal" file="scenes/images/glitched_bakery/metal_stripes.jpg" />
+        <texture id="stripesOnTransparentBg" file="scenes/images/glitched_bakery/beam_stripes.png" />
+        <texture id="explodingBarrelTexture" file="scenes/images/glitched_bakery/barrel-texture.png" />
+        <texture id="explodingBarrelInternalTexture" file="scenes/images/glitched_bakery/barrel-texture-interior.png" />
+        <texture id="explodingBarrelLidTexture" file="scenes/images/glitched_bakery/barrel-texture-lid.png" />
+        <texture id="roofTiles" file="scenes/images/glitched_bakery/roof-tiles.png" />
+        <texture id="roofTilesVertical" file="scenes/images/glitched_bakery/roof-tiles-vertical.png" />
+        <texture id="outsideWood" file="scenes/images/glitched_bakery/outside-wood.png" />
+        <texture id="tableLeg" file="scenes/images/glitched_bakery/table-leg.png" />
+        <texture id="woolTable" file="scenes/images/glitched_bakery/wool-table.png" />
     </textures>
 
     <materials>
