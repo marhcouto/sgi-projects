@@ -1,12 +1,12 @@
 import { MyRectangle } from "../primitives/MyRectangle.js";
 import {CGFappearance, CGFtexture} from "../../lib/CGF.js";
 import {
-  cordToArrayIdx, generateGameState,
-  getCapturePosition, getPiece,
-  isFromTurn,
+  getPieceChoiceError,
+  cordToArrayIdx, GameStatus, generateGameState,
+  getCapturePosition, getGameStatus, getPiece,
   lastMove,
-  movePiece,
-  PieceType, undo
+  movePiece, PieceChoiceError,
+  PieceType, undo, getDestinationChoiceError, DestinationChoiceError, getMove
 } from "../checkers/CheckerState.js";
 import {
   MOVE_ANIMATION_DURATION,
@@ -148,7 +148,7 @@ export class MyGameView {
     this.runningFunctions = new Map();
     this.scene.registerForUpdate('GameView', this.update.bind(this));
 
-    this.pickedCell = null;
+    this.pickedCellId = null;
     this.cells = [];
 
     // Cells
@@ -310,9 +310,7 @@ export class MyGameView {
         return;
       }
       const curMove = moveSequence.pop();
-      const origIdx = cordToArrayIdx(this.gameState, curMove.initPos);
-      const destIdx = cordToArrayIdx(this.gameState, curMove.finalPos);
-      this.executeMovementOrder(origIdx, destIdx);
+      this.executeMovementOrder(curMove);
     }
   }
 
@@ -328,6 +326,9 @@ export class MyGameView {
       return;
     }
 
+    if (this.boardAnimator.hasAnimations()) return;
+
+
     for (let i = 0; i< this.scene.pickResults.length; i++) {
       const obj = this.scene.pickResults[i][0];
       if (!obj) continue;
@@ -340,27 +341,64 @@ export class MyGameView {
         return;
       }
 
-      if (!this.pickedCell) {
-        if (this.boardAnimator.hasAnimations()) return;
-        this.pickedCell = isFromTurn(this.gameState, customId) ? customId : null;
-      } else {
-        this.executeMovementOrder(this.pickedCell, customId);
-        this.pickedCell = null;
+      // No play if victory
+      if (getGameStatus(this.gameState) === GameStatus.victoryBlacks || getGameStatus(this.gameState) === GameStatus.victoryWhites) {
+        return;
       }
-      console.log("Picked object: " + obj + ", with pick id " + customId);
+
+      this.boardInteraction(customId);
     }
     this.scene.pickResults.splice(0,this.scene.pickResults.length);
+
+    // Check for win
+    if (getGameStatus(this.gameState) === GameStatus.victoryBlacks) {
+      alert(GameStatus.victoryBlacks);
+    } else if (getGameStatus(this.gameState) === GameStatus.victoryWhites) {
+      alert(GameStatus.victoryWhites);
+    }
   }
 
-  executeMovementOrder(origIdx, destIdx) {
-    let result = movePiece(this.gameState, origIdx, destIdx);
-    if (result.success) {
-      const lastPieceMove = lastMove(result.gameState);
-      this.setupAnimation(lastPieceMove);
-    }
-    this.gameState = result.gameState;
+  boardInteraction(customId) {
+    if (!this.pickedCellId) { // Pick Piece
+      let pickResult = getPieceChoiceError(this.gameState, customId);
+      if (pickResult.error === PieceChoiceError.wrongTurn) alert(pickResult.error);
+      if (pickResult.pos !== null) {
+        this.pickedCellId = customId;
+        this.pickedPiecePos = pickResult.pos;
+      }
+    } else { // Pick Destination
+      let pickResult = getDestinationChoiceError(this.gameState, customId);
+      if (pickResult.error !== null || pickResult.pos === null) {
+        alert(pickResult.error);
+        this.pickedCellId = null;
+        this.pickedPiecePos = null;
+        return;
+      }
+      let moveResult = getMove(this.gameState, this.pickedPiecePos, pickResult.pos);
+      if (moveResult.moveError !== null) {
+        alert(moveResult.moveError);
+        this.pickedCellId = null;
+        this.pickedPiecePos = null;
+        return;
+      }
 
-    return result.success;
+      // Move Piece
+      this.executeMovementOrder(moveResult.checkerMove);
+      this.pickedCellId = null;
+    }
+  }
+
+  /**
+   * @param {CheckerMove} move
+   * @returns {*}
+   */
+  executeMovementOrder(move) {
+    let newGameState = movePiece(this.gameState, move);
+    const lastPieceMove = lastMove(newGameState);
+    console.log("Move:", move);
+    console.log("Last Piece Move:", lastPieceMove);
+    this.setupAnimation(lastPieceMove);
+    this.gameState = newGameState;
   }
 
   getCapturedPieceData(movement) {
@@ -512,7 +550,7 @@ export class MyGameView {
         const piece = getPiece(this.gameState, {row, col});
 
         if (piece === PieceType.Empty) continue;
-        if (row * this.cells.length + col === this.pickedCell) { // Selected piece different material
+        if (row * this.cells.length + col === this.pickedCellId) { // Selected piece different material
           this.materialSelectedPawns.apply();
         } else {
           this.pieceModel[piece].retrieveMaterials(piece).apply();

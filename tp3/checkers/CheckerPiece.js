@@ -101,7 +101,7 @@ function moveResultedInUpgrade(gameState, initialPos, finalPos) {
   if (piece === PieceType.KingWhite || piece === PieceType.KingBlack) {
     return false;
   }
-
+  console.log(finalPos.row, " - ", lastRowForPlayer(gameState));
   return (
     finalPos.row === lastRowForPlayer(gameState)
   );
@@ -121,14 +121,14 @@ function generateValidMovesInDirection(gameState, piecePos, direction) {
   const enemyPieces = enemyPieceColor(gameState);
   let nFoundCaptures = 0;
 
-  const directionMove = movGen.next();
-  if (!movGen.done && directionMove.value) {
-    const piece = getPiece(gameState, directionMove.value);
+  const destination = movGen.next();
+  if (!movGen.done && destination.value) {
+    const piece = getPiece(gameState, destination.value);
     if (piece === PieceType.Empty) {
       validMoves.push({
         initPos: piecePos,
-        finalPos: directionMove.value,
-        moveType: moveResultedInUpgrade(gameState, piecePos, directionMove.value) ?
+        finalPos: destination.value,
+        moveType: moveResultedInUpgrade(gameState, piecePos, destination.value) ?
           MoveType.MoveAndUpgrade :
           MoveType.Move
       });
@@ -139,7 +139,7 @@ function generateValidMovesInDirection(gameState, piecePos, direction) {
         validMoves.push({
           initPos: piecePos,
           finalPos: captureMove.value,
-          moveType: moveResultedInUpgrade(gameState, piecePos, directionMove.value) ?
+          moveType: moveResultedInUpgrade(gameState, piecePos, captureMove.value) ?
             MoveType.CaptureAndUpgrade :
             MoveType.Capture
         })

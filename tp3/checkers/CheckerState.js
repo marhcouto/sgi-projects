@@ -8,6 +8,51 @@ import {generateValidMoves as generateValidMovesForPiece, MoveType} from "./Chec
  */
 
 /**
+ * Enum for game status
+ * @readonly
+ * @enum {string}
+ */
+export const GameStatus = {
+  victoryBlacks: "Black Pieces Win!",
+  victoryWhites: "White Pieces Win!",
+  ongoing: "Game in progress"
+}
+Object.freeze(GameStatus);
+
+/**
+ * Enum for validity of move choice
+ * @readonly
+ * @enum {string}
+ */
+export const MoveChoiceError = {
+  availableCaptures: "If a capture is available, you must take it",
+  invalidMoveForPiece: "That piece cannot move to that destination"
+}
+Object.freeze(MoveChoiceError);
+
+/**
+ * Enum for validity of Piece Choice
+ * @readonly
+ * @enum {string}
+ */
+export const PieceChoiceError = {
+  wrongTurn: "It is not that player's turn",
+  notAPiece: "That is not a piece"
+}
+Object.freeze(PieceChoiceError);
+
+/**
+ * Enum for validity of destination choice
+ * @readonly
+ * @enum {string}
+ */
+export const DestinationChoiceError = {
+  pieceInCell: "There is a pawn in that cell",
+  notACell: "That is not a valid cell",
+  whiteCellPlay: "You cannot play in the white cells"
+}
+
+/**
  * Enum for valid player turns
  * @readonly
  * @enum {Symbol<string>}
@@ -117,87 +162,130 @@ export function generateGameState(size) {
   }
 
   const validMoves = generateValidMoves(initialState);
-  initialState.validMoves = validMoves.validMoves;
+  initialState.validMoves = validMoves.moves;
   initialState.nCaptures = validMoves.nFoundCaptures;
 
   return initialState;
 }
 
 /**
+ * Updates gameState with new move
  *
  * @param {GameState} gameState
- * @param {Number} orig
- * @param {Number} dest
- * @return {{success: boolean, gameState: GameState}}
+ * @param {CheckerMove} move
+ * @return {GameState}
  */
-export function movePiece(gameState, orig, dest) {
-  if (!orig || !(typeof orig === 'number')) {
-    console.error("Can't move piece with invalid orig");
-    return {
-      success: false,
-      gameState: gameState
-    }
-  }
-  if (!dest || !(typeof dest === 'number')) {
-    console.error("Can't move piece with invalid dest");
-    return {
-      success: false,
-      gameState: gameState
-    }
-  }
-
-  if (orig > gameState.numberOfCells) {
-    return {
-      success: false,
-      gameState: gameState,
-    };
-  }
-  if (dest > gameState.numberOfCells) {
-    return {
-      success: false,
-      gameState: gameState,
-    };
-  }
-
-  const origPos = arrayIdxToCord(gameState, orig);
-  const destPos = arrayIdxToCord(gameState, dest);
-  const movement = findMovementEvent(gameState, origPos, destPos);
-  if (!movement) {
-    return {
-      success: false,
-      gameState: gameState,
-    };
-  }
+export function movePiece(gameState, move) {
 
   const newGameState = copy(gameState);
-  if (gameState.nCaptures - 1 <= 0) {
-    newGameState.turn = gameState.turn === PlayerTurn.Black ? PlayerTurn.White : PlayerTurn.Black;
-  }
 
-  replacePiece(newGameState, origPos, PieceType.Empty);
-  if (movement.moveType === MoveType.MoveAndUpgrade || movement.moveType === MoveType.CaptureAndUpgrade) {
-    replacePiece(newGameState, destPos, upgradedPiece(getPiece(gameState, movement.initPos)));
+  console.log("Captures before:", gameState.nCaptures);
+
+  replacePiece(newGameState, move.initPos, PieceType.Empty);
+  if (move.moveType === MoveType.MoveAndUpgrade || move.moveType === MoveType.CaptureAndUpgrade) {
+    replacePiece(newGameState, move.finalPos, upgradedPiece(getPiece(gameState, move.initPos)));
   } else {
-    replacePiece(newGameState, destPos, getPiece(gameState, movement.initPos));
+    replacePiece(newGameState, move.finalPos, getPiece(gameState, move.initPos));
   }
 
-  if (movement.moveType === MoveType.Capture || movement.moveType === MoveType.CaptureAndUpgrade) {
+  if (move.moveType === MoveType.Capture || move.moveType === MoveType.CaptureAndUpgrade) {
     gameState.turn === PlayerTurn.Black ? newGameState.score.blacksScore++ : newGameState.score.whitesScore++;
-    const capturePosition = getCapturePosition(movement);
+    const capturePosition = getCapturePosition(move);
     replacePiece(newGameState, capturePosition, PieceType.Empty);
   }
 
-  newGameState.moves.push(movement);
+  newGameState.moves.push(move);
+
+  // TODO: extract task of checking captures from function
+  const validMovesForMovedPiece = generateValidMovesForPiece(newGameState, move.finalPos, getPiece(newGameState, move.finalPos));
+  console.log(validMovesForMovedPiece);
+  if (validMovesForMovedPiece.nFoundCaptures <= 0 || (move.moveType !== MoveType.Capture && move.moveType !== MoveType.CaptureAndUpgrade)) {
+    newGameState.turn = gameState.turn === PlayerTurn.Black ? PlayerTurn.White : PlayerTurn.Black;
+  }
 
   const validMoves = generateValidMoves(newGameState);
-  newGameState.validMoves = validMoves.validMoves;
+  newGameState.validMoves = validMoves.moves;
   newGameState.nCaptures = validMoves.nFoundCaptures;
 
-  return {
-    success: true,
-    gameState: newGameState
-  };
+  return newGameState;
 }
+
+// /**
+//  * Move a piece
+//  *
+//  * @param {GameState} gameState
+//  * @param {Number} orig
+//  * @param {Number} dest
+//  * @return {{success: boolean, gameState: GameState}}
+//  */
+// export function movePiece(gameState, orig, dest) {
+//   if (!orig || !(typeof orig === 'number')) {
+//     console.error("Can't move piece with invalid orig");
+//     return {
+//       success: false,
+//       gameState: gameState
+//     }
+//   }
+//   if (!dest || !(typeof dest === 'number')) {
+//     console.error("Can't move piece with invalid dest");
+//     return {
+//       success: false,
+//       gameState: gameState
+//     }
+//   }
+//
+//   if (orig > gameState.numberOfCells) {
+//     return {
+//       success: false,
+//       gameState: gameState,
+//     };
+//   }
+//   if (dest > gameState.numberOfCells) {
+//     return {
+//       success: false,
+//       gameState: gameState,
+//     };
+//   }
+//
+//   const origPos = arrayIdxToCord(gameState, orig);
+//   const destPos = arrayIdxToCord(gameState, dest);
+//   const movement = getMove(gameState, origPos, destPos);
+//   if (!movement) {
+//     return {
+//       success: false,
+//       gameState: gameState,
+//     };
+//   }
+//
+//   const newGameState = copy(gameState);
+//   if (gameState.nCaptures - 1 <= 0) {
+//     newGameState.turn = gameState.turn === PlayerTurn.Black ? PlayerTurn.White : PlayerTurn.Black;
+//   }
+//
+//   replacePiece(newGameState, origPos, PieceType.Empty);
+//   if (movement.moveType === MoveType.MoveAndUpgrade || movement.moveType === MoveType.CaptureAndUpgrade) {
+//     replacePiece(newGameState, destPos, upgradedPiece(getPiece(gameState, movement.initPos)));
+//   } else {
+//     replacePiece(newGameState, destPos, getPiece(gameState, movement.initPos));
+//   }
+//
+//   if (movement.moveType === MoveType.Capture || movement.moveType === MoveType.CaptureAndUpgrade) {
+//     gameState.turn === PlayerTurn.Black ? newGameState.score.blacksScore++ : newGameState.score.whitesScore++;
+//     const capturePosition = getCapturePosition(movement);
+//     replacePiece(newGameState, capturePosition, PieceType.Empty);
+//   }
+//
+//   newGameState.moves.push(movement);
+//
+//   const validMoves = generateValidMoves(newGameState);
+//   newGameState.validMoves = validMoves.validMoves;
+//   newGameState.nCaptures = validMoves.nFoundCaptures;
+//
+//   return {
+//     success: true,
+//     gameState: newGameState
+//   };
+// }
 
 /**
  *
@@ -262,11 +350,11 @@ export function turnPieceColor(gameState) {
 /**
  *
  * @param {GameState} gameState
- * @returns {{nFoundCaptures, validMoves: Map<string, CheckerMove[]>}}
+ * @returns {{nFoundCaptures, moves: Map<string, CheckerMove[]>}}
  */
 function generateValidMoves(gameState) {
   const validPieces = turnPieceColor(gameState);
-  const validMoves = new Map();
+  const moves = new Map();
 
   let nFoundCaptures = 0;
   for (let row = 0; row < gameState.size; row++) {
@@ -276,8 +364,9 @@ function generateValidMoves(gameState) {
         continue;
       }
       const validMovesForPiece = generateValidMovesForPiece(gameState, { row, col }, cell.piece);
+      if (validMovesForPiece.validMoves.length == 0) continue;
       nFoundCaptures += validMovesForPiece.nFoundCaptures;
-      validMoves.set(
+      moves.set(
           JSON.stringify({row, col}),
           validMovesForPiece.validMoves,
       );
@@ -285,11 +374,11 @@ function generateValidMoves(gameState) {
   }
 
   if (nFoundCaptures === 0) {
-    return {validMoves, nFoundCaptures};
+    return {moves, nFoundCaptures};
   }
 
   const filteredMovesByCapture = new Map();
-  for (const [orig, validMovesForOrig] of validMoves.entries()) {
+  for (const [orig, validMovesForOrig] of moves.entries()) {
     filteredMovesByCapture.set(
         orig,
         validMovesForOrig.filter((move) => move.moveType === MoveType.Capture || move.moveType === MoveType.CaptureAndUpgrade)
@@ -297,7 +386,7 @@ function generateValidMoves(gameState) {
   }
 
   return {
-    validMoves: filteredMovesByCapture,
+    moves: filteredMovesByCapture,
     nFoundCaptures: nFoundCaptures
   };
 }
@@ -334,27 +423,6 @@ export function cordToArrayIdx(gameState, position) {
  */
 export function lastMove(gameState) {
   return gameState.moves.at(-1);
-}
-
-/**
- *
- * @param {GameState} gameState
- * @param {Position} origPos
- * @param {Position} finalPos
- * @return {CheckerMove|null}
- */
-function findMovementEvent(gameState, origPos, finalPos) {
-  if (!gameState.validMoves.has(JSON.stringify(origPos))) {
-    return null;
-  }
-
-  const validMovesForPosition = gameState.validMoves.get(JSON.stringify(origPos));
-  for (const move of validMovesForPosition) {
-    if (JSON.stringify(move.finalPos) === JSON.stringify(finalPos)) {
-      return move;
-    }
-  }
-  return null;
 }
 
 /**
@@ -411,15 +479,88 @@ function copy(gameState) {
 }
 
 /**
+ * Return Move or MoveChoiceError
  *
  * @param {GameState} gameState
- * @param {Number} pos
+ * @param {Position} origPos
+ * @param {Position} finalPos
+ * @return {{checkerMove: CheckerMove, moveError: MoveChoiceError}}
  */
-export function isFromTurn(gameState, pos) {
+export function getMove(gameState, origPos, finalPos) {
+
+  const validMovesForPosition = gameState.validMoves.get(JSON.stringify(origPos));
+  if (!validMovesForPosition) return {
+    checkerMove: null,
+    moveError: MoveChoiceError.invalidMoveForPiece
+  };
+  for (const move of validMovesForPosition) {
+    if (JSON.stringify(move.finalPos) === JSON.stringify(finalPos)) {
+      return {
+        checkerMove: move,
+        moveError: null,
+      };
+    }
+  }
+  if (gameState.nCaptures > 0) return {
+    checkerMove: null,
+    moveError: MoveChoiceError.availableCaptures
+  };
+  else return {
+    checkerMove: null,
+    moveError: MoveChoiceError.invalidMoveForPiece
+  };
+}
+
+/**
+ * Checks if a piece is valid to pick
+ * @param {GameState} gameState
+ * @param {Number} pos
+ * @return {{pos: Position|null, error: PieceChoiceError|null}}
+ */
+export function getPieceChoiceError(gameState, pos) {
   const posObj = arrayIdxToCord(gameState, pos);
   const piece = getPiece(gameState, posObj);
+  if (piece === PieceType.Empty || piece === null) return {
+    pos: null,
+    error: PieceChoiceError.notAPiece,
+  };
   const validPiecesForTurn = turnPieceColor(gameState);
-  return validPiecesForTurn.includes(piece);
+  return validPiecesForTurn.includes(piece) ? {
+    pos: posObj,
+    error: null
+  } : {
+    pos: null,
+    error: PieceChoiceError.wrongTurn
+  };
+}
+
+/**
+ * Checks if a destination for a given piece is valid
+ * @param {GameState} gameState
+ * @param {Number} pos
+ * @return {{pos: Position|null, error: DestinationChoiceError|null}}
+ */
+export function getDestinationChoiceError(gameState, pos) {
+  console.log("Position:", pos);
+  const posObj = arrayIdxToCord(gameState, pos);
+  console.log("Position2:", posObj);
+  const piece = getPiece(gameState, posObj);
+  if (piece !== PieceType.Empty) return {
+    pos: null,
+    error: DestinationChoiceError.pieceInCell
+  };
+  if (((posObj.col + posObj.row) % 2) == 0) return {
+    pos: null,
+    error: DestinationChoiceError.whiteCellPlay
+  };
+  if (pos > gameState.numberOfCells) return {
+    pos: null,
+    error: DestinationChoiceError.notACell
+  };
+  return {
+    pos: posObj,
+    error: null
+  };
 }
 
 /**
@@ -445,7 +586,6 @@ export function upgradedPiece(piece) {
  * @return {GameState}
  */
 export function undo(gameState) {
-  console.log(gameState);
   if (gameState.moves.length === 0) {
     return gameState;
   }
@@ -459,4 +599,16 @@ export function undo(gameState) {
     newGameState = newState.gameState;
   })
   return newGameState;
+}
+
+
+/**
+ * Checks wins
+ * @param {GameState} gameState
+ * @returns {GameStatus}
+ */
+export function getGameStatus(gameState) {
+  if (gameState.score.whitesScore == 12) return GameStatus.victoryWhites;
+  else if (gameState.score.blacksScore == 12) return GameStatus.victoryBlacks;
+  else return GameStatus.ongoing;
 }
