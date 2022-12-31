@@ -1,10 +1,11 @@
-import {generateValidMoves as generateValidMovesForPiece, MoveType} from "./CheckerPiece.js";
+import {generateValidMoves, generateValidMovesForPiece, MoveType} from "./CheckerMoves.js";
 
 
-// Datatypes
+
+// Object Definitions
 
 /**
- * @typedef {import('./CheckerPiece.js').CheckerMove} CheckerMove
+ * @typedef {import('./CheckerMoves.js').CheckerMove} CheckerMove
  */
 
 /**
@@ -110,7 +111,9 @@ export const PieceType = {
  * @property {Number} col
  */
 
-// Main Functions
+
+
+// Public Functions
 
 /**
  * Generate a board that respects GameState interface
@@ -179,8 +182,6 @@ export function movePiece(gameState, move) {
 
   const newGameState = copy(gameState);
 
-  console.log("Captures before:", gameState.nCaptures);
-
   replacePiece(newGameState, move.initPos, PieceType.Empty);
   if (move.moveType === MoveType.MoveAndUpgrade || move.moveType === MoveType.CaptureAndUpgrade) {
     replacePiece(newGameState, move.finalPos, upgradedPiece(getPiece(gameState, move.initPos)));
@@ -198,7 +199,6 @@ export function movePiece(gameState, move) {
 
   // TODO: extract task of checking captures from function
   const validMovesForMovedPiece = generateValidMovesForPiece(newGameState, move.finalPos, getPiece(newGameState, move.finalPos));
-  console.log(validMovesForMovedPiece);
   if (validMovesForMovedPiece.nFoundCaptures <= 0 || (move.moveType !== MoveType.Capture && move.moveType !== MoveType.CaptureAndUpgrade)) {
     newGameState.turn = gameState.turn === PlayerTurn.Black ? PlayerTurn.White : PlayerTurn.Black;
   }
@@ -209,83 +209,6 @@ export function movePiece(gameState, move) {
 
   return newGameState;
 }
-
-// /**
-//  * Move a piece
-//  *
-//  * @param {GameState} gameState
-//  * @param {Number} orig
-//  * @param {Number} dest
-//  * @return {{success: boolean, gameState: GameState}}
-//  */
-// export function movePiece(gameState, orig, dest) {
-//   if (!orig || !(typeof orig === 'number')) {
-//     console.error("Can't move piece with invalid orig");
-//     return {
-//       success: false,
-//       gameState: gameState
-//     }
-//   }
-//   if (!dest || !(typeof dest === 'number')) {
-//     console.error("Can't move piece with invalid dest");
-//     return {
-//       success: false,
-//       gameState: gameState
-//     }
-//   }
-//
-//   if (orig > gameState.numberOfCells) {
-//     return {
-//       success: false,
-//       gameState: gameState,
-//     };
-//   }
-//   if (dest > gameState.numberOfCells) {
-//     return {
-//       success: false,
-//       gameState: gameState,
-//     };
-//   }
-//
-//   const origPos = arrayIdxToCord(gameState, orig);
-//   const destPos = arrayIdxToCord(gameState, dest);
-//   const movement = getMove(gameState, origPos, destPos);
-//   if (!movement) {
-//     return {
-//       success: false,
-//       gameState: gameState,
-//     };
-//   }
-//
-//   const newGameState = copy(gameState);
-//   if (gameState.nCaptures - 1 <= 0) {
-//     newGameState.turn = gameState.turn === PlayerTurn.Black ? PlayerTurn.White : PlayerTurn.Black;
-//   }
-//
-//   replacePiece(newGameState, origPos, PieceType.Empty);
-//   if (movement.moveType === MoveType.MoveAndUpgrade || movement.moveType === MoveType.CaptureAndUpgrade) {
-//     replacePiece(newGameState, destPos, upgradedPiece(getPiece(gameState, movement.initPos)));
-//   } else {
-//     replacePiece(newGameState, destPos, getPiece(gameState, movement.initPos));
-//   }
-//
-//   if (movement.moveType === MoveType.Capture || movement.moveType === MoveType.CaptureAndUpgrade) {
-//     gameState.turn === PlayerTurn.Black ? newGameState.score.blacksScore++ : newGameState.score.whitesScore++;
-//     const capturePosition = getCapturePosition(movement);
-//     replacePiece(newGameState, capturePosition, PieceType.Empty);
-//   }
-//
-//   newGameState.moves.push(movement);
-//
-//   const validMoves = generateValidMoves(newGameState);
-//   newGameState.validMoves = validMoves.validMoves;
-//   newGameState.nCaptures = validMoves.nFoundCaptures;
-//
-//   return {
-//     success: true,
-//     gameState: newGameState
-//   };
-// }
 
 /**
  *
@@ -344,53 +267,6 @@ export function turnPieceColor(gameState) {
       [PieceType.KingWhite, PieceType.White];
 }
 
-
-// Auxiliary Functions
-
-/**
- *
- * @param {GameState} gameState
- * @returns {{nFoundCaptures, moves: Map<string, CheckerMove[]>}}
- */
-function generateValidMoves(gameState) {
-  const validPieces = turnPieceColor(gameState);
-  const moves = new Map();
-
-  let nFoundCaptures = 0;
-  for (let row = 0; row < gameState.size; row++) {
-    for (let col = 0; col < gameState.size; col++) {
-      const cell = gameState.board[row][col];
-      if (!validPieces.includes(cell.piece)) {
-        continue;
-      }
-      const validMovesForPiece = generateValidMovesForPiece(gameState, { row, col }, cell.piece);
-      if (validMovesForPiece.validMoves.length == 0) continue;
-      nFoundCaptures += validMovesForPiece.nFoundCaptures;
-      moves.set(
-          JSON.stringify({row, col}),
-          validMovesForPiece.validMoves,
-      );
-    }
-  }
-
-  if (nFoundCaptures === 0) {
-    return {moves, nFoundCaptures};
-  }
-
-  const filteredMovesByCapture = new Map();
-  for (const [orig, validMovesForOrig] of moves.entries()) {
-    filteredMovesByCapture.set(
-        orig,
-        validMovesForOrig.filter((move) => move.moveType === MoveType.Capture || move.moveType === MoveType.CaptureAndUpgrade)
-    )
-  }
-
-  return {
-    moves: filteredMovesByCapture,
-    nFoundCaptures: nFoundCaptures
-  };
-}
-
 /**
  *
  * @param {GameState} gameState
@@ -434,48 +310,6 @@ export function lastRowForPlayer(gameState) {
     return gameState.size - 1;
   }
   return 0;
-}
-
-/**
- *
- * @param {GameState} gameState
- * @param {Position} position
- * @param {PieceType} piece
- */
-function replacePiece(gameState, position, piece) {
-  if (piece === null) {
-    throw new Error("Tried to replace piece for null");
-  }
-  const cell = gameState.board[position.row][position.col];
-  cell.piece = piece;
-}
-
-/**
- *
- * @param {GameState} gameState
- * @return {GameState}
- */
-function copy(gameState) {
-  const newGameState = {
-    size: gameState.size,
-    score: { ...gameState.score },
-    turn: gameState.turn,
-    numberOfCells: gameState.numberOfCells,
-    validMoves: gameState.validMoves,
-    nCaptures: gameState.nCaptures,
-    board: [],
-    moves: [ ...gameState.moves ]
-  };
-
-  for (const line of gameState.board) {
-    const newLine = [];
-    for (const cell of line) {
-      newLine.push({...cell});
-    }
-    newGameState.board.push(newLine);
-  }
-
-  return newGameState;
 }
 
 /**
@@ -541,9 +375,7 @@ export function getPieceChoiceError(gameState, pos) {
  * @return {{pos: Position|null, error: DestinationChoiceError|null}}
  */
 export function getDestinationChoiceError(gameState, pos) {
-  console.log("Position:", pos);
   const posObj = arrayIdxToCord(gameState, pos);
-  console.log("Position2:", posObj);
   const piece = getPiece(gameState, posObj);
   if (piece !== PieceType.Empty) return {
     pos: null,
@@ -593,14 +425,10 @@ export function undo(gameState) {
   let newGameState = generateGameState(gameState.size);
   const moves = gameState.moves.slice(0, gameState.moves.length - 1);
   moves.forEach((move) => {
-    const orig = cordToArrayIdx(newGameState, move.initPos);
-    const dest = cordToArrayIdx(newGameState, move.finalPos);
-    const newState = movePiece(newGameState, orig, dest);
-    newGameState = newState.gameState;
-  })
+    newGameState = movePiece(newGameState, move);
+  });
   return newGameState;
 }
-
 
 /**
  * Checks wins
@@ -612,3 +440,50 @@ export function getGameStatus(gameState) {
   else if (gameState.score.blacksScore == 12) return GameStatus.victoryBlacks;
   else return GameStatus.ongoing;
 }
+
+
+
+// Auxiliary Functions
+
+/**
+ *
+ * @param {GameState} gameState
+ * @param {Position} position
+ * @param {PieceType} piece
+ */
+function replacePiece(gameState, position, piece) {
+  if (piece === null) {
+    throw new Error("Tried to replace piece for null");
+  }
+  const cell = gameState.board[position.row][position.col];
+  cell.piece = piece;
+}
+
+/**
+ *
+ * @param {GameState} gameState
+ * @return {GameState}
+ */
+function copy(gameState) {
+  const newGameState = {
+    size: gameState.size,
+    score: { ...gameState.score },
+    turn: gameState.turn,
+    numberOfCells: gameState.numberOfCells,
+    validMoves: gameState.validMoves,
+    nCaptures: gameState.nCaptures,
+    board: [],
+    moves: [ ...gameState.moves ]
+  };
+
+  for (const line of gameState.board) {
+    const newLine = [];
+    for (const cell of line) {
+      newLine.push({...cell});
+    }
+    newGameState.board.push(newLine);
+  }
+
+  return newGameState;
+}
+

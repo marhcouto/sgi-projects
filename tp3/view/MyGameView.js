@@ -14,7 +14,7 @@ import {
 } from "../transformations/MyLinearAnimation.js";
 import { MyBoardFrame } from "./components/MyBoardFrame.js";
 import { DEFAULT_PAWN_HEIGHT, DEFAULT_PAWN_RADIUS, MyPawn } from "./components/MyPawn.js";
-import { MoveType } from "../checkers/CheckerPiece.js";
+import { MoveType } from "../checkers/CheckerMoves.js";
 import { MyPieceContainer } from "./components/MyPieceContainer.js";
 import { MyScoreBoard } from "./components/MyScoreBoard.js";
 import {
@@ -315,7 +315,7 @@ export class MyGameView {
   }
 
   /**
-   * Checks if what cell has been picked and acts accordingly
+   * Checks what cell has been picked and acts accordingly
    */
   checkPick() {
     if (this.scene.pickMode) {
@@ -328,14 +328,12 @@ export class MyGameView {
 
     if (this.boardAnimator.hasAnimations()) return;
 
-
     for (let i = 0; i< this.scene.pickResults.length; i++) {
       const obj = this.scene.pickResults[i][0];
       if (!obj) continue;
       let customId = this.scene.pickResults[i][1];
       const buttonIndex = customId - 1000;
       if (buttonIndex >= 0) {
-        console.log("Did click: ", buttonIndex);
         this.buttons[buttonIndex].component.callback();
         this.scene.pickResults.splice(0,this.scene.pickResults.length);
         return;
@@ -395,8 +393,6 @@ export class MyGameView {
   executeMovementOrder(move) {
     let newGameState = movePiece(this.gameState, move);
     const lastPieceMove = lastMove(newGameState);
-    console.log("Move:", move);
-    console.log("Last Piece Move:", lastPieceMove);
     this.setupAnimation(lastPieceMove);
     this.gameState = newGameState;
   }
