@@ -23,7 +23,6 @@
     </lights>
 
     <textures>
-        <texture id="demoTexture" file="scenes/images/SGI_TP1_XML_T03_G11/wall-texture.png" />
     </textures>
 
     <materials>
