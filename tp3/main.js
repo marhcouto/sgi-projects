@@ -8,6 +8,8 @@ import { MyGameView } from './view/MyGameView.js';
 const scenes = {
   glitchedBakery: "glitched_bakery.xml",
   testScene: "test_scene.xml",
+    prisonCell: "prison_cell.xml",
+    space: "space.xml"
 };
 Object.freeze(scenes);
 
