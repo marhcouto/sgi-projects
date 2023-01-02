@@ -44,5 +44,33 @@
 ----
 
 ### [TP3 - ...](tp3)
-- (items briefly describing main strong points)
 
+
+#### Project information
+
+**Strong Points**
+- 3 Different scenarios to play on despite the void default one
+- Smooth animations
+- Classical look and feel to the game
+
+**Scenes**
+- testScene
+  - void default scene
+  - ![Default scene](tp3/screenshots/SGI3_T03_G11_1.png)
+- space
+  - scene with planets, giant ants being abducted and a starry night sky
+  - ![Space scene](tp3/screenshots/SGI3_T03_G11_2.png)
+- glitchedBakery
+  - a glitched bakery lost in the matrix (scene from other TP changed)
+  - ![Glitched Bakery Scene](tp3/screenshots/SGI3_T03_G11_4.png)
+- prisonCell
+  - play checkers in an old scary prison cell
+  - ![Prison Cell scene](tp3/screenshots/SGI3_T03_G11_3.png)
+----
+#### Issues/Problems
+
+- There are no apparent bugs, all functionalities were implemented
+----
+
+#### Instructions
+Instructions for the usage of the program can be found in [this link](tp3/MANUAL.md).
