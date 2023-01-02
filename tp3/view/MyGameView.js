@@ -494,8 +494,8 @@ export class MyGameView {
       const position = moveAnimation.currentPosition();
       vec3.transformMat4(position, position, this.boardTransformation);
 
-      this.scene.lights[7].setPosition(position[0], position[1] + 2, position[2], 1.0);
-      this.scene.lights[7].setSpotDirection(position[0], 0, position[2]);
+      this.scene.lights[7].setPosition(position[0] * 0.5, (position[1] + 2) * 0.5, position[2] * 0.5, 1.0);
+      this.scene.lights[7].setSpotDirection(position[0] * 0.5, 0, position[2] * 0.5);
       this.scene.lights[7].setVisible(true);
       this.scene.lights[7].enable();
     });
